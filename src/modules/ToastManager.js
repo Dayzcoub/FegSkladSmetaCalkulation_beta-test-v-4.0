@@ -10,7 +10,7 @@
         bottom: '20px',
         left: '50%',
         transform: 'translateX(-50%)',
-        backgroundColor: '#c4a06f',
+        backgroundColor: '#2F4F4F',
         color: '#111820',
         padding: '10px 20px',
         borderRadius: '60px',

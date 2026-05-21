@@ -110,10 +110,79 @@
     return { status: 'ready', label: 'Готово к складу', level: 'ok' };
   }
 
+  function getWorkflowDraftMap() {
+    const wf = workflowModule();
+    if (!wf || !wf.listWorkflowDrafts) return new Map();
+    try {
+      return (wf.listWorkflowDrafts() || []).reduce((map, row) => {
+        const id = toText(row && (row.quoteId || row.quote_id));
+        if (id) map.set(id, row);
+        return map;
+      }, new Map());
+    } catch (_) {
+      return new Map();
+    }
+  }
+
+  function buildOperationIndexSnapshot(row, options) {
+    const src = row || {};
+    const opts = options || {};
+    const workflowMap = opts.workflowMap || getWorkflowDraftMap();
+    const quoteId = toText(src.quoteId || src.quote && src.quote.id);
+    const savedWorkflow = workflowMap.get(quoteId) || null;
+    const bom = src.v4BomSummary || {};
+    const totals = src.totals || {};
+    const warehouseRows = nonNegative(bom.warehouse || bom.sharedBom || bom.quoteItems, 0);
+    const reservedQty = nonNegative(totals.reservedQty || totals.warehouseReservedQty, 0);
+    const deficitQty = nonNegative(totals.deficitQty || totals.warehouseDeficitQty, 0);
+    const subrentQty = nonNegative(totals.subrentQty || totals.warehouseSubrentQty, 0);
+    const unmatchedRows = nonNegative(totals.unmatchedRows || totals.warehouseUnmatchedRows, 0);
+    const warehouseStatus = toText(savedWorkflow && savedWorkflow.status) || 'draft';
+    const warehouseStatusLabel = toText(savedWorkflow && (savedWorkflow.statusLabel || savedWorkflow.status_label)) || 'Черновик склада';
+    const health = getWarehouseHealth({
+      reservationPlan: { totals: { deficitQty, subrentQty, unmatchedRows } },
+      workflow: { status: warehouseStatus },
+      readiness: null
+    });
+    return {
+      type: 'feg-stage-pro-warehouse-operation-index-snapshot',
+      version: WAREHOUSE_OPERATIONS_HUB_VERSION,
+      generatedAt: nowIso(),
+      projectId: src.projectId || '',
+      quoteId,
+      projectName: src.projectName || 'Без названия',
+      clientName: src.clientName || 'клиент не указан',
+      eventDate: src.eventDate || '',
+      projectStatus: src.status || 'draft',
+      warehouseStatus,
+      warehouseStatusLabel,
+      warehouseAction: savedWorkflow && (savedWorkflow.warehouseAction || savedWorkflow.warehouse_action) || 'reserve',
+      readiness: null,
+      health,
+      totals: {
+        requestedQty: nonNegative(totals.requestedQty || warehouseRows, 0),
+        reservedQty,
+        deficitQty,
+        subrentQty,
+        unmatchedRows,
+        rows: warehouseRows
+      },
+      reservationPlan: { rows: [], totals: { rows: warehouseRows, reservedQty, deficitQty, subrentQty, unmatchedRows } },
+      stockMovementPlan: { action: 'reserve', rows: [], totals: {} },
+      subrentPlan: { rows: [], totals: {} },
+      warehouseWorkflow: savedWorkflow || { status: warehouseStatus, statusLabel: warehouseStatusLabel, timeline: [] },
+      indexOnly: true
+    };
+  }
+
   function listOperationProjects(filters) {
     const opts = filters || {};
-    const rows = storage() && storage().listProjects ? storage().listProjects(opts.projectFilters || {}) : [];
-    return rows.map(row => buildOperationSnapshot(row, opts)).filter(snapshot => {
+    const store = storage();
+    const rows = opts.full && store && store.listProjects
+      ? store.listProjects(opts.projectFilters || {})
+      : (store && store.listProjectIndex ? store.listProjectIndex(opts.projectFilters || {}) : (store && store.listProjects ? store.listProjects(opts.projectFilters || {}) : []));
+    const workflowMap = getWorkflowDraftMap();
+    return rows.map(row => opts.full ? buildOperationSnapshot(row, opts) : buildOperationIndexSnapshot(row, Object.assign({}, opts, { workflowMap }))).filter(snapshot => {
       if (opts.warehouseStatus && snapshot.warehouseStatus !== opts.warehouseStatus) return false;
       if (opts.onlyActionable && ['closed', 'cancelled'].includes(snapshot.warehouseStatus)) return false;
       if (opts.query) {
@@ -137,7 +206,7 @@
       acc[row.health && row.health.status || 'ready'] = (acc[row.health && row.health.status || 'ready'] || 0) + 1;
       return acc;
     }, { projects: 0, requestedQty: 0, reservedQty: 0, deficitQty: 0, subrentQty: 0, unmatchedRows: 0 });
-    return { type: 'feg-stage-pro-warehouse-operations-dashboard', version: WAREHOUSE_OPERATIONS_HUB_VERSION, generatedAt: nowIso(), totals, rows };
+    return { type: 'feg-stage-pro-warehouse-operations-dashboard', version: WAREHOUSE_OPERATIONS_HUB_VERSION, generatedAt: nowIso(), totals, rows, fastIndex: !(filters && filters.full) };
   }
 
   function transitionProjectWarehouse(projectId, nextStatus, options) {
@@ -208,7 +277,12 @@
     const opts = options || {};
     const state = root._fegWarehouseHubState || { query: '', warehouseStatus: '', selectedProjectId: '' };
     const dashboard = buildOperationsDashboard({ query: state.query, warehouseStatus: state.warehouseStatus, onlyActionable: false });
-    const selected = dashboard.rows.find(row => row.projectId === state.selectedProjectId) || dashboard.rows[0] || null;
+    const selectedIndex = dashboard.rows.find(row => row.projectId === state.selectedProjectId) || dashboard.rows[0] || null;
+    let selected = null;
+    if (selectedIndex && selectedIndex.projectId && storage() && storage().loadProject) {
+      try { selected = buildOperationSnapshot(storage().loadProject(selectedIndex.projectId), { ignoreSavedWorkflow: false }); } catch (_) { selected = null; }
+    }
+    if (!selected) selected = selectedIndex;
     root.innerHTML = `
       <div class="v4-card v4-warehouse-ops" data-v4-warehouse-operations-hub>
         <div class="v4-card-head">
@@ -236,7 +310,8 @@
         </div>
         <div class="v4-warehouse-ops-layout">
           <div class="v4-warehouse-project-list">
-            ${dashboard.rows.length ? dashboard.rows.map(row => renderProjectButton(row, selected && selected.projectId === row.projectId)).join('') : '<div class="v4-note">Пока нет сохранённых проектов. Сохрани смету в «Проекты / история».</div>'}
+            ${dashboard.rows.length ? dashboard.rows.slice(0, 80).map(row => renderProjectButton(row, selectedIndex && selectedIndex.projectId === row.projectId)).join('') : '<div class="v4-note">Пока нет сохранённых проектов. Сохрани смету в «Проекты / история».</div>'}
+            ${dashboard.rows.length > 80 ? `<div class="v4-note">Показаны первые 80 проектов из ${formatNumber(dashboard.rows.length)}. Используй поиск или фильтр статуса.</div>` : ''}
           </div>
           <div class="v4-warehouse-detail">
             ${selected ? renderOperationDetail(selected) : '<div class="v4-note">Выбери проект для складских операций.</div>'}
@@ -332,8 +407,9 @@
     if (openEquipment) openEquipment.addEventListener('click', () => opts.onOpenEquipment && opts.onOpenEquipment());
     root.querySelectorAll('[data-wh-open]').forEach(btn => btn.addEventListener('click', () => opts.onOpenProject && opts.onOpenProject(btn.getAttribute('data-wh-open'))));
     root.querySelectorAll('[data-wh-export-pack]').forEach(btn => btn.addEventListener('click', () => {
-      const snapshot = (dashboard.rows || []).find(row => row.projectId === btn.getAttribute('data-wh-export-pack'));
-      const pack = exportWarehousePack(snapshot || {});
+      const projectId = btn.getAttribute('data-wh-export-pack');
+      const record = storage() && storage().loadProject ? storage().loadProject(projectId) : null;
+      const pack = exportWarehousePack(record || (dashboard.rows || []).find(row => row.projectId === projectId) || {});
       const text = JSON.stringify(pack, null, 2);
       downloadText(`feg-warehouse-pack-${pack.projectId || 'project'}.json`, text);
       copyText(text);
@@ -372,6 +448,7 @@
     buildOperationSnapshot,
     buildOperationsDashboard,
     listOperationProjects,
+    buildOperationIndexSnapshot,
     transitionProjectWarehouse,
     exportWarehousePack,
     warehousePackToText,

@@ -4,7 +4,7 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const PICKLIST_VERSION = '1.1.0';
+  const PICKLIST_VERSION = '1.2.0-deficit-closure';
 
   function summary() { return ROOT.QuoteSummaryBuilder || null; }
   function availability() { return ROOT.AvailabilityChecker || null; }
@@ -57,6 +57,10 @@
         inventoryStatus: row.inventoryStatus || '',
         inventoryItemId: row.inventoryItemId || '',
         sourceTypeSuggestion: row.sourceTypeSuggestion || '',
+        stageHeightM: nonNegative(row.stageHeightM == null ? row.stage_height_m : row.stageHeightM, 0),
+        meters: 0,
+        trussLengthM: nonNegative(row.trussLengthM == null ? row.truss_length_m : row.trussLengthM, 0),
+        trussStraightCount: 0,
         notes: []
       };
       prev.qty += nonNegative(row.qty, 0);
@@ -64,6 +68,8 @@
       prev.weightKg += nonNegative(row.weightKg, 0);
       prev.powerW += nonNegative(row.powerW, 0);
       prev.startupPowerW += nonNegative(row.startupPowerW, 0);
+      prev.meters += nonNegative(row.meters, 0);
+      prev.trussStraightCount += nonNegative(row.trussStraightCount == null ? row.truss_straight_count : row.trussStraightCount, 0);
       prev.deficitQty += nonNegative(row.deficitQty, 0);
       prev.subrentQty += nonNegative(row.subrentQty, 0);
       if (row.availableQty != null) prev.availableQty = row.availableQty;
@@ -77,6 +83,7 @@
       if (row.subrentPrice) prev.subrentPrice = row.subrentPrice;
       if (row.clientPrice) prev.clientPrice = row.clientPrice;
       if (row.margin) prev.margin += nonNegative(row.margin, 0);
+      if (row.stageHeightM && !prev.stageHeightM) prev.stageHeightM = nonNegative(row.stageHeightM, 0);
       if (row.note) prev.notes.push(row.note);
       map.set(key, prev);
     });
@@ -111,12 +118,17 @@
     return makeList('all', 'Общий складской лист', collectRows(quote), { ignoreSection: false });
   }
 
+  function isDeficitClosureRow(row) {
+    return nonNegative(row && row.deficitQty, 0) > 0 || row && row.sourceType === 'subrent' || nonNegative(row && row.subrentQty, 0) > 0;
+  }
+
   function buildDeficitList(quote) {
-    return makeList('deficits', 'Дефицит / докупить / субаренда', collectRows(quote).filter(row => nonNegative(row.deficitQty, 0) > 0 || row.sourceType === 'subrent'));
+    return makeList('deficits', 'Дефицит и закрытие', collectRows(quote).filter(isDeficitClosureRow));
   }
 
   function buildSubrentList(quote) {
-    return makeList('subrent', 'Субаренда / закрытие дефицита', collectRows(quote).filter(row => row.sourceType === 'subrent' || nonNegative(row.subrentQty, 0) > 0));
+    // Kept as an internal compatibility list for subrent planning documents.
+    return makeList('subrent', 'План субаренды', collectRows(quote).filter(row => row.sourceType === 'subrent' || nonNegative(row.subrentQty, 0) > 0));
   }
 
   function buildPickLists(quote) {
@@ -165,6 +177,7 @@
     buildAllPickList,
     buildDeficitList,
     buildSubrentList,
+    isDeficitClosureRow,
     buildPickLists,
     getRowsForPrint
   };

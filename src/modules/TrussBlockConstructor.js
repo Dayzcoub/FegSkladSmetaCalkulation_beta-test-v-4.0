@@ -1,16 +1,16 @@
-// FEG Stage PRO v3.6.19 — TrussBlockConstructor module, phase 13
+// FEG Stage PRO v3.15.34 — TrussBlockConstructor module, phase 21
 // Responsibility: block catalog, legacy type aliases, object library grouping, geometry helpers, BOM calculation helpers, selection/edit helpers, snap helpers, SVG generators, render helpers, drag helpers, action helpers and UI summary helpers, draft/display/export helpers.
 // Classic-compatible module: attaches API to window.FEGModules.TrussBlockConstructor.
 (function (global) {
     'use strict';
 
     const DEFAULT_SPECS = {
-            truss3:   { id:'truss3',   label:'Ферма 3 м',   short:'3 м',   kind:'straight', length:3,   icon:'▰3' },
-            truss25:  { id:'truss25',  label:'Ферма 2.5 м', short:'2.5 м', kind:'straight', length:2.5, icon:'▰2.5' },
-            truss2:   { id:'truss2',   label:'Ферма 2 м',   short:'2 м',   kind:'straight', length:2,   icon:'▰2' },
-            truss15:  { id:'truss15',  label:'Ферма 1.5 м', short:'1.5 м', kind:'straight', length:1.5, icon:'▰1.5' },
-            truss1:   { id:'truss1',   label:'Ферма 1 м',   short:'1 м',   kind:'straight', length:1,   icon:'▰1' },
-            truss05:  { id:'truss05',  label:'Ферма 0.5 м', short:'0.5 м', kind:'straight', length:0.5, icon:'▰0.5' },
+            truss3:   { id:'truss3',   label:'Ферма 3 м',   short:'3 м',   kind:'straight', length:3,   icon:'▰3',   weights:{T29Q:17.9} },
+            truss25:  { id:'truss25',  label:'Ферма 2.5 м', short:'2.5 м', kind:'straight', length:2.5, icon:'▰2.5', weights:{T29Q:15.0} },
+            truss2:   { id:'truss2',   label:'Ферма 2 м',   short:'2 м',   kind:'straight', length:2,   icon:'▰2',   weights:{T29Q:12.4} },
+            truss15:  { id:'truss15',  label:'Ферма 1.5 м', short:'1.5 м', kind:'straight', length:1.5, icon:'▰1.5', weights:{T29Q:10.0} },
+            truss1:   { id:'truss1',   label:'Ферма 1 м',   short:'1 м',   kind:'straight', length:1,   icon:'▰1',   weights:{T29Q:7.0} },
+            truss05:  { id:'truss05',  label:'Ферма 0.5 м', short:'0.5 м', kind:'straight', length:0.5, icon:'▰0.5', weights:{T29Q:4.4} },
 
             cornerU001:{ id:'cornerU001', label:'U001 · угол 45° · 2 направления',  short:'U001 45°', kind:'node', icon:'45°', u:'001', angle:'45°',  directions:2, weights:{T29Q:9.7,  T39Q:11.7} },
             cornerU002:{ id:'cornerU002', label:'U002 · угол 60° · 2 направления',  short:'U002 60°', kind:'node', icon:'60°', u:'002', angle:'60°',  directions:2, weights:{T29Q:9.87, T39Q:11.7} },
@@ -24,19 +24,164 @@
             cornerU022:{ id:'cornerU022', label:'U022 · угол 90° · 6 направлений · куб', short:'U022 куб', kind:'node', icon:'◼', u:'022', angle:'90°', directions:6, weights:{T29Q:13.8, T39Q:16.3} },
             cornerU024:{ id:'cornerU024', label:'U024 · угол 90° · 5 направлений', short:'U024 5н', kind:'node', icon:'◫', u:'024', angle:'90°', directions:5, weights:{T29Q:12.1, T39Q:14.1} },
 
-            base:     { id:'base',     label:'База / блин', short:'База',  kind:'base', icon:'◉' },
-            pin:      { id:'pin',      label:'Конусный коннектор C2-88 / бабышка', short:'C2-88', kind:'pin', icon:'C2', hidden:true }
+            base:     { id:'base',     label:'База / блин', short:'База',  kind:'base', icon:'◉', weight:29 },
+            pin:      { id:'pin',      label:'Конусный коннектор C2-88 / бабышка', short:'C2-88', kind:'pin', icon:'C2', hidden:true, weight:0.16 }
         };
 
-    const LEGACY_TYPE_MAP = Object.freeze({ angle90:'cornerU003', cube:'cornerU022', tee:'cornerU017', cross:'cornerU016' });
+    const LEGACY_TYPE_MAP = Object.freeze({
+        angle90:'cornerU003', cube:'cornerU022', tee:'cornerU017', cross:'cornerU016',
+        truss3000:'truss3', truss30:'truss3', truss3m:'truss3', 'truss3.0':'truss3', 'truss3.0m':'truss3',
+        truss2500:'truss25', truss25m:'truss25', 'truss2.5':'truss25', 'truss2.5m':'truss25', truss2_5:'truss25', truss2_5m:'truss25',
+        truss2000:'truss2', truss20:'truss2', truss2m:'truss2', 'truss2.0':'truss2', 'truss2.0m':'truss2',
+        truss1500:'truss15', truss15m:'truss15', 'truss1.5':'truss15', 'truss1.5m':'truss15', truss1_5:'truss15', truss1_5m:'truss15',
+        truss1000:'truss1', truss10:'truss1', truss1m:'truss1', 'truss1.0':'truss1', 'truss1.0m':'truss1',
+        truss0500:'truss05', truss05m:'truss05', 'truss0.5':'truss05', 'truss0.5m':'truss05', truss0_5:'truss05', truss0_5m:'truss05', trusshalf:'truss05', halftruss:'truss05'
+    });
 
     const LIBRARY_GROUPS = Object.freeze([
         Object.freeze({ id:'straight', title:'Прямые фермы', icon:'▰', items:Object.freeze(['truss3','truss25','truss2','truss15','truss1','truss05']) }),
-        Object.freeze({ id:'angles2d', title:'2D углы', icon:'∟', items:Object.freeze(['cornerU003','cornerU017','cornerU016','cornerU001','cornerU002','cornerU004','cornerU005']) }),
-        Object.freeze({ id:'nodes3d', title:'3D узлы', icon:'◼', items:Object.freeze(['cornerU012','cornerU020','cornerU022','cornerU024','base']) })
+        Object.freeze({ id:'angles2d', title:'2D узлы', icon:'∟', items:Object.freeze(['cornerU003','cornerU017','cornerU016','base','cornerU001','cornerU002','cornerU004','cornerU005']) }),
+        Object.freeze({ id:'nodes3d', title:'3D узлы', icon:'◼', items:Object.freeze(['cornerU012','cornerU020','cornerU022','cornerU024']) })
     ]);
 
     const STRAIGHT_ORDER = Object.freeze([3, 2.5, 2, 1.5, 1, 0.5]);
+    const STRAIGHT_TYPE_ORDER = Object.freeze(['truss3', 'truss25', 'truss2', 'truss15', 'truss1', 'truss05']);
+
+    const STRAIGHT_SVG_ARTWORK_VERSION = '3.15.8-user-straight-aluminum-clean';
+    const STRAIGHT_SVG_ARTWORK = Object.freeze({
+        truss05: Object.freeze({ width:50, height:100, body:`<path class="truss-art-port-rail" d="M0 30 L50 30 M0 70 L50 70"/>
+<path class="truss-art-rail" d="M3,30h44 M3,70h44"/>
+<line class="truss-art-web" x1="7.2" y1="30" x2="42.6" y2="70"/>
+<line class="truss-art-end" x1="4" y1="30" x2="4" y2="70"/>
+<line class="truss-art-end" x1="46" y1="30" x2="46" y2="70"/>
+<line class="truss-art-port-end" x1="0" y1="28" x2="0" y2="72"/>
+<line class="truss-art-port-end" x1="50" y1="28" x2="50" y2="72"/>` }),
+        truss1: Object.freeze({ width:100, height:100, body:`<path class="truss-art-port-rail" d="M0 30 L100 30 M0 70 L100 70"/>
+<path class="truss-art-rail" d="M5,30h90 M5,70h90"/>
+<path class="truss-art-web" d="M13.7,30l35.9,40l35.9-40"/>
+<line class="truss-art-end" x1="8" y1="30" x2="8" y2="70"/>
+<line class="truss-art-end" x1="92" y1="30" x2="92" y2="70"/>
+<line class="truss-art-port-end" x1="0" y1="28" x2="0" y2="72"/>
+<line class="truss-art-port-end" x1="100" y1="28" x2="100" y2="72"/>` }),
+        truss15: Object.freeze({ width:150, height:100, body:`<path class="truss-art-port-rail" d="M0 30 L150 30 M0 70 L150 70"/>
+<path class="truss-art-rail" d="M5,30h140 M5,70h140"/>
+<path class="truss-art-web" d="M15.1,30L55,70l39.9-40l39.9,40"/>
+<line class="truss-art-end" x1="10" y1="30" x2="10" y2="70"/>
+<line class="truss-art-end" x1="140" y1="30" x2="140" y2="70"/>
+<line class="truss-art-port-end" x1="0" y1="28" x2="0" y2="72"/>
+<line class="truss-art-port-end" x1="150" y1="28" x2="150" y2="72"/>` }),
+        truss2: Object.freeze({ width:200, height:100, body:`<path class="truss-art-port-rail" d="M0 30 L200 30 M0 70 L200 70"/>
+<path class="truss-art-rail" d="M5,30h190 M5,70h190"/>
+<path class="truss-art-web" d="M14.7,30l42.6,40l42.6-40l42.6,40l42.6-40"/>
+<line class="truss-art-end" x1="10" y1="30" x2="10" y2="70"/>
+<line class="truss-art-end" x1="190" y1="30" x2="190" y2="70"/>
+<line class="truss-art-port-end" x1="0" y1="28" x2="0" y2="72"/>
+<line class="truss-art-port-end" x1="200" y1="28" x2="200" y2="72"/>` }),
+        truss25: Object.freeze({ width:250, height:100, body:`<path class="truss-art-port-rail" d="M0 30 L250 30 M0 70 L250 70"/>
+<path class="truss-art-rail" d="M5,30h240 M5,70h240"/>
+<path class="truss-art-web" d="M15,30l44.3,40l44.3-40l44.3,40l44.3-40l44.3,40"/>
+<line class="truss-art-end" x1="10" y1="30" x2="10" y2="70"/>
+<line class="truss-art-end" x1="240" y1="30" x2="240" y2="70"/>
+<line class="truss-art-port-end" x1="0" y1="28" x2="0" y2="72"/>
+<line class="truss-art-port-end" x1="250" y1="28" x2="250" y2="72"/>` }),
+        truss3: Object.freeze({ width:300, height:100, body:`<path class="truss-art-port-rail" d="M0 30 L300 30 M0 70 L300 70"/>
+<path class="truss-art-rail" d="M6,30h289 M6,70h289"/>
+<path class="truss-art-web" d="M14.2,30l45.2,40l45.2-40l45.2,40L195,30l45.2,40l45.2-40"/>
+<line class="truss-art-end" x1="10" y1="30" x2="10" y2="70"/>
+<line class="truss-art-end" x1="290" y1="30" x2="290" y2="70"/>
+<line class="truss-art-port-end" x1="0" y1="28" x2="0" y2="72"/>
+<line class="truss-art-port-end" x1="300" y1="28" x2="300" y2="72"/>` }),
+    });
+    const NODE_SVG_ARTWORK_VERSION = '3.17.41-stool-top-frame-real-dimensions';
+    const NODE_SVG_ARTWORK = Object.freeze({
+        cornerU003: Object.freeze({ viewBox:'0 0 100 100', baseRotation:180, body:`<line class="truss-node-rail" x1="70" y1="4.1" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="5.3" y1="70" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="30" y1="4.1" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="5.3" y1="30" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="30" y1="9.4" x2="70" y2="9.4"/>
+<line class="truss-node-rail" x1="10" y1="30" x2="10" y2="70"/>
+<line class="truss-node-web" x1="30" y1="30" x2="70" y2="40.4"/>
+<line class="truss-node-web" x1="40" y1="70" x2="30" y2="30"/>` }),
+        cornerU012: Object.freeze({ viewBox:'0 0 100 100', baseRotation:180, body:`<line class="truss-node-rail" x1="70" y1="4.1" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="5.3" y1="70" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="30" y1="4.1" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="5.3" y1="30" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="30" y1="9.4" x2="70" y2="9.4"/>
+<line class="truss-node-rail" x1="10" y1="30" x2="10" y2="70"/>
+<line class="truss-node-web" x1="30" y1="30" x2="70" y2="40.4"/>
+<line class="truss-node-web" x1="40" y1="70" x2="30" y2="30"/>` }),
+        cornerU017: Object.freeze({ viewBox:'0 0 100 100', baseRotation:0, body:`<line class="truss-node-rail" x1="95" y1="29.6" x2="6" y2="30"/>
+<line class="truss-node-rail" x1="6" y1="70" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="94.8" y1="70" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="90" y1="29.6" x2="90" y2="70"/>
+<line class="truss-node-rail" x1="30" y1="94.9" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="70" y1="94.9" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="30" y1="90.4" x2="70" y2="90"/>
+<line class="truss-node-rail" x1="10" y1="29.8" x2="10" y2="70"/>
+<line class="truss-node-web" x1="30" y1="70" x2="50" y2="29.6"/>
+<line class="truss-node-web" x1="70" y1="70" x2="50" y2="29.6"/>` }),
+        cornerU016: Object.freeze({ viewBox:'0 0 100 100', baseRotation:0, body:`<line class="truss-node-rail" x1="30" y1="4" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="4" y1="30" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="4" y1="70" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="30" y1="95.6" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="70" y1="95.6" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="94.8" y1="70" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="94.8" y1="30" x2="70" y2="30"/>
+<line class="truss-node-rail" x1="70" y1="4" x2="70" y2="30"/>
+<line class="truss-node-rail" x1="30" y1="10" x2="70" y2="10"/>
+<line class="truss-node-rail" x1="90" y1="30" x2="90" y2="70"/>
+<line class="truss-node-rail" x1="70" y1="90" x2="30" y2="90"/>
+<line class="truss-node-rail" x1="10" y1="70" x2="10" y2="30"/>
+<line class="truss-node-web" x1="30" y1="30" x2="70" y2="70"/>
+<line class="truss-node-web" x1="70" y1="30" x2="30" y2="70"/>` }),
+        cornerU020: Object.freeze({ viewBox:'0 0 100 100', baseRotation:0, body:`<line class="truss-node-rail" x1="30" y1="4" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="4" y1="30" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="4" y1="70" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="30" y1="95.6" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="70" y1="95.6" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="94.8" y1="70" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="94.8" y1="30" x2="70" y2="30"/>
+<line class="truss-node-rail" x1="70" y1="4" x2="70" y2="30"/>
+<line class="truss-node-rail" x1="30" y1="10" x2="70" y2="10"/>
+<line class="truss-node-rail" x1="90" y1="30" x2="90" y2="70"/>
+<line class="truss-node-rail" x1="70" y1="90" x2="30" y2="90"/>
+<line class="truss-node-rail" x1="10" y1="70" x2="10" y2="30"/>
+<line class="truss-node-web" x1="30" y1="30" x2="70" y2="70"/>
+<line class="truss-node-web" x1="70" y1="30" x2="30" y2="70"/>` }),
+        cornerU022: Object.freeze({ viewBox:'0 0 100 100', baseRotation:0, body:`<line class="truss-node-rail" x1="30" y1="4" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="4" y1="30" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="4" y1="70" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="30" y1="95.6" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="70" y1="95.6" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="94.8" y1="70" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="94.8" y1="30" x2="70" y2="30"/>
+<line class="truss-node-rail" x1="70" y1="4" x2="70" y2="30"/>
+<line class="truss-node-rail" x1="30" y1="10" x2="70" y2="10"/>
+<line class="truss-node-rail" x1="90" y1="30" x2="90" y2="70"/>
+<line class="truss-node-rail" x1="70" y1="90" x2="30" y2="90"/>
+<line class="truss-node-rail" x1="10" y1="70" x2="10" y2="30"/>
+<line class="truss-node-web" x1="30" y1="30" x2="70" y2="70"/>
+<line class="truss-node-web" x1="70" y1="30" x2="30" y2="70"/>` }),
+        cornerU024: Object.freeze({ viewBox:'0 0 100 100', baseRotation:0, body:`<line class="truss-node-rail" x1="30" y1="4" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="4" y1="30" x2="30" y2="30"/>
+<line class="truss-node-rail" x1="4" y1="70" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="30" y1="95.6" x2="30" y2="70"/>
+<line class="truss-node-rail" x1="70" y1="95.6" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="94.8" y1="70" x2="70" y2="70"/>
+<line class="truss-node-rail" x1="94.8" y1="30" x2="70" y2="30"/>
+<line class="truss-node-rail" x1="70" y1="4" x2="70" y2="30"/>
+<line class="truss-node-rail" x1="30" y1="10" x2="70" y2="10"/>
+<line class="truss-node-rail" x1="90" y1="30" x2="90" y2="70"/>
+<line class="truss-node-rail" x1="70" y1="90" x2="30" y2="90"/>
+<line class="truss-node-rail" x1="10" y1="70" x2="10" y2="30"/>
+<line class="truss-node-web" x1="30" y1="30" x2="70" y2="70"/>
+<line class="truss-node-web" x1="70" y1="30" x2="30" y2="70"/>` }),
+        base: Object.freeze({ viewBox:'0 0 100 100', baseRotation:0, body:`<path class="truss-node-rail" d="M18.8,17.8h62.5 M10,27.8h80"/>
+<line class="truss-node-web" x1="70" y1="5.1" x2="70" y2="17.8"/>
+<line class="truss-node-web" x1="30" y1="5.1" x2="30" y2="17.8"/>
+<line class="truss-node-web" x1="30" y1="10" x2="70" y2="10"/>` }),
+    });
+
 
     function clone(value) {
         return JSON.parse(JSON.stringify(value));
@@ -73,6 +218,97 @@
         return source[type] || null;
     }
 
+    function canonicalType(type, legacyMap) {
+        const aliases = legacyMap && typeof legacyMap === 'object' ? legacyMap : LEGACY_TYPE_MAP;
+        const raw = String(type == null ? '' : type).trim();
+        const compact = raw.toLowerCase().replace(/[\s\-]+/g, '').replace(/,/g, '.');
+        return aliases[raw] || aliases[compact] || raw;
+    }
+
+    function orderedSpecIds(specs) {
+        const source = specs && typeof specs === 'object' ? specs : DEFAULT_SPECS;
+        const used = new Set();
+        const ids = [];
+        STRAIGHT_TYPE_ORDER.forEach(id => { if (source[id]) { ids.push(id); used.add(id); } });
+        Object.keys(source).forEach(id => { if (!used.has(id)) ids.push(id); });
+        return ids;
+    }
+
+    function straightBreakdown(counts, metersByType, specs) {
+        const source = specs && typeof specs === 'object' ? specs : DEFAULT_SPECS;
+        return STRAIGHT_TYPE_ORDER.map(id => {
+            const spec = source[id] || DEFAULT_SPECS[id];
+            const count = Number(counts && counts[id] || 0);
+            const meters = Number(metersByType && metersByType[id] || 0);
+            return { id, length: Number(spec && spec.length || 0), label: spec && (spec.label || spec.short) || id, count, meters };
+        }).filter(row => row.count > 0 || row.meters > 0);
+    }
+
+
+    // v3.17.45: shared template-run splitter for quick and quote truss constructors.
+    // Goal: avoid small straight modules in generated templates when a more balanced
+    // exact combination exists. Example: 4.5 m -> 2.5 + 2.0, not 3.0 + 1.5.
+    function balancedStraightSegmentTypes(meters, specs, options) {
+        const source = specs && typeof specs === 'object' ? specs : DEFAULT_SPECS;
+        const opts = options || {};
+        const targetUnits = Math.max(0, Math.round(Number(meters || 0) * 2));
+        if (!targetUnits) return [];
+        const lengths = STRAIGHT_TYPE_ORDER
+            .map(type => ({ type, length:Number(source[type] && source[type].length || DEFAULT_SPECS[type] && DEFAULT_SPECS[type].length || 0) }))
+            .filter(row => row.length > 0 && !((source[row.type] || {}).hidden))
+            .map(row => Object.assign({}, row, { units:Math.round(row.length * 2) }))
+            .filter(row => row.units > 0)
+            .sort((a, b) => b.units - a.units);
+        const exactSingle = lengths.find(row => row.units === targetUnits);
+        if (exactSingle) return [exactSingle.type];
+        const maxPieces = Math.max(1, Math.min(Number(opts.maxPieces || 12), targetUnits));
+        let best = null;
+        function comboScore(combo) {
+            const values = combo.map(type => {
+                const row = lengths.find(item => item.type === type);
+                return row ? row.length : 0;
+            }).filter(Boolean);
+            const pieces = values.length;
+            const min = values.length ? Math.min.apply(null, values) : 0;
+            const max = values.length ? Math.max.apply(null, values) : 0;
+            const range = max - min;
+            const avg = values.reduce((sum, value) => sum + value, 0) / Math.max(1, values.length);
+            const variance = values.reduce((sum, value) => sum + Math.pow(value - avg, 2), 0);
+            const tinyPenalty = combo.filter(type => type === 'truss05').length * 9000
+                + combo.filter(type => type === 'truss1').length * 3200
+                + combo.filter(type => type === 'truss15').length * 900;
+            const uncommonPenalty = combo.filter(type => type === 'truss25').length * 8;
+            const preferredBigPenalty = combo.filter(type => type === 'truss3').length * 1;
+            return pieces * 100000 + range * 10000 + tinyPenalty + variance * 100 + uncommonPenalty + preferredBigPenalty;
+        }
+        function remember(combo) {
+            const sorted = combo.slice().sort((a, b) => {
+                const al = Number(source[a] && source[a].length || DEFAULT_SPECS[a] && DEFAULT_SPECS[a].length || 0);
+                const bl = Number(source[b] && source[b].length || DEFAULT_SPECS[b] && DEFAULT_SPECS[b].length || 0);
+                return bl - al || STRAIGHT_TYPE_ORDER.indexOf(a) - STRAIGHT_TYPE_ORDER.indexOf(b);
+            });
+            const score = comboScore(sorted);
+            if (!best || score < best.score) best = { combo:sorted, score };
+        }
+        function walk(startIndex, remainUnits, combo) {
+            if (remainUnits === 0) {
+                remember(combo);
+                return;
+            }
+            if (combo.length >= maxPieces) return;
+            if (best && combo.length > best.combo.length) return;
+            for (let i = startIndex; i < lengths.length; i += 1) {
+                const row = lengths[i];
+                if (row.units > remainUnits) continue;
+                combo.push(row.type);
+                walk(i, remainUnits - row.units, combo);
+                combo.pop();
+            }
+        }
+        walk(0, targetUnits, []);
+        return best ? best.combo.slice() : [];
+    }
+
     function isKnownType(specs, type) {
         return !!getSpec(specs, type);
     }
@@ -95,7 +331,7 @@
         const source = specs && typeof specs === 'object' ? specs : DEFAULT_SPECS;
         const aliases = legacyMap && typeof legacyMap === 'object' ? legacyMap : LEGACY_TYPE_MAP;
         if (!item || typeof item !== 'object') return null;
-        const nextType = aliases[item.type] || item.type;
+        const nextType = canonicalType(item.type, aliases);
         const spec = source[nextType];
         if (!spec || nextType === 'pin' || nextType === 'outrigger') return null;
         const normalized = Object.assign({}, item, {
@@ -119,7 +355,7 @@
         const source = specs && typeof specs === 'object' ? specs : DEFAULT_SPECS;
         const aliases = legacyMap && typeof legacyMap === 'object' ? legacyMap : LEGACY_TYPE_MAP;
         const safeFallback = fallback && source[fallback] && !source[fallback].hidden ? fallback : 'truss3';
-        const mapped = aliases[selected] || selected;
+        const mapped = canonicalType(selected, aliases);
         const spec = source[mapped];
         if (!spec || spec.hidden || mapped === 'pin' || mapped === 'outrigger') return safeFallback;
         return mapped;
@@ -189,7 +425,7 @@
         if (!spec) return { ok:false, reason:'unknown-type' };
         if (spec.kind === 'straight') {
             const nextO = item.o === 'v' ? 'h' : 'v';
-            if (typeof canPlace === 'function' && !canPlace(item, nextO)) return { ok:false, reason:'out-of-bounds', item };
+            if (typeof canPlace === 'function' && !canPlace(item.type, item.x, item.y, nextO)) return { ok:false, reason:'out-of-bounds', item };
             item.o = nextO;
         } else {
             item.r = normalizeRotation(Number(item.r || 0) + 90);
@@ -279,17 +515,138 @@
         return { minX, minY, maxX, maxY, width: maxX - minX, height: maxY - minY };
     }
 
+    const NODE_PHYSICAL_SIZES_M = Object.freeze({
+        // x/y are top-view dimensions used by the v4 block constructor. z is kept as real 3D height metadata
+        // for warnings and future warehouse/BOM logic.
+        cornerU012: Object.freeze({ w:0.50, h:0.50, z:0.50 }),
+        cornerU016: Object.freeze({ w:0.71, h:0.71, z:0.29 }),
+        cornerU017: Object.freeze({ w:0.71, h:0.50, z:0.50 }),
+        cornerU020: Object.freeze({ w:0.71, h:0.50, z:0.50 }),
+        cornerU024: Object.freeze({ w:0.71, h:0.71, z:0.50 }),
+        cornerU022: Object.freeze({ w:0.71, h:0.71, z:0.71 })
+    });
 
+    function physicalItemBounds(item, spec, cellMeters) {
+        if (!item || !spec) return null;
+        const cellM = normalizeCellMeters(cellMeters);
+        const x = Number(item.x || 0) * cellM;
+        const y = Number(item.y || 0) * cellM;
+        if (spec.kind === 'straight') {
+            const length = Math.max(0, Number(spec.length || 0));
+            return item.o === 'v'
+                ? { minX:x, minY:y, maxX:x + cellM, maxY:y + length, width:cellM, height:length }
+                : { minX:x, minY:y, maxX:x + length, maxY:y + cellM, width:length, height:cellM };
+        }
+        if (spec.kind === 'base') {
+            // Bases/plates are visual/support BOM items. Their real 30 mm height is intentionally ignored
+            // for overall constructor dimensions so portals do not grow because of bases.
+            return { minX:x, minY:y, maxX:x + cellM, maxY:y, width:cellM, height:0, ignoredHeight:true };
+        }
+        if (spec.kind === 'node') {
+            const size = NODE_PHYSICAL_SIZES_M[spec.id] || { w:0.5, h:0.5 };
+            const r = normalizeRotation(Number(item.r || 0));
+            const swap = r === 90 || r === 270;
+            const w = swap ? Number(size.h || 0.5) : Number(size.w || 0.5);
+            const h = swap ? Number(size.w || 0.5) : Number(size.h || 0.5);
+            return { minX:x, minY:y, maxX:x + w, maxY:y + h, width:w, height:h };
+        }
+        return { minX:x, minY:y, maxX:x + cellM, maxY:y + cellM, width:cellM, height:cellM };
+    }
+
+    function isStoolSupportDisplayItem(item) {
+        if (!item) return false;
+        const id = String(item.id || '');
+        const micro = item.micro && typeof item.micro === 'object' ? item.micro : {};
+        const template = String(micro.template || '');
+        return id.indexOf('stool_leg') === 0 || template === 'stool-base';
+    }
+
+    function topFrameItemsForDimensions(items, state) {
+        const list = Array.isArray(items) ? items : [];
+        const geometry = state && state.trussGeometry && typeof state.trussGeometry === 'object' ? state.trussGeometry : {};
+        const isStool = geometry.source === 'stool-template' || list.some(item => item && item.micro && String(item.micro.template || '').indexOf('stool') === 0);
+        if (!isStool) return list;
+        return list.filter(item => !isStoolSupportDisplayItem(item));
+    }
+
+    function schemePhysicalBounds(items, specs, cellMeters) {
+        const list = Array.isArray(items) ? items : [];
+        const source = specs && typeof specs === 'object' ? specs : DEFAULT_SPECS;
+        const cellM = normalizeCellMeters(cellMeters);
+        const bounds = list.map(item => physicalItemBounds(item, source[item && item.type], cellMeters)).filter(Boolean);
+        if (!bounds.length) return null;
+        const minX = Math.min(...bounds.map(b => b.minX));
+        const minY = Math.min(...bounds.map(b => b.minY));
+        const maxX = Math.max(...bounds.map(b => b.maxX));
+        const maxY = Math.max(...bounds.map(b => b.maxY));
+        let extraWidth = 0;
+        let extraHeight = 0;
+        const cmap = connectionMap(list, source, { cellMeters:cellM, nodePortPoints:(item, spec) => nodePortPoints(item, spec) });
+        list.forEach(item => {
+            const spec = source[item && item.type];
+            if (!item || !spec || spec.kind !== 'node') return;
+            const size = NODE_PHYSICAL_SIZES_M[spec.id];
+            if (!size) return;
+            const r = normalizeRotation(Number(item.r || 0));
+            const swap = r === 90 || r === 270;
+            const w = swap ? Number(size.h || cellM) : Number(size.w || cellM);
+            const h = swap ? Number(size.w || cellM) : Number(size.h || cellM);
+            const extraW = Math.max(0, w - cellM);
+            const extraH = Math.max(0, h - cellM);
+            if (extraW > 0 || extraH > 0) {
+                const ports = nodeBasePortOffsets(spec).map(p => rotatePortOffset(p, r)).map(p => ({ rel:p, abs:{ x:Number(item.x || 0) + p.x, y:Number(item.y || 0) + p.y } }));
+                const horizontalConnected = ports.some(entry => {
+                    const rel = entry.rel || {};
+                    const isHorizontal = Math.abs(Number(rel.y || 0) - 0.5) < 0.001 && (Math.abs(Number(rel.x || 0) - 0) < 0.001 || Math.abs(Number(rel.x || 0) - 1) < 0.001);
+                    const key = pointKey(entry.abs.x, entry.abs.y);
+                    const mapEntry = cmap.get(key);
+                    return isHorizontal && mapEntry && mapEntry.count >= 2;
+                });
+                const verticalConnected = ports.some(entry => {
+                    const rel = entry.rel || {};
+                    const isVertical = Math.abs(Number(rel.x || 0) - 0.5) < 0.001 && (Math.abs(Number(rel.y || 0) - 0) < 0.001 || Math.abs(Number(rel.y || 0) - 1) < 0.001);
+                    const key = pointKey(entry.abs.x, entry.abs.y);
+                    const mapEntry = cmap.get(key);
+                    return isVertical && mapEntry && mapEntry.count >= 2;
+                });
+                if (horizontalConnected) extraWidth += extraW;
+                if (verticalConnected) extraHeight += extraH;
+            }
+        });
+        return { minX, minY, maxX, maxY, width:(maxX - minX) + extraWidth, height:(maxY - minY) + extraHeight, baseWidth:maxX - minX, baseHeight:maxY - minY, extraWidth, extraHeight };
+    }
+
+
+    const C2_88_WEIGHT_KG = 0.16;
     const C2_67_WEIGHT_KG = 0.04;
-    const C2_COTTER_WEIGHT_KG = 0;
+    const C2_COTTER_WEIGHT_KG = 0.003;
     const C3_83_WEIGHT_KG = 0.27;
+    const TRUSS_BASE_WEIGHT_KG = 29;
+    const TRUSS_RENTAL_PRICE_PER_METER = 500;
+    const TRUSS_NODE_RENTAL_PRICE = 500;
+    const TRUSS_BASE_RENTAL_PRICE = 500;
+    const TRUSS_PIN_RENTAL_PRICE = 0;
+    const TRUSS_HALF_CONNECTOR_RENTAL_PRICE = 0;
 
-    function nodeWeight(spec, state) {
-        if (!spec) return 0;
+    function specWeight(spec, state, fallback) {
+        if (!spec) return Number(fallback || 0);
         const series = state && state.trussSeries ? state.trussSeries : 'T29Q';
         const weights = spec.weights || {};
-        const value = weights[series] ?? weights.T29Q ?? (state && state.nodeWeight) ?? 0;
+        const value = weights[series] ?? weights.T29Q ?? fallback ?? 0;
         return Number(value || 0);
+    }
+
+    function nodeWeight(spec, state) {
+        return specWeight(spec, state, state && state.nodeWeight);
+    }
+
+    function straightWeight(spec, state) {
+        return specWeight(spec, state, 0);
+    }
+
+    function readPrice(state, key, fallback) {
+        const value = state && Object.prototype.hasOwnProperty.call(state, key) ? Number(state[key]) : NaN;
+        return Number.isFinite(value) && value >= 0 ? value : Number(fallback || 0);
     }
 
     function priceAndWeightFor(spec, count, meters, state) {
@@ -297,10 +654,13 @@
         const st = state || {};
         const c = Number(count || 0);
         const m = Number(meters || 0);
-        if (spec.kind === 'straight') return { price: m * Number(st.pricePerMeter || 0), weight: m * Number(st.weightPerMeter || 0) };
-        if (spec.kind === 'node') return { price: c * Number(st.nodePrice || 0), weight: c * nodeWeight(spec, st) };
-        if (spec.kind === 'base') return { price: c * Number(st.basePrice || 0), weight: c * Number(st.baseWeight || 0) };
-        if (spec.kind === 'pin') return { price: c * Number(st.pinPrice || 0), weight: c * Number(st.pinWeight || 0) };
+        if (spec.kind === 'straight') {
+            const exactWeight = straightWeight(spec, st);
+            return { price: m * readPrice(st, 'pricePerMeter', TRUSS_RENTAL_PRICE_PER_METER), weight: exactWeight > 0 ? c * exactWeight : m * Number(st.weightPerMeter || 0) };
+        }
+        if (spec.kind === 'node') return { price: c * readPrice(st, 'nodePrice', TRUSS_NODE_RENTAL_PRICE), weight: c * nodeWeight(spec, st) };
+        if (spec.kind === 'base') return { price: c * readPrice(st, 'basePrice', TRUSS_BASE_RENTAL_PRICE), weight: c * Number(st.baseWeight || spec.weight || TRUSS_BASE_WEIGHT_KG) };
+        if (spec.kind === 'pin') return { price: c * readPrice(st, 'pinPrice', TRUSS_PIN_RENTAL_PRICE), weight: c * Number(st.pinWeight || spec.weight || C2_88_WEIGHT_KG) };
         return { price: 0, weight: 0 };
     }
 
@@ -311,10 +671,11 @@
         Object.keys(source).forEach(id => { counts[id] = 0; metersByType[id] = 0; });
         (Array.isArray(items) ? items : []).forEach(item => {
             if (!item || !item.type) return;
-            const spec = source[item.type];
+            const type = canonicalType(item.type, LEGACY_TYPE_MAP);
+            const spec = source[type];
             if (!spec) return;
-            counts[item.type] = (counts[item.type] || 0) + 1;
-            if (spec.kind === 'straight') metersByType[item.type] = (metersByType[item.type] || 0) + Number(spec.length || 0);
+            counts[type] = (counts[type] || 0) + 1;
+            if (spec.kind === 'straight') metersByType[type] = (metersByType[type] || 0) + Number(spec.length || 0);
         });
         return { counts, metersByType };
     }
@@ -332,17 +693,24 @@
         const tNodes = counts.cornerU017 || 0;
         const crosses = counts.cornerU016 || 0;
         const angledNodes = (counts.cornerU001 || 0) + (counts.cornerU002 || 0) + (counts.cornerU004 || 0) + (counts.cornerU005 || 0);
-        const multiNodes = (counts.cornerU012 || 0) + (counts.cornerU020 || 0) + (counts.cornerU024 || 0);
+        const multiNodes = (counts.cornerU012 || 0) + (counts.cornerU020 || 0) + (counts.cornerU022 || 0) + (counts.cornerU024 || 0);
         const nodePieces = Object.entries(source).reduce((sum, [id, spec]) => sum + (spec && spec.kind === 'node' ? Number(counts[id] || 0) : 0), 0);
         const connectionCount = Number(opts.connectionCount || 0);
-        const connectorKits = connectionCount;
+        const connectorKits = 0; // manual connector-kit count is no longer used in v4
         const baseCount = Number(counts.base || 0);
+        // v3.15.18: C2/C3 fastening rule for v4 BOM.
+        // Real truss joints (truss-truss, truss-corner, corner-corner,
+        // corner-node, truss-node): 4 × C2-88 per joint.
+        // C2-67 pins and C2-2-48 cotters for these joints: 2 pcs per C2-88.
+        // Connected bases are separate: 4 × C3-83 half-connectors + 4 × C2-67 pins
+        // + 4 × C2-2-48 cotters per base connected to a truss endpoint.
         const cq2Cones = connectionCount * 4;
-        const cq2Pins = connectionCount * 8;
-        const cq2Cotters = connectionCount * 8;
-        const baseHalfConnectors = baseCount * 4;
-        const baseC2Pins = baseCount * 4;
-        const baseCotters = baseCount * 4;
+        const cq2Pins = cq2Cones * 2;
+        const cq2Cotters = cq2Cones * 2;
+        const connectedBaseCount = Math.max(0, Number(opts.baseConnectionCount ?? autoBaseConnectionCount(items, source, { cellMeters:st.cellMeters || 0.5 })));
+        const baseHalfConnectors = connectedBaseCount * 4;
+        const baseC2Pins = baseHalfConnectors;
+        const baseCotters = baseHalfConnectors;
         const totalC2Pins = cq2Pins + baseC2Pins;
         const totalCotters = cq2Cotters + baseCotters;
         const autoPins = cq2Cones;
@@ -361,7 +729,7 @@
             weight += pw.weight;
         });
         const pinPW = priceAndWeightFor(source.pin, totalPins, 0, st);
-        const halfConnectorPrice = Number(st.halfConnectorPrice || 0);
+        const halfConnectorPrice = readPrice(st, 'halfConnectorPrice', TRUSS_HALF_CONNECTOR_RENTAL_PRICE);
         const halfConnectorWeightPerUnit = Number(st.halfConnectorWeight || C3_83_WEIGHT_KG);
         const halfConnectorWeight = baseHalfConnectors * halfConnectorWeightPerUnit;
         const halfConnectorPriceTotal = baseHalfConnectors * halfConnectorPrice;
@@ -376,7 +744,10 @@
         const install = Math.max(0, Number(st.install || 0));
         const transport = Math.max(0, Number(opts.transport || 0));
         const total = rental + install + transport;
-        return { counts, metersByType, totalMeters, angles, cubes, tNodes, crosses, angledNodes, multiNodes, nodePieces, connectionCount, connectorKits, baseCount, cq2Cones, cq2Pins, cq2Cotters, baseHalfConnectors, baseC2Pins, baseCotters, totalC2Pins, totalCotters, autoPins, placedPins, manualPins, totalPins, halfConnectorWeight, halfConnectorPriceTotal, cq2C2PinWeight, baseC2PinWeight, c2PinWeight, cq2CotterWeight, baseCotterWeight, c2CotterWeight, rental, install, transport, total, weight };
+        const dimensionItems = topFrameItemsForDimensions(Array.isArray(items) ? items : [], st);
+        const physicalBounds = schemePhysicalBounds(dimensionItems, source, st.cellMeters || 0.5);
+        const straightRows = straightBreakdown(counts, metersByType, source);
+        return { counts, metersByType, straightBreakdown: straightRows, physicalBounds, dimensionItemCount:dimensionItems.length, dimensionSource:dimensionItems.length !== (Array.isArray(items) ? items.length : 0) ? 'stool-top-frame' : 'all-items', totalMeters, angles, cubes, tNodes, crosses, angledNodes, multiNodes, nodePieces, connectionCount, connectorKits, baseCount, connectedBaseCount, cq2Cones, cq2Pins, cq2Cotters, baseHalfConnectors, baseC2Pins, baseCotters, totalC2Pins, totalCotters, autoPins, placedPins, manualPins, totalPins, halfConnectorWeight, halfConnectorPriceTotal, cq2C2PinWeight, baseC2PinWeight, c2PinWeight, cq2CotterWeight, baseCotterWeight, c2CotterWeight, rental, install, transport, total, weight };
     }
 
     function buildBomRows(result, specs, state, codeFn) {
@@ -384,7 +755,7 @@
         const res = result || {};
         const st = state || {};
         const rows = [];
-        Object.keys(source).forEach(id => {
+        orderedSpecIds(source).forEach(id => {
             const spec = source[id];
             if (!spec || spec.hidden || id === 'pin') return;
             const count = Number(res.counts && res.counts[id] || 0);
@@ -395,27 +766,32 @@
                 id,
                 code: typeof codeFn === 'function' ? codeFn(spec) : '',
                 name: spec.label || spec.short || id,
-                qty: spec.kind === 'straight' ? meters : count,
-                unit: spec.kind === 'straight' ? 'м' : 'шт',
+                qty: count,
+                unit: 'шт',
                 count,
                 meters,
+                trussLengthM: spec.kind === 'straight' ? Number(spec.length || 0) : 0,
+                trussStraightCount: spec.kind === 'straight' ? count : 0,
                 weight: pw.weight,
                 price: pw.price,
-                note: spec.kind === 'straight' ? 'прямые фермы' : (spec.kind === 'node' ? 'угол / узел' : 'опора')
+                note: spec.kind === 'straight' ? `${count} шт · ${defaultMetric(meters)} м суммарно` : (spec.kind === 'node' ? 'угол / узел' : 'опора')
             });
         });
-        if (Number(res.connectorKits || 0) > 0) {
-            rows.push({ id:'c288', code:'C2-88', name:'Конусный коннектор C2-88', qty:Number(res.cq2Cones || 0), unit:'шт', count:Number(res.cq2Cones || 0), meters:0, weight:Number(res.cq2Cones || 0) * Number(st.pinWeight || 0), price:Number(res.cq2Cones || 0) * Number(st.pinPrice || 0), note:`${Number(res.connectorKits || 0)} торц. стыков × 4 шт` });
+        if (Number(res.connectionCount || 0) > 0) {
+            rows.push({ id:'c288', code:'C2-88', name:'Конусный коннектор C2-88', qty:Number(res.cq2Cones || 0), unit:'шт', count:Number(res.cq2Cones || 0), meters:0, weight:Number(res.cq2Cones || 0) * Number(st.pinWeight || C2_88_WEIGHT_KG), price:Number(res.cq2Cones || 0) * Number(st.pinPrice || 0), note:`${Number(res.connectionCount || 0)} фактических стыков × 4 шт` });
         }
         if (Number(res.baseHalfConnectors || 0) > 0) {
-            rows.push({ id:'c383', code:'C3-83', name:'Полуконнектор конусный C3-83', qty:Number(res.baseHalfConnectors || 0), unit:'шт', count:Number(res.baseHalfConnectors || 0), meters:0, weight:Number(res.halfConnectorWeight || 0), price:Number(res.halfConnectorPriceTotal || 0), note:`${Number(res.baseCount || 0)} баз × 4 шт` });
+            rows.push({ id:'c383', code:'C3-83', name:'Полуконнектор конусный C3-83', qty:Number(res.baseHalfConnectors || 0), unit:'шт', count:Number(res.baseHalfConnectors || 0), meters:0, weight:Number(res.halfConnectorWeight || 0), price:Number(res.halfConnectorPriceTotal || 0), note:`${Number(res.connectedBaseCount || 0)} подключ. баз × 4 шт` });
         }
         if (Number(res.totalC2Pins || 0) > 0) {
+            const c288 = Number(res.cq2Cones || 0);
+            const c383 = Number(res.baseHalfConnectors || 0);
             const parts = [];
-            if (Number(res.connectorKits || 0) > 0) parts.push(`${Number(res.connectorKits || 0)} соед. × 8 шт`);
-            if (Number(res.baseCount || 0) > 0) parts.push(`${Number(res.baseCount || 0)} баз × 4 шт`);
-            rows.push({ id:'c267', code:'C2-67', name:'Палец C2-67', qty:Number(res.totalC2Pins || 0), unit:'шт', count:Number(res.totalC2Pins || 0), meters:0, weight:Number(res.c2PinWeight || 0), price:0, note:parts.join(' + ') || 'крепёж' });
-            rows.push({ id:'cotter', code:'C2-2-48', name:'Шплинт игольчатый C2-2-48', qty:Number(res.totalCotters || 0), unit:'шт', count:Number(res.totalCotters || 0), meters:0, weight:Number(res.c2CotterWeight || 0), price:0, note:parts.join(' + ') || 'крепёж' });
+            if (c288 > 0) parts.push(`${c288} C2-88 × 2 шт`);
+            if (c383 > 0) parts.push(`${c383} C3-83 × 1 шт`);
+            const jointNote = parts.join(' + ') || '2 шт на каждый C2-88; 1 шт на каждый C3-83 базы';
+            rows.push({ id:'c267', code:'C2-67', name:'Палец C2-67', qty:Number(res.totalC2Pins || 0), unit:'шт', count:Number(res.totalC2Pins || 0), meters:0, weight:Number(res.c2PinWeight || 0), price:0, note:jointNote });
+            rows.push({ id:'cotter', code:'C2-2-48', name:'Шплинт игольчатый C2-2-48', qty:Number(res.totalCotters || 0), unit:'шт', count:Number(res.totalCotters || 0), meters:0, weight:Number(res.c2CotterWeight || 0), price:0, note:jointNote });
         }
         return rows;
     }
@@ -428,8 +804,10 @@
         if (!item || !spec) return [];
         if (spec.kind === 'straight') return straightPortPoints(item, spec, opts.cellMeters);
         if (spec.kind === 'node') {
+            // v3.15.17: use built-in node port points by default so auto joint detection
+            // works in v4 summaries/BOM even when wrapper code does not pass explicit helpers.
             if (typeof opts.nodePortPoints === 'function') return opts.nodePortPoints(item, spec) || [];
-            return [];
+            return nodePortPoints(item, spec) || [];
         }
         if (spec.kind === 'base') return [];
         return [{ x: Number(item.x || 0) + 0.5, y: Number(item.y || 0) + 0.5 }];
@@ -460,6 +838,40 @@
             });
         });
         return best;
+    }
+
+
+
+    function basePortOffsets() {
+        return [
+            { x:0.5, y:0, edge:'N' },
+            { x:1, y:0.5, edge:'E' },
+            { x:0.5, y:1, edge:'S' },
+            { x:0, y:0.5, edge:'W' },
+            { x:0.5, y:0.5, edge:'C' }
+        ];
+    }
+
+    function autoBaseConnectionCount(items, specs, options) {
+        const list = Array.isArray(items) ? items : [];
+        if (!list.length) return 0;
+        const source = specs || DEFAULT_SPECS;
+        const ports = new Set();
+        list.forEach(item => {
+            const spec = source[item && item.type];
+            if (!item || !spec || spec.kind === 'base') return;
+            itemPoints(item, source, options || {}).forEach(pt => ports.add(pointKey(pt.x, pt.y)));
+        });
+        let count = 0;
+        list.forEach(item => {
+            const spec = source[item && item.type];
+            if (!item || !spec || spec.kind !== 'base') return;
+            const x = Number(item.x || 0);
+            const y = Number(item.y || 0);
+            const connected = basePortOffsets().some(p => ports.has(pointKey(x + Number(p.x || 0), y + Number(p.y || 0))));
+            if (connected) count += 1;
+        });
+        return count;
     }
 
     function getSnappedPlacement(type, x, y, orientation, items, specs, state, helpers) {
@@ -558,7 +970,32 @@
             .replace(/'/g, '&#039;');
     }
 
+        function renderStraightArtworkSvg(item, spec){
+            const art = STRAIGHT_SVG_ARTWORK[spec.id];
+            if (!art) return null;
+            const label = esc(spec.short || '');
+            const isVertical = (item.o || 'h') === 'v';
+            const vb = isVertical ? `0 0 100 ${art.width}` : `0 0 ${art.width} 100`;
+            const transform = isVertical ? `<g transform="translate(100 0) rotate(90)">${art.body}</g>` : art.body;
+            const labelMarkup = isVertical
+                ? `<text class="truss-art-label" x="50" y="${art.width / 2}" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90 50 ${art.width / 2})">${label}</text>`
+                : `<text class="truss-art-label" x="${art.width / 2}" y="52" text-anchor="middle" dominant-baseline="middle">${label}</text>`;
+            return `<svg class="truss-svg truss-user-art ${isVertical ? 'truss-v' : 'truss-h'}" viewBox="${vb}" preserveAspectRatio="none" aria-hidden="true">
+                <style>
+                    .truss-art-rail{fill:none;stroke:#d7dde6;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.96;vector-effect:non-scaling-stroke;}
+                    .truss-art-web{fill:none;stroke:#aeb8c6;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.9;vector-effect:non-scaling-stroke;}
+                    .truss-art-end{fill:none;stroke:#e5e7eb;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.98;vector-effect:non-scaling-stroke;}
+                    .truss-art-port-rail,.truss-art-port-end{display:none;}
+                    .truss-art-label{font-family:Inter,Arial,sans-serif;font-size:10px;fill:#f8fafc;font-weight:800;paint-order:stroke;stroke:#111827;stroke-width:3px;stroke-linejoin:round;}
+                </style>
+                ${transform}
+                ${labelMarkup}
+            </svg>`;
+        }
+
         function renderStraightSvg(item, spec){
+            const artSvg = renderStraightArtworkSvg(item, spec);
+            if (artSvg) return artSvg;
             const label = esc(spec.short || '');
             if ((item.o || 'h') === 'v') {
                 return `<svg class="truss-svg truss-v" viewBox="0 0 32 100" preserveAspectRatio="none" aria-hidden="true">
@@ -573,6 +1010,34 @@
                 <line class="truss-end" x1="4" y1="6" x2="4" y2="26"></line><line class="truss-end" x1="96" y1="6" x2="96" y2="26"></line>
                 <path class="truss-web" d="M6 8 L18 24 L30 8 L42 24 L54 8 L66 24 L78 8 L92 24"></path>
                 <text class="truss-label" x="50" y="18" text-anchor="middle" dominant-baseline="middle" font-size="12">${label}</text>
+            </svg>`;
+        }
+
+        function renderNodeArtworkSvg(item, spec){
+            const art = spec && NODE_SVG_ARTWORK[spec.id];
+            if (!art) return null;
+            const r = normalizeRotation(Number(item && item.r || 0) + Number(art.baseRotation || 0));
+            const label = spec.u ? `U${spec.u}` : esc(spec.short || '');
+            return `<svg class="node-svg node-user-art" viewBox="${art.viewBox || '0 0 100 100'}" preserveAspectRatio="none" aria-hidden="true">
+                <style>
+                    .truss-node-rail{fill:none;stroke:#d7dde6;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.96;vector-effect:non-scaling-stroke;}
+                    .truss-node-web{fill:none;stroke:#aeb8c6;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.9;vector-effect:non-scaling-stroke;}
+                    .node-art-label{font-family:Inter,Arial,sans-serif;font-size:10px;fill:#f8fafc;font-weight:800;paint-order:stroke;stroke:#111827;stroke-width:3px;stroke-linejoin:round;}
+                </style>
+                <g transform="rotate(${r} 50 50)">${art.body}</g>
+                <text class="node-art-label" x="50" y="54" text-anchor="middle" dominant-baseline="middle">${label}</text>
+            </svg>`;
+        }
+
+        function renderBaseArtworkSvg(){
+            const art = NODE_SVG_ARTWORK.base;
+            if (!art) return null;
+            return `<svg class="base-svg base-user-art" viewBox="${art.viewBox || '0 0 100 100'}" preserveAspectRatio="none" aria-hidden="true">
+                <style>
+                    .truss-node-rail{fill:none;stroke:#d7dde6;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.96;vector-effect:non-scaling-stroke;}
+                    .truss-node-web{fill:none;stroke:#aeb8c6;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.9;vector-effect:non-scaling-stroke;}
+                </style>
+                <g>${art.body}</g>
             </svg>`;
         }
         function nodePorts(spec){
@@ -737,6 +1202,8 @@
             return '';
         }
 function renderNodeSvg(item, spec){
+            const artSvg = renderNodeArtworkSvg(item, spec);
+            if (artSvg) return artSvg;
             const r = Number(item.r || 0);
             const label = spec.u ? `U${spec.u}` : esc(spec.short || '');
             if (spec.id === 'cornerU003') {
@@ -810,15 +1277,11 @@ function renderNodeSvg(item, spec){
             </svg>`;
         }
         function baseSnapOffsets(){
-            return [
-                { x:0.5, y:0, edge:'N' },
-                { x:1, y:0.5, edge:'E' },
-                { x:0.5, y:1, edge:'S' },
-                { x:0, y:0.5, edge:'W' },
-                { x:0.5, y:0.5, edge:'C' }
-            ];
+            return basePortOffsets();
         }
         function renderBaseSvg(){
+            const artSvg = renderBaseArtworkSvg();
+            if (artSvg) return artSvg;
             return `<svg class="base-svg" viewBox="0 0 100 100" aria-hidden="true">
                 <defs>
                     <radialGradient id="baseMetal" cx="35%" cy="30%" r="75%">
@@ -898,24 +1361,20 @@ function renderNodeSvg(item, spec){
         const isStraight = spec.kind === 'straight';
         const cells = isStraight ? cellCount(spec.length, cellMeters) : 1;
         const style = {
-            left: `${Number(item.x || 0) * px + 3}px`,
-            top: `${Number(item.y || 0) * px + 3}px`,
-            width: `${((isStraight && item.o === 'h') ? cells : 1) * px - 6}px`,
-            height: `${((isStraight && item.o === 'v') ? cells : 1) * px - 6}px`
+            left: `${Number(item.x || 0) * px}px`,
+            top: `${Number(item.y || 0) * px}px`,
+            width: `${((isStraight && item.o === 'h') ? cells : 1) * px}px`,
+            height: `${((isStraight && item.o === 'v') ? cells : 1) * px}px`
         };
         if (spec.kind === 'node') {
-            const scale = spec.id === 'cornerU003' ? 1.00 : 1.24;
+            // v3.15.8 — user SVG straight-truss assets use clean aluminum artwork with hidden template port artifacts.
+            // Keep every node/angle at a full one-cell footprint so edge ports can meet.
+            const scale = 1.00;
             const extra = ((scale - 1) * px) / 2;
-            let shiftX = 0;
-            let shiftY = 0;
-            if (spec.id === 'cornerU003') {
-                shiftX = 0;
-                shiftY = 0;
-            }
-            style.left = `${Number(item.x || 0) * px + 3 - extra + shiftX}px`;
-            style.top = `${Number(item.y || 0) * px + 3 - extra + shiftY}px`;
-            style.width = `${px * scale - 6}px`;
-            style.height = `${px * scale - 6}px`;
+            style.left = `${Number(item.x || 0) * px - extra}px`;
+            style.top = `${Number(item.y || 0) * px - extra}px`;
+            style.width = `${px * scale}px`;
+            style.height = `${px * scale}px`;
         }
         if (!isStraight && spec.kind !== 'node' && Number(item.r || 0)) style.transform = `rotate(${Number(item.r || 0)}deg)`;
         return style;
@@ -1144,6 +1603,118 @@ function renderNodeSvg(item, spec){
         return addAndSelectItem(opts);
     }
 
+
+
+    // v3.15.5 — extracted from legacy v3 block constructor: auto connection count and load span calculation.
+    // v3.15.6 — node render footprint restored to exact one-cell v3 geometry.
+    // This keeps the v4 wrapper on the exact same truss-load basis as the v3 constructor.
+    const NODE_EXTENSION_M = 0.5;
+
+    function axisEndpointInfo(items, specs, options) {
+        const endpoints = new Map();
+        (Array.isArray(items) ? items : []).forEach(item => {
+            const spec = (specs || DEFAULT_SPECS)[item && item.type];
+            if (!spec || spec.kind !== 'straight') return;
+            straightPortPoints(item, spec, options && options.cellMeters).forEach(pt => {
+                const key = pointKey(pt.x, pt.y);
+                const entry = endpoints.get(key) || { h:false, v:false };
+                if (item.o === 'v') entry.v = true;
+                else entry.h = true;
+                endpoints.set(key, entry);
+            });
+        });
+        return endpoints;
+    }
+
+    function buildRunDataWithNodeExtensions(items, specs, state, options) {
+        const source = specs && typeof specs === 'object' ? specs : DEFAULT_SPECS;
+        const st = state || {};
+        const opts = options || {};
+        const cellM = Number(opts.cellMeters || st.cellMeters || 0.5);
+        const h = new Map();
+        const v = new Map();
+        const endpoints = axisEndpointInfo(items, source, { cellMeters:cellM });
+        (Array.isArray(items) ? items : []).forEach(item => {
+            const spec = source[item && item.type];
+            if (!spec || spec.kind !== 'straight') return;
+            const start = item.o === 'v' ? Number(item.y || 0) : Number(item.x || 0);
+            const end = start + cellCount(spec.length);
+            const key = item.o === 'v' ? String(item.x) : String(item.y);
+            const map = item.o === 'v' ? v : h;
+            const list = map.get(key) || [];
+            list.push({ start, end, meters:Number(spec.length || 0), item });
+            map.set(key, list);
+        });
+        function nodeAxisContrib(axis, lineKey, start, end) {
+            const ids = new Set();
+            (Array.isArray(items) ? items : []).forEach(item => {
+                const spec = source[item && item.type];
+                if (!spec || spec.kind !== 'node') return;
+                const points = itemPoints(item, source, { cellMeters:cellM });
+                const hasAxisConnection = points.some(pt => {
+                    const onLine = axis === 'h' ? String(pt.y) === String(lineKey) : String(pt.x) === String(lineKey);
+                    if (!onLine) return false;
+                    const pos = axis === 'h' ? pt.x : pt.y;
+                    if (pos < start - 1e-9 || pos > end + 1e-9) return false;
+                    const ep = endpoints.get(pointKey(pt.x, pt.y));
+                    return !!(ep && ep[axis]);
+                });
+                if (hasAxisConnection) ids.add(item.id);
+            });
+            return ids;
+        }
+        function runsForAxis(map, axis) {
+            const out = [];
+            map.forEach((list, lineKey) => {
+                const intervals = list.slice().sort((a, b) => a.start - b.start);
+                let current = null;
+                intervals.forEach(it => {
+                    if (!current || it.start > current.end + 1e-9) {
+                        if (current) out.push(current);
+                        current = { axis, lineKey, start:it.start, end:it.end, straightMeters:it.meters, items:[it.item] };
+                    } else {
+                        current.end = Math.max(current.end, it.end);
+                        current.straightMeters += it.meters;
+                        current.items.push(it.item);
+                    }
+                });
+                if (current) out.push(current);
+            });
+            out.forEach(run => {
+                const nodes = nodeAxisContrib(run.axis, run.lineKey, run.start, run.end);
+                run.nodeCount = nodes.size;
+                run.nodeExtensionMeters = run.nodeCount * NODE_EXTENSION_M;
+                run.gridMeters = Math.max(0, (run.end - run.start) * cellM);
+                run.effectiveMeters = run.straightMeters + run.nodeExtensionMeters;
+            });
+            return out;
+        }
+        return runsForAxis(h, 'h').concat(runsForAxis(v, 'v'));
+    }
+
+    function effectiveSpanInfo(items, specs, state, options) {
+        const runs = buildRunDataWithNodeExtensions(items, specs, state, options);
+        let maxStraight = 0, maxGrid = 0, maxEffective = 0, maxNodeCount = 0, best = null;
+        runs.forEach(run => {
+            if (run.effectiveMeters > maxEffective) {
+                maxEffective = run.effectiveMeters;
+                maxStraight = run.straightMeters;
+                maxGrid = run.gridMeters;
+                maxNodeCount = run.nodeCount;
+                best = run;
+            }
+        });
+        return { runs, maxStraight, maxGrid, maxEffective, maxNodeCount, best, nodeExtensionMeters:maxNodeCount * NODE_EXTENSION_M };
+    }
+
+    function autoConnectionCount(items, specs, options) {
+        let connectionCount = 0;
+        connectionMap(items, specs || DEFAULT_SPECS, options || {}).forEach(entry => {
+            if (entry.count >= 2) connectionCount += Math.max(0, entry.count - 1);
+        });
+        return connectionCount;
+    }
+
     function defaultMoney(value) {
         return `${Number(value || 0).toLocaleString('ru-RU')} ₽`;
     }
@@ -1161,20 +1732,22 @@ function renderNodeSvg(item, spec){
         const metric = typeof opts.metric === 'function' ? opts.metric : defaultMetric;
         const esc = typeof opts.escapeHtml === 'function' ? opts.escapeHtml : escapeHtml;
         const effective = res.loadCheck && res.loadCheck.spanInfo ? metric(res.loadCheck.spanInfo.maxEffective) + ' м' : '—';
+        const dims = res.physicalBounds ? `${metric(res.physicalBounds.width)} × ${metric(res.physicalBounds.height)} м` : '—';
         const baseCount = Number(res.counts && res.counts.base || 0);
         const rows = [
             ['Прямые фермы', `${metric(res.totalMeters)} м`, 'метраж'],
             ['Макс. габарит с U-блоками', effective, 'расчётный'],
+            ['Габариты схемы с T/X узлами', dims, 'размеры'],
             ['U003 угол 90°', `${Number(res.angles || 0)} шт`, 'узлы'],
             ['U022 куб 6 направл.', `${Number(res.cubes || 0)} шт`, 'узлы'],
             ['U017 / U016 Т+крест', `${Number(res.tNodes || 0) + Number(res.crosses || 0)} шт`, 'узлы'],
             ['Прочие угловые U-блоки', `${Number(res.angledNodes || 0) + Number(res.multiNodes || 0)} шт`, 'узлы'],
             ['Всего узлов МДМТ', `${Number(res.nodePieces || 0)} шт`, 'узлы'],
-            ['Базы / блины', `${baseCount} шт · ${metric(baseCount * Number(st.baseWeight || 0))} кг`, 'опоры'],
-            ['Крепление баз C3-83 / пальцы / шплинты', `${Number(res.baseHalfConnectors || 0)} / ${Number(res.baseC2Pins || 0)} / ${Number(res.baseCotters || 0)} шт`, 'крепёж'],
-            ['Торцевые соединения CQ2', `${Number(res.connectorKits || 0)} компл.`, 'крепёж'],
-            ['CQ2: C2-88 / пальцы / шплинты', `${Number(res.cq2Cones || 0)} / ${Number(res.cq2Pins || 0)} / ${Number(res.cq2Cotters || 0)} шт`, 'крепёж'],
-            ['Крепёж всего: C2-88 / C3-83 / пальцы / шплинты', `${Number(res.cq2Cones || 0)} / ${Number(res.baseHalfConnectors || 0)} / ${Number(res.totalC2Pins || 0)} / ${Number(res.totalCotters || 0)} шт`, 'крепёж'],
+            ['Базы / блины', `${baseCount} шт · ${metric(baseCount * Number(st.baseWeight || TRUSS_BASE_WEIGHT_KG))} кг`, 'опоры'],
+            ['Крепление баз C3-83', `${Number(res.baseHalfConnectors || 0)} шт · ${Number(res.connectedBaseCount || 0)} подключ. баз`, 'крепёж'],
+            ['Фактические стыки C2-88', `${Number(res.connectionCount || 0)} стык. · C2-88: ${Number(res.cq2Cones || 0)} шт`, 'крепёж'],
+            ['Крепёж стыков: C2-88 / C2-67 / C2-2-48', `${Number(res.cq2Cones || 0)} / ${Number(res.cq2Pins || 0)} / ${Number(res.cq2Cotters || 0)} шт`, 'крепёж'],
+            ['Крепёж всего: C2-88 / C3-83 / C2-67 / C2-2-48', `${Number(res.cq2Cones || 0)} / ${Number(res.baseHalfConnectors || 0)} / ${Number(res.totalC2Pins || 0)} / ${Number(res.totalCotters || 0)} шт`, 'стыки + базы'],
             ['Вес комплекта', `${metric(res.weight)} кг`, 'масса'],
             ['Прокат блоков', money(res.rental), 'стоимость'],
             ['Монтаж', money(res.install), 'стоимость'],
@@ -1222,7 +1795,7 @@ function renderNodeSvg(item, spec){
         const load = loadCheck || res.loadCheck || {};
         const metric = helpers && typeof helpers.metric === 'function' ? helpers.metric : defaultMetric;
         const maxEffective = load && load.spanInfo ? Number(load.spanInfo.maxEffective || 0) : 0;
-        return `Блоков: ${list.length} · Прямые: ${metric(res.totalMeters)} м · габарит с U: ${metric(maxEffective)} м · CQ2: ${Number(res.connectorKits || 0)} компл.`;
+        return `Блоков: ${list.length} · Прямые: ${metric(res.totalMeters)} м · габарит с U: ${metric(maxEffective)} м · стыки: ${Number(res.connectionCount || 0)} шт`;
     }
 
 
@@ -1264,7 +1837,7 @@ function renderNodeSvg(item, spec){
         next.cols = Math.max(6, Math.min(60, Math.round(Number(next.cols || 24))));
         next.rows = Math.max(6, Math.min(40, Math.round(Number(next.rows || 14))));
         next.cellMeters = normalizeCellMeters(next.cellMeters);
-        next.zoom = Math.max(60, Math.min(180, Math.round(Number(next.zoom || 100))));
+        next.zoom = Math.max(35, Math.min(220, Math.round(Number(next.zoom || 100))));
         next.orientation = next.orientation === 'v' ? 'v' : 'h';
         next.mode = 'place';
         next.templateWidthM = Math.max(1, Number(next.templateWidthM || 6));
@@ -1326,11 +1899,20 @@ function renderNodeSvg(item, spec){
     global.FEGModules.TrussBlockConstructor = {
         DEFAULT_SPECS,
         STRAIGHT_ORDER,
+        STRAIGHT_TYPE_ORDER,
+        STRAIGHT_SVG_ARTWORK_VERSION,
+        STRAIGHT_SVG_ARTWORK,
+        NODE_SVG_ARTWORK_VERSION,
+        NODE_SVG_ARTWORK,
         getDefaultSpecs,
         getLegacyTypeMap,
         getLibraryGroupDefs,
         getLibraryGroups,
         getSpec,
+        canonicalType,
+        orderedSpecIds,
+        straightBreakdown,
+        balancedStraightSegmentTypes,
         isKnownType,
         isVisibleType,
         normalizeRotation,
@@ -1357,14 +1939,21 @@ function renderNodeSvg(item, spec){
         getSnappedPlacement,
         inBounds,
         schemeBounds,
+        schemePhysicalBounds,
+        physicalItemBounds,
+        topFrameItemsForDimensions,
+        C2_88_WEIGHT_KG,
         C2_67_WEIGHT_KG,
         C2_COTTER_WEIGHT_KG,
+        TRUSS_BASE_WEIGHT_KG,
         nodeWeight,
         priceAndWeightFor,
         calculateItemCounts,
         summarizeBom,
         buildBomRows,
+        renderStraightArtworkSvg,
         renderStraightSvg,
+        renderNodeArtworkSvg,
         nodePorts,
         nodeTubeSvg,
         nodeBasePortOffsets,
@@ -1398,6 +1987,11 @@ function renderNodeSvg(item, spec){
         renderSummaryHtml,
         renderBomRowsHtml,
         renderCountLabelText,
+        NODE_EXTENSION_M,
+        axisEndpointInfo,
+        buildRunDataWithNodeExtensions,
+        effectiveSpanInfo,
+        autoConnectionCount,
         normalizeDisplaySettings,
         densityLabel,
         displaySummaryText,
