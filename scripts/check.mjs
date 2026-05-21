@@ -18,7 +18,16 @@ async function checkStaticSecurity() {
   const indexHtml = await readFile(repoPath('index.html'), 'utf8');
   const manifest = JSON.parse(await readFile(repoPath('manifest.json'), 'utf8'));
   const quoteWizardSource = await readFile(repoPath('src/modules/QuoteWizard.js'), 'utf8');
+  const warehousePickListBuilderSource = await readFile(repoPath('src/modules/WarehousePickListBuilder.js'), 'utf8');
+  const quoteModelSource = await readFile(repoPath('src/modules/QuoteModel.js'), 'utf8');
+  const quoteEquipmentPickerSource = await readFile(repoPath('src/modules/QuoteEquipmentPicker.js'), 'utf8');
+  const quoteSummaryBuilderSource = await readFile(repoPath('src/modules/QuoteSummaryBuilder.js'), 'utf8');
+  const quoteDraftStorageSource = await readFile(repoPath('src/modules/QuoteDraftStorage.js'), 'utf8');
+  const quoteProjectStorageSource = await readFile(repoPath('src/modules/QuoteProjectStorage.js'), 'utf8');
   const ledUiSource = await readFile(repoPath('src/modules/LedCalculatorUI.js'), 'utf8');
+  const v4LedBomBridgeSource = await readFile(repoPath('src/modules/V4LedBomBridge.js'), 'utf8');
+  const quickTechnicalSheetsSource = await readFile(repoPath('src/modules/QuickTechnicalSheets.js'), 'utf8');
+  const v4StabilizationSmokeMapSource = await readFile(repoPath('src/modules/V4StabilizationSmokeMap.js'), 'utf8');
   const projectsUiSource = await readFile(repoPath('src/modules/QuoteProjectsUI.js'), 'utf8');
   const projectTimelineViewSource = await readFile(repoPath('src/modules/ProjectTimelineView.js'), 'utf8');
   const equipmentUiSource = await readFile(repoPath('src/modules/EquipmentDatabaseUI.js'), 'utf8');
@@ -53,6 +62,8 @@ async function checkStaticSecurity() {
   const v4AppShellSource = await readFile(repoPath('src/modules/V4AppShell.js'), 'utf8');
   const v4ClientsPanelSource = await readFile(repoPath('src/modules/V4ClientsPanel.js'), 'utf8');
   const adminShellSource = await readFile(repoPath('src/modules/AdminShell.js'), 'utf8');
+  const projectCrewAssignmentsSource = await readFile(repoPath('src/modules/ProjectCrewAssignments.js'), 'utf8');
+  const rolePermissionsSource = await readFile(repoPath('src/modules/RolePermissions.js'), 'utf8');
   const adminControlCenterSource = await readFile(repoPath('src/modules/AdminControlCenter.js'), 'utf8');
   const dataQualityCenterSource = await readFile(repoPath('src/modules/DataQualityCenter.js'), 'utf8');
   const reportsCenterSource = await readFile(repoPath('src/modules/ReportsCenter.js'), 'utf8');
@@ -87,14 +98,256 @@ async function checkStaticSecurity() {
   const quoteControlledWriteFunction = await readFile(repoPath('supabase/functions/quote-controlled-write/index.ts'), 'utf8');
   const quoteControlledWriteDoc = await readFile(repoPath('docs/SUPABASE_QUOTES_CONTROLLED_WRITE_RUNNER.md'), 'utf8');
   const quotePostWriteVerificationDoc = await readFile(repoPath('docs/SUPABASE_QUOTES_POST_WRITE_VERIFICATION.md'), 'utf8');
+  const v4StabilizationSmokeMapDoc = await readFile(repoPath('docs/V4_STABILIZATION_SUMMARY_SMOKE_MAP_3_15_64.md'), 'utf8');
+  const stageVisualAdapterSource = await readFile(repoPath('src/modules/visual/StageVisualAdapter.js'), 'utf8');
+  const visualModelBuilderSource = await readFile(repoPath('src/modules/visual/VisualModelBuilder.js'), 'utf8');
+  const projectRenderer2DSource = await readFile(repoPath('src/modules/visual/ProjectRenderer2D.js'), 'utf8');
+  const visualExportSource = await readFile(repoPath('src/modules/visual/VisualExport.js'), 'utf8');
+  const visualPreviewPanelSource = await readFile(repoPath('src/modules/visual/VisualPreviewPanel.js'), 'utf8');
+  const trussVisualAdapterSource = await readFile(repoPath('src/modules/visual/TrussVisualAdapter.js'), 'utf8');
+  const ledVisualAdapterSource = await readFile(repoPath('src/modules/visual/LedVisualAdapter.js'), 'utf8');
+  const audioVisualAdapterSource = await readFile(repoPath('src/modules/visual/AudioVisualAdapter.js'), 'utf8');
+  const lightVisualAdapterSource = await readFile(repoPath('src/modules/visual/LightVisualAdapter.js'), 'utf8');
+  const visualModelFoundationDoc = await readFile(repoPath('docs/V4_VISUAL_MODEL_FOUNDATION_3_16_0.md'), 'utf8');
+  const stageTopViewRendererDoc = await readFile(repoPath('docs/V4_STAGE_TOP_VIEW_RENDERER_3_16_1.md'), 'utf8');
+  const stageFrontViewRendererDoc = await readFile(repoPath('docs/V4_STAGE_FRONT_VIEW_RENDERER_3_16_2.md'), 'utf8');
+  const stageIsoPreviewDoc = await readFile(repoPath('docs/V4_STAGE_ISOMETRIC_PREVIEW_3_16_3.md'), 'utf8');
+  const trussVisualAdapterDoc = await readFile(repoPath('docs/V4_TRUSS_VISUAL_ADAPTER_3_16_4.md'), 'utf8');
+  const trussRoofVisualSeedDoc = await readFile(repoPath('docs/V4_TRUSS_ROOF_VISUAL_SEED_3_16_5.md'), 'utf8');
+  const ledVisualAdapterDoc = await readFile(repoPath('docs/V4_LED_VISUAL_ADAPTER_3_16_6.md'), 'utf8');
+  const audioLightVisualDoc = await readFile(repoPath('docs/V4_AUDIO_LIGHT_VISUAL_PLACEHOLDERS_3_16_7.md'), 'utf8');
+  const visualExportDoc = await readFile(repoPath('docs/V4_VISUAL_EXPORT_3_16_8.md'), 'utf8');
+  const visualPreviewPanelDoc = await readFile(repoPath('docs/V4_VISUAL_PREVIEW_PANEL_3_16_9.md'), 'utf8');
+  const visualStageStairsPlanCellFixDoc = await readFile(repoPath('docs/V4_VISUAL_STAGE_STAIRS_PLAN_CELL_FIX_3_16_10.md'), 'utf8');
+  const trussVisualRendererSeedDoc = await readFile(repoPath('docs/V4_TRUSS_LIVE_QUICK_PREVIEW_3_16_12.md'), 'utf8');
+  const ledVisualizerMultiConstructionDoc = await readFile(repoPath('docs/V4_LED_VISUALIZER_MULTI_CONSTRUCTION_PLACEMENT_3_16_20.md'), 'utf8');
+  const quoteSmartRowsFlowDoc = await readFile(repoPath('docs/V4_QUOTE_SMART_EQUIPMENT_ROWS_FLOW_3_16_21.md'), 'utf8');
+  const quoteSummaryFlowDoc = await readFile(repoPath('docs/V4_QUOTE_SUMMARY_FLOW_MAP_3_16_22.md'), 'utf8');
+  const quoteLedConstructorFastSaveDoc = await readFile(repoPath('docs/V4_QUOTE_LED_CONSTRUCTOR_FAST_SAVE_3_16_23.md'), 'utf8');
+  const quoteEquipmentSummaryPreserveDoc = await readFile(repoPath('docs/V4_QUOTE_EQUIPMENT_SUMMARY_PRESERVE_3_16_24.md'), 'utf8');
+  const managerProjectsFastIndexDoc = await readFile(repoPath('docs/V4_MANAGER_PROJECTS_FAST_INDEX_3_16_25.md'), 'utf8');
+  const quoteDocumentActionGroupsDoc = await readFile(repoPath('docs/V4_QUOTE_DOCUMENT_ACTION_GROUPS_3_16_26.md'), 'utf8');
+  const managerProjectsCompactTableDoc = await readFile(repoPath('docs/V4_MANAGER_PROJECTS_COMPACT_TABLE_3_16_27.md'), 'utf8');
+  const v4OnlyAppShellDoc = await readFile(repoPath('docs/V4_ONLY_APP_SHELL_3_17_0.md'), 'utf8');
+  const v4FastSectionsDoc = await readFile(repoPath('docs/V4_FAST_SECTIONS_CLEANUP_3_17_1.md'), 'utf8');
+  const v4DashboardPolishDoc = await readFile(repoPath('docs/V4_ONLY_DASHBOARD_POLISH_3_17_2.md'), 'utf8');
+  const v4LinearStyleSystemDoc = await readFile(repoPath('docs/V4_LINEAR_STYLE_SYSTEM_3_17_3.md'), 'utf8');
+  const v4LinearSafeCanvasDoc = await readFile(repoPath('docs/V4_LINEAR_UI_SAFE_CANVAS_FIX_3_17_4.md'), 'utf8');
+  const v4LedCanvasGuardDoc = await readFile(repoPath('docs/V4_LED_CONSTRUCTOR_CANVAS_GUARD_3_17_5.md'), 'utf8');
+  const v4FastLazyDocumentCenterDoc = await readFile(repoPath('docs/V4_FAST_LAZY_DOCUMENT_CENTER_3_17_6.md'), 'utf8');
+  const v4LinearCompactReferenceDoc = await readFile(repoPath('docs/V4_LINEAR_COMPACT_REFERENCE_UI_3_17_7.md'), 'utf8');
+  const v4CommunicationIsoHardeningDoc = await readFile(repoPath('docs/V4_COMMUNICATION_ISO_HARDENING_3_17_8.md'), 'utf8');
+  const v4LinearUiMetadataSyncDoc = await readFile(repoPath('docs/V4_LINEAR_UI_METADATA_SYNC_3_17_8.md'), 'utf8');
+  const v4LinearUiPolishDoc = await readFile(repoPath('docs/V4_LINEAR_UI_POLISH_3_17_9.md'), 'utf8');
+  const v4QuoteWizardLayoutCleanupDoc = await readFile(repoPath('docs/V4_QUOTE_WIZARD_LAYOUT_CLEANUP_3_17_10.md'), 'utf8');
+  const v4QuoteWizardManualRowsSmartDoc = await readFile(repoPath('docs/V4_QUOTE_WIZARD_MANUAL_ROWS_SMART_3_17_11.md'), 'utf8');
+  const v4QuoteEquipmentCompactAvailabilityDoc = await readFile(repoPath('docs/V4_QUOTE_EQUIPMENT_COMPACT_AVAILABILITY_3_17_12.md'), 'utf8');
+  const v4StageConfiguratorLayoutPolishDoc = await readFile(repoPath('docs/V4_STAGE_CONFIGURATOR_LAYOUT_POLISH_3_17_13.md'), 'utf8');
+  const v4QuoteEquipmentLinkedSubrentSplitDoc = await readFile(repoPath('docs/V4_QUOTE_EQUIPMENT_LINKED_SUBRENT_SPLIT_3_17_14.md'), 'utf8');
+  const v4QuoteStructureSubrentOverridesDoc = await readFile(repoPath('docs/V4_QUOTE_STRUCTURE_SUBRENT_OVERRIDES_3_17_15.md'), 'utf8');
+  const v4QuoteEquipmentRowActionsDoc = await readFile(repoPath('docs/V4_QUOTE_EQUIPMENT_ROW_ACTIONS_3_17_16.md'), 'utf8');
+  const v4QuoteWizardActiveStepFrameCleanupDoc = await readFile(repoPath('docs/V4_QUOTE_WIZARD_ACTIVE_STEP_FRAME_CLEANUP_3_17_17.md'), 'utf8');
+  const v4SubrentorsDirectoryDoc = await readFile(repoPath('docs/V4_SUBRENTORS_DIRECTORY_3_17_18.md'), 'utf8');
+  const v4SubrentorsSharedPickersDoc = await readFile(repoPath('docs/V4_SUBRENTORS_SHARED_PICKERS_3_17_19.md'), 'utf8');
+  const v4SubrentClientPricingDoc = await readFile(repoPath('docs/V4_SUBRENT_CLIENT_PRICING_3_17_20.md'), 'utf8');
+  const v4SubrentLayoutPolishDoc = await readFile(repoPath('docs/V4_SUBRENT_LAYOUT_POLISH_3_17_21.md'), 'utf8');
+  const v4RoleAccessCleanupDoc = await readFile(repoPath('docs/V4_ROLE_ACCESS_CLEANUP_3_17_22.md'), 'utf8');
+  const v4TechDirectorSiteChecklistDoc = await readFile(repoPath('docs/V4_TECH_DIRECTOR_SITE_CHECKLIST_3_17_23.md'), 'utf8');
+  const v4AdminUserAccessPasswordRecoveryDoc = await readFile(repoPath('docs/V4_ADMIN_USER_ACCESS_PASSWORD_RECOVERY_3_17_24.md'), 'utf8');
+  const v4ProjectCrewKeysDoc = await readFile(repoPath('docs/V4_PROJECT_CREW_KEYS_3_17_25.md'), 'utf8');
+  const v4ProjectCrewSummaryBindingDoc = await readFile(repoPath('docs/V4_PROJECT_CREW_SUMMARY_BINDING_3_17_26.md'), 'utf8');
+  const v4ProjectCrewRoleOnlySmartRowsDoc = await readFile(repoPath('docs/V4_PROJECT_CREW_ROLE_ONLY_SMART_ROWS_3_17_27.md'), 'utf8');
+  const v4UnifiedDeficitClosureSummaryDoc = await readFile(repoPath('docs/V4_UNIFIED_DEFICIT_CLOSURE_SUMMARY_3_17_28.md'), 'utf8');
+  const v4QuoteWizardTrussNavTransportOrderDoc = await readFile(repoPath('docs/V4_QUOTE_WIZARD_TRUSS_NAV_TRANSPORT_ORDER_3_17_29.md'), 'utf8');
+  const v4ClientPickerTruss3dHeightDoc = await readFile(repoPath('docs/V4_CLIENT_PICKER_TRUSS_3D_HEIGHT_3_17_30.md'), 'utf8');
+  const v4TrussTemplateSplitRepairDoc = await readFile(repoPath('docs/V4_TRUSS_TEMPLATE_SPLIT_REPAIR_3_17_31.md'), 'utf8');
+  const v4TrussStoolTSupportsDoc = await readFile(repoPath('docs/V4_TRUSS_STOOL_T_SUPPORTS_3_17_32.md'), 'utf8');
+  const v4TrussRentalPricingDoc = await readFile(repoPath('docs/V4_TRUSS_RENTAL_PRICING_3_17_33.md'), 'utf8');
+  const v4TrussStraightBomExportDoc = await readFile(repoPath('docs/V4_TRUSS_STRAIGHT_BOM_EXPORT_3_17_34.md'), 'utf8');
+  const v4TrussFinalKitNoV3BomDoc = await readFile(repoPath('docs/V4_TRUSS_FINAL_KIT_NO_V3_BOM_3_17_35.md'), 'utf8');
+  const v4TrussCatalogStockBindingDoc = await readFile(repoPath('docs/V4_TRUSS_CATALOG_STOCK_BINDING_3_17_37.md'), 'utf8');
+  const v4TrussCompatibleAlternativesDoc = await readFile(repoPath('docs/V4_TRUSS_CATALOG_MDM_CLEANUP_3_17_39.md'), 'utf8');
+  const v4QuickTrussNoSubrentMinWeightDoc = await readFile(repoPath('docs/V4_QUICK_TRUSS_NO_SUBRENT_MIN_WEIGHT_3_17_40.md'), 'utf8');
+  const v4QuickTrussStoolRealDimensionsDoc = await readFile(repoPath('docs/V4_QUICK_TRUSS_STOOL_REAL_DIMENSIONS_3_17_41.md'), 'utf8');
+  const v4QuickTrussManualAutoZoomDoc = await readFile(repoPath('docs/V4_QUICK_TRUSS_MANUAL_AUTO_ZOOM_3_17_42.md'), 'utf8');
+  const v4TrussStoolSharedQuickQuoteDoc = await readFile(repoPath('docs/V4_TRUSS_STOOL_SHARED_QUICK_QUOTE_DIMENSIONS_3_17_43.md'), 'utf8');
+  const v4TrussStoolPairedLegLayoutDoc = await readFile(repoPath('docs/V4_TRUSS_STOOL_PAIRED_LEG_LAYOUT_3_17_44.md'), 'utf8');
+  const v4TrussBalancedTemplateSplitDoc = await readFile(repoPath('docs/V4_TRUSS_BALANCED_TEMPLATE_SPLIT_3_17_45.md'), 'utf8');
+  const quickPdfExportSource = await readFile(repoPath('src/modules/QuickPdfExport.js'), 'utf8');
+  const v4QuickCalculatorsPdfExportDoc = await readFile(repoPath('docs/V4_QUICK_CALCULATORS_PDF_EXPORT_3_17_46.md'), 'utf8');
+  const v4QuickPdfModalOverlayFixDoc = await readFile(repoPath('docs/V4_QUICK_PDF_MODAL_OVERLAY_FIX_3_17_47.md'), 'utf8');
+  const v4QuickPdfConstructorSchemeDoc = await readFile(repoPath('docs/V4_QUICK_PDF_CONSTRUCTOR_SCHEME_SNAPSHOT_3_17_48.md'), 'utf8');
+  const v4QuickPdfReadableSchemeFallbackDoc = await readFile(repoPath('docs/V4_QUICK_PDF_READABLE_SCHEME_FALLBACK_3_17_49.md'), 'utf8');
+  const subrentorsDirectoryUiSource = await readFile(repoPath('src/modules/SubrentorsDirectoryUI.js'), 'utf8');
+  const communicationCenterSource = await readFile(repoPath('src/modules/CommunicationCenter.js'), 'utf8');
+  const projectRendererIsoSource = await readFile(repoPath('src/modules/visual/ProjectRendererIso.js'), 'utf8');
+  const communicationMigrationSource = await readFile(repoPath('supabase/migrations/202605150001_communication_schema.sql'), 'utf8');
+  const subrentorsMigrationSource = await readFile(repoPath('supabase/migrations/202605150002_subrentors_directory.sql'), 'utf8');
+  const changelogSource = await readFile(repoPath('CHANGELOG.md'), 'utf8');
+  const v4DesignSystemSource = await readFile(repoPath('src/modules/V4DesignSystem.js'), 'utf8');
 
-  assert(manifest.name.includes('3.13.1'), 'manifest version must stay in sync with app version');
+  assert(manifest.version === '3.17.49' && manifest.name.includes('v3.17.49'), 'manifest version must stay in sync with v3.17.49 release metadata');
+  assert(managerProjectsFastIndexDoc.includes('lightweight project index'), 'manager projects fast index doc should exist');
+  assert(quoteDocumentActionGroupsDoc.includes('Dev / JSON'), 'quote document action groups doc should exist');
+
+const trussSource = await readFile(repoPath('src/modules/TrussBlockConstructor.js'), 'utf8');
+assert(trussSource.includes('const scale = 1.00;'), 'truss node visual footprint must stay one-cell aligned');
+assert(trussSource.includes("STRAIGHT_SVG_ARTWORK_VERSION = '3.15.8-user-straight-aluminum-clean'"), 'straight truss renderer should use user-provided clean aluminum per-length SVG assets');
+assert(['truss05','truss1','truss15','truss2','truss25','truss3'].every(id => trussSource.includes(id + ': Object.freeze')), 'all straight truss lengths should have dedicated SVG artwork');
+assert(trussSource.includes('truss-art-port-rail,.truss-art-port-end{display:none;}') && trussSource.includes('renderStraightArtworkSvg'), 'straight SVG artwork should hide template port artifacts and keep renderer');
+assert(trussSource.includes('stroke:#d7dde6') && trussSource.includes('stroke:#aeb8c6'), 'straight truss artwork should use aluminum/silver tones instead of yellow guide color');
+
+assert(trussSource.includes("NODE_SVG_ARTWORK_VERSION = '3.17.41-stool-top-frame-real-dimensions'"), 'node/corner truss renderer should keep user SVG assets and v3.17.41 stool dimension metadata');
+assert(trussSource.includes("weights:{T29Q:17.9}") && trussSource.includes("weights:{T29Q:4.4}"), 'T29 Q straight truss weights should be embedded from MDM catalog');
+assert(['cornerU003','cornerU017','cornerU016','cornerU020','cornerU022','cornerU024','base'].every(id => trussSource.includes(id + ': Object.freeze')), 'all key corner/node/base assets should have dedicated SVG artwork');
+assert(trussSource.includes('renderNodeArtworkSvg') && trussSource.includes('renderBaseArtworkSvg'), 'node/base SVG artwork renderers should stay wired');
+assert(trussSource.includes('baseRotation:180') && trussSource.includes('cornerU003'), 'cornerU003 artwork should preserve right+bottom default ports via base rotation');
+assert(!trussSource.includes("const scale = spec.id === 'cornerU003' ? 1.00 : 1.24"), 'truss nodes must not be oversized because it breaks U-node/straight alignment');
+assert(!trussSource.includes(' * px + 3}px') && !trussSource.includes(' * px - 6}px'), 'truss visual footprints should not add padding when using exact edge-port artwork');
+  const v4StructureConfiguratorSource = await readFile(repoPath('src/modules/V4StructureConfigurator.js'), 'utf8');
+  const quickIdealCatalogSource = await readFile(repoPath('src/modules/QuickIdealCatalog.js'), 'utf8');
+  const quickCalculatorsV4Source = await readFile(repoPath('src/modules/QuickCalculators.js'), 'utf8');
+  const visualConfiguratorV4Source = await readFile(repoPath('src/modules/V4StructureVisualConfigurator.js'), 'utf8');
+const indexHtmlSource = await readFile(repoPath('index.html'), 'utf8');
+const serviceWorkerSource = await readFile(repoPath('sw.js'), 'utf8');
+assert(indexHtmlSource.includes('.v4-doc-action-group') && indexHtmlSource.includes('.v4-doc-dev-panel'), 'v3.16.26 should style grouped quote document actions');
+assert(quoteWizardSource.includes('data-quote-final-doc-actions') && quoteWizardSource.includes('data-quote-doc-dev-panel') && quoteWizardSource.includes('Основные документы') && quoteWizardSource.includes('Админ / JSON'), 'v3.16.26 should group final quote document actions and collapse JSON diagnostics');
+assert(serviceWorkerSource.includes('FEG_STAGE_PRO_3_17_49_QUICK_PDF_READABLE_SCHEME_FALLBACK') && serviceWorkerSource.includes('./src/modules/QuickPdfExport.js'), 'service worker cache should bump and cache QuickPdfExport for v3.17.49');
+assert(visualConfiguratorV4Source.includes('quick mode must not render stock/subrent needs') && visualConfiguratorV4Source.includes("ctx.options && ctx.options.mode === 'quote' ? renderTrussSubrentNeeds(section, state)") && equipmentUiSource.includes("numberField('weightKg', 'Вес за ед., кг', current.weightKg, '0.0001', '0')") && v4QuickTrussNoSubrentMinWeightDoc.includes('0.0001 кг') && v4QuickTrussNoSubrentMinWeightDoc.includes('options.mode === "quote"'), 'v3.17.40 should hide quick truss subrent prompts and allow tiny equipment weights');
+assert(visualConfiguratorV4Source.includes('data-truss-zoom-panel') && visualConfiguratorV4Source.includes('fitTrussCanvasToViewport') && visualConfiguratorV4Source.includes('getTrussRenderCellPx') && visualConfiguratorV4Source.includes('state.autoFit = false') && v4DesignSystemSource.includes('.v4-truss-zoom-panel') && v4DesignSystemSource.includes('.v4-truss-field-wrap') && v4QuickTrussManualAutoZoomDoc.includes('auto-fit') && v4QuickTrussManualAutoZoomDoc.includes('35–220%'), 'v3.17.42 should add quick truss manual zoom controls and auto-fit viewport without changing calculations');
+assert(trussSource.includes('topFrameItemsForDimensions') && v4StructureConfiguratorSource.includes('const dimensionItems = truss && truss.topFrameItemsForDimensions') && visualConfiguratorV4Source.includes('Итого по ферменной конструкции') && !visualConfiguratorV4Source.includes('<caption>Итог комплектации</caption>') && trussSource.includes("cornerU017: Object.freeze({ w:0.71, h:0.50, z:0.50 })") && v4QuickTrussStoolRealDimensionsDoc.includes('верхней раме') && v4QuickTrussStoolRealDimensionsDoc.includes('710 × 500 мм'), 'v3.17.41 should use top-frame dimensions for quick truss stools and keep one final kit table');
+assert(v4StructureConfiguratorSource.includes("TRUSS_STOOL_DIMENSION_POLICY_VERSION = '3.17.43-shared-quick-quote-top-frame'") && v4StructureConfiguratorSource.includes('const incomingGeometry = clone(src.trussGeometry || src.geometry') && v4StructureConfiguratorSource.includes('result.stoolTopFrameDimensionsShared') && v4StructureConfiguratorSource.includes('catalogMode:catalogContext.catalogMode') && visualConfiguratorV4Source.includes('Габарит верхней рамы') && v4TrussStoolSharedQuickQuoteDoc.includes('catalogMode: quote') && v4TrussStoolSharedQuickQuoteDoc.includes('catalogMode: quick'), 'v3.17.43 should share stool top-frame dimensions between quick and quote truss constructors');
+assert(visualConfiguratorV4Source.includes('buildStoolLegPairGroups') && visualConfiguratorV4Source.includes('stoolLegPairKey') && visualConfiguratorV4Source.includes('x-pair-') && visualConfiguratorV4Source.includes('y-pair-') && visualConfiguratorV4Source.includes("micro:{ template:'stool-base', sourceX:p.x, sourceY:p.y, pair:groupIndex, pairIndex }") && v4TrussStoolPairedLegLayoutDoc.includes('визуальными парами') && v4TrussStoolPairedLegLayoutDoc.includes('Quick') && v4TrussStoolPairedLegLayoutDoc.includes('Quote'), 'v3.17.44 should group every stool leg layout into shared quick/quote visual pairs');
+assert(trussSource.includes('balancedStraightSegmentTypes') && visualConfiguratorV4Source.includes("templateSplitPolicy:'balanced-v3.17.45'") && v4StructureConfiguratorSource.includes('truss.balancedStraightSegmentTypes(length') && v4TrussBalancedTemplateSplitDoc.includes('4.5 м → 2.5 м + 2.0 м') && v4TrussBalancedTemplateSplitDoc.includes('Quick') && v4TrussBalancedTemplateSplitDoc.includes('Quote'), 'v3.17.45 should use balanced shared straight splitting for quick and quote truss templates');
+assert(indexHtmlSource.includes('src/modules/QuickPdfExport.js') && quickPdfExportSource.includes('QUICK_PDF_EXPORT_VERSION') && quickPdfExportSource.includes('openSectionPreview') && quickPdfExportSource.includes('navigator.share') && quickPdfExportSource.includes('quick-pdf-backdrop') && quickPdfExportSource.includes('data-quick-pdf-backdrop') && quickPdfExportSource.includes('readable-scheme-fallback') && visualConfiguratorV4Source.includes("ROOT.QuickPdfExport.renderActionHtml('stage')") && visualConfiguratorV4Source.includes("ROOT.QuickPdfExport.renderActionHtml('truss')") && ledUiSource.includes("ROOT.QuickPdfExport.renderActionHtml('led')") && v4QuickCalculatorsPdfExportDoc.includes('сводной таблицы') && v4QuickCalculatorsPdfExportDoc.includes('navigator.share') && v4QuickPdfModalOverlayFixDoc.includes('fixed-backdrop') && v4QuickPdfModalOverlayFixDoc.includes('Esc') && quickPdfExportSource.includes('captureSchemeSnapshot') && quickPdfExportSource.includes('buildSchemeSvgFallback') && quickPdfExportSource.includes('buildStageSchemeSvg') && quickPdfExportSource.includes('buildLedSchemeSvg') && quickPdfExportSource.includes('data-stage-grid') && quickPdfExportSource.includes('data-truss-field') && quickPdfExportSource.includes('data-led-grid') && !quickPdfExportSource.includes('buildVisualExportPack') && v4QuickPdfConstructorSchemeDoc.includes('Схема из конструктора') && v4QuickPdfConstructorSchemeDoc.includes('чёрный / тёмно-серый') && v4QuickPdfReadableSchemeFallbackDoc.includes('data-driven SVG fallback') && v4QuickPdfReadableSchemeFallbackDoc.includes('inline light styles'), 'v3.17.49 should keep quick Stage/Truss/LED PDF export, fixed overlay, constructor snapshots and readable Stage/LED scheme fallback');
+assert(projectCrewAssignmentsSource.includes('PROJECT_CREW_ROLES') && quoteWizardSource.includes('data-project-crew-panel') && quoteWizardSource.includes('data-project-crew-generate-key') && quoteWizardSource.includes('v4-project-crew-row--draft') && quoteWizardSource.includes('isProjectCrewRowMeaningful') && quoteWizardSource.includes('handleCrewSmartRowChange') && quoteModelSource.includes('crewAssignments') && adminShellSource.includes('keyType') && v4ProjectCrewKeysDoc.includes('quote.crewAssignments') && quoteSummaryBuilderSource.includes('getCrewCustomerRows') && quoteSummaryBuilderSource.includes('title: `Работы: ${role}`') && !quoteSummaryBuilderSource.includes('title: `Работы: ${role}${name') && quoteItemBuilderSource.includes('buildCrewQuoteItems') && quoteItemBuilderSource.includes('name: `Работы: ${role}`') && !quoteItemBuilderSource.includes('name: `Работы: ${role}${name') && v4ProjectCrewSummaryBindingDoc.includes('sectionKey=crew') && v4ProjectCrewRoleOnlySmartRowsDoc.includes('Клиентская смета') && v4ProjectCrewRoleOnlySmartRowsDoc.includes('Smart rows'), 'project crew step, key types, role-only client rows and smart assignment rows should remain wired');
+assert(warehousePickListBuilderSource.includes("PICKLIST_VERSION = '1.2.0-deficit-closure'") && warehousePickListBuilderSource.includes("'Дефицит и закрытие'") && warehousePickListBuilderSource.includes('isDeficitClosureRow') && quoteWizardSource.includes('renderDeficitClosureTable') && quoteWizardSource.includes('v4-table--deficit-closure') && quoteWizardSource.includes('data-quote-doc="warehouse:deficits">Дефицит и закрытие') && !quoteWizardSource.includes('data-quote-doc="warehouse:subrent"') && v4UnifiedDeficitClosureSummaryDoc.includes('Дефицит и закрытие') && v4UnifiedDeficitClosureSummaryDoc.includes('План субаренды'), 'v3.17.28 should merge duplicate final deficit/subrent windows into one deficit closure summary');
+assert(quoteWizardSource.includes("{ id: 'client', title: 'Клиент и проект'") && quoteWizardSource.indexOf("{ id: 'scope', title: 'Состав сметы'") < quoteWizardSource.indexOf("{ id: 'stage', title: 'Сцена'") && quoteWizardSource.indexOf("{ id: 'transport', title: 'Транспорт'") > quoteWizardSource.indexOf("{ id: 'equipment', title: 'Звук, свет, услуги'") && quoteWizardSource.indexOf("{ id: 'transport', title: 'Транспорт'") < quoteWizardSource.indexOf("{ id: 'crew', title: 'Команда проекта'") && quoteWizardSource.includes('autoBindActiveStepBeforeMove') && quoteWizardSource.includes('quote-wizard-nav-truss-autobind') && quoteModelSource.includes("steps.push('transport');\n    steps.push('crew');") && v4QuoteWizardTrussNavTransportOrderDoc.includes('Переход после шага `Фермы`') && v4QuoteWizardTrussNavTransportOrderDoc.includes('Транспорт'), 'v3.17.29 should keep truss-step navigation autobind and transport before crew in quote wizard');
+assert(quoteWizardSource.includes('data-quote-client-select') && quoteWizardSource.includes('data-quote-client-open-create') && quoteWizardSource.includes('data-quote-client-new-field="name"') && quoteWizardSource.includes('clientStorage()') && quoteWizardSource.includes('upsertClient') && visualConfiguratorV4Source.includes('TRUSS_TOP_NODE_HEIGHT_M = 0.5') && visualConfiguratorV4Source.includes('netLegStraightHeightM') && visualConfiguratorV4Source.includes('structureMode:geometry.mode') && v4StructureConfiguratorSource.includes('TRUSS_TOP_NODE_HEIGHT_M = 0.5') && v4StructureConfiguratorSource.includes('deriveTrussSectionGeometry') && v4StructureConfiguratorSource.includes('truss3d:!!geometry.is3d') && v4ClientPickerTruss3dHeightDoc.includes('500 мм / 0,5 м') && v4ClientPickerTruss3dHeightDoc.includes('Клиент и проект'), 'v3.17.30 should keep client database picker and truss 3D height metadata with U012/U017 0.5m correction');
+assert(visualConfiguratorV4Source.includes('data-truss-flat-width') && visualConfiguratorV4Source.includes('data-truss-flat-height') && visualConfiguratorV4Source.includes('data-truss-stool-width') && visualConfiguratorV4Source.includes('data-truss-stool-depth') && visualConfiguratorV4Source.includes('data-truss-stool-height') && visualConfiguratorV4Source.includes('data-truss-stool-legs') && visualConfiguratorV4Source.includes('readStoolLegCount') && visualConfiguratorV4Source.includes('spanDepthM || 0') && !visualConfiguratorV4Source.includes('stored.totalHeightM || footprintDepthM') && v4DesignSystemSource.includes('.v4-truss-template-split') && v4DesignSystemSource.includes('.v4-truss-template-card') && v4TrussTemplateSplitRepairDoc.includes('runtime-сбой') && v4TrussTemplateSplitRepairDoc.includes('Кол-во ног'), 'v3.17.31 should repair truss constructor runtime error and split portal/frame/stool template parameters');
+assert(visualConfiguratorV4Source.includes('allocateManualSupportPairs') && visualConfiguratorV4Source.includes('addHorizontalRunSplit') && visualConfiguratorV4Source.includes('insertedIntoRun:true') && visualConfiguratorV4Source.includes('U017 для дополнительных ног врезается') && visualConfiguratorV4Source.includes('maxSpanM = 9') && v4TrussStoolTSupportsDoc.includes('разрывается в точке дополнительной опоры') && v4TrussStoolTSupportsDoc.includes('не оставлять пролёты больше 9 м'), 'v3.17.32 should insert U017 T modules into stool frame runs and distribute manual supports by 9m span');
+assert(trussSource.includes('TRUSS_RENTAL_PRICE_PER_METER = 500') && trussSource.includes('TRUSS_NODE_RENTAL_PRICE = 500') && trussSource.includes('TRUSS_BASE_RENTAL_PRICE = 500') && trussSource.includes('TRUSS_PIN_RENTAL_PRICE = 0') && v4TrussRentalPricingDoc.includes('500 ₽ за погонный метр') && v4TrussRentalPricingDoc.includes('500 ₽ за штуку'), 'v3.17.34 should add truss straight BOM export defaults and keep pins/cotters included');
+assert(trussSource.includes('STRAIGHT_TYPE_ORDER') && trussSource.includes("truss05m:'truss05'") && trussSource.includes('canonicalType(item.type') && v4StructureConfiguratorSource.includes('TRUSS_STRAIGHT_TYPE_ORDER') && v4StructureConfiguratorSource.includes('trussStraightCount') && v4TrussStraightBomExportDoc.includes('0.5 м'), 'v3.17.34 should keep every straight truss length including 0.5m in BOM/export rows');
+assert(visualConfiguratorV4Source.includes('renderTrussFinalKitTable') && visualConfiguratorV4Source.includes('Итоговая комплектация ферм') && !visualConfiguratorV4Source.includes('<caption>Ведомость v3</caption>') && trussSource.includes("qty: count,\n                unit: 'шт'") && quoteWizardSource.includes('row.trussStraightCount || row.qty') && v4TrussFinalKitNoV3BomDoc.includes('Нулевые позиции скрываются'), 'v3.17.35 should replace visible v3 truss ведомость with final kit rows and count straight trusses by pieces plus meters');
+
+assert(v4OnlyAppShellDoc.includes('v4-only') && v4FastSectionsDoc.includes('listProjectIndex') && v4DashboardPolishDoc.includes('компактную навигацию') && v4LinearStyleSystemDoc.includes('Linear') && v4LinearSafeCanvasDoc.includes('led-cabinet-texture.png') && v4LedCanvasGuardDoc.includes('стартовые размеры поля') && ledUiSource.includes('resetLedGridCanvas') && ledUiSource.includes('expandedEdges') && ledUiSource.includes('startCols: state.cols || GRID_COLS') && v4DesignSystemSource.includes('linear-reference-compact-flat-dark-v4-safe-technical-canvases') && v4DesignSystemSource.includes("url('./led-cabinet-texture.png')") && v4DesignSystemSource.includes('border-radius:2px !important') && indexHtml.includes('v4-only-body') && indexHtml.includes('.v4-dashboard-quick-actions') && indexHtml.includes('src/modules/V4DesignSystem.js') && !indexHtml.includes('src/legacy-app.js') && !indexHtml.includes('id="stagePage"') && serviceWorkerSource.includes('PROJECT_CREW_KEYS') && serviceWorkerSource.includes('src/modules/V4DesignSystem.js') && !serviceWorkerSource.includes('src/legacy-app.js'), 'v3.17.12 should keep v4-only shell, fast sections, compact dashboard, compact Linear reference UI, safe technical canvas exceptions, LED canvas guard and fast Document Center');
+assert(documentCenterSource.includes('buildFastDocumentIndex') && documentCenterSource.includes('fastIndex: true') && documentCenterSource.includes('Подготовить HTML') && documentCenterSource.includes('previewText') && v4FastLazyDocumentCenterDoc.includes('fast lazy mode'), 'v3.17.6 should lazy-load Document Center documents, JSON payloads and HTML templates');
+assert(v4LinearCompactReferenceDoc.includes('14px') && v4LinearCompactReferenceDoc.includes('11px') && v4DesignSystemSource.includes('background:#08090a !important') && v4DesignSystemSource.includes('font-size:14px !important') && v4DesignSystemSource.includes('font-size:11px !important') && v4DesignSystemSource.includes("background-image:url('./led-cabinet-texture.png')"), 'v3.17.7 should apply compact flat Linear reference palette and typography while preserving LED texture');
+assert(changelogSource.startsWith('# FEG Stage PRO Changelog') && changelogSource.includes('## v3.17.47') && changelogSource.includes('## v3.17.46') && changelogSource.includes('## v3.17.45') && changelogSource.includes('## v3.17.44') && changelogSource.includes('## v3.17.43') && changelogSource.includes('## v3.17.42') && changelogSource.includes('## v3.17.41') && changelogSource.includes('## v3.17.40') && changelogSource.includes('## v3.17.39') && changelogSource.includes('## v3.17.38') && changelogSource.includes('## v3.17.37') && changelogSource.includes('## v3.17.35') && changelogSource.includes('## v3.17.34') && changelogSource.includes('## v3.17.32') && changelogSource.includes('## v3.17.31') && changelogSource.includes('## v3.17.30') && changelogSource.includes('## v3.17.29') && changelogSource.includes('## v3.17.28') && changelogSource.includes('## v3.17.26') && changelogSource.includes('## v3.17.24') && v4AdminUserAccessPasswordRecoveryDoc.includes('permissionsAdd') && v4AdminUserAccessPasswordRecoveryDoc.includes('Забыли пароль') && adminShellSource.includes('createProfile') && adminShellSource.includes('deleteProfile') && adminShellSource.includes('setProfilePermissions') && adminShellSource.includes('resetProfilePassword') && adminShellSource.includes('completePasswordReset') && localAuthProviderSource.includes('requestPasswordReset') && accessOnboardingSource.includes('data-v4-access-submit="complete-reset"') && rolePermissionsSource.includes('getProfilePermissions') && rolePermissionsSource.includes('canSeeSectionForUser') && v4DesignSystemSource.includes("data-feg-version', '3.17.45'") && v4DesignSystemSource.includes("version: '3.17.45'") && serviceWorkerSource.includes('FEG_STAGE_PRO_3_17_49_QUICK_PDF_READABLE_SCHEME_FALLBACK'), 'v3.17.49 should preserve admin user management metadata and bump quick PDF scheme fallback metadata');
+assert(indexHtmlSource.includes('.v4-project-action-more') && indexHtmlSource.includes('.v4-project-row-details'), 'v3.16.27 should style compact project action menus and collapsed project details');
+assert(projectsUiSource.includes('renderProjectActionGroup') && projectsUiSource.includes('Детали проекта') && projectsUiSource.includes('Ещё') && managerProjectsCompactTableDoc.includes('аккуратная таблица'), 'v3.16.27 should render compact manager projects table with grouped actions');
+assert(visualConfiguratorV4Source.includes('DEFAULT_STAGE_GRID_COLS = 14') && visualConfiguratorV4Source.includes('DEFAULT_STAGE_GRID_ROWS = 10'), 'v4 stage visual grid should default to 14x10');
+assert(quickCalculatorsV4Source.includes('QUICK_DRAFT_STORAGE_KEY') && quickCalculatorsV4Source.includes('hydrateQuickDrafts') && quickCalculatorsV4Source.includes('syncOpenQuickModalSections') && quickCalculatorsV4Source.includes("setQuickSection(root, 'truss'"), 'v3.16.12 should persist quick stage/truss/LED drafts locally and sync open modal state before visual refresh');
+assert(visualConfiguratorV4Source.includes('shouldPreserveStagePlanCoordinates') && visualConfiguratorV4Source.includes("coordinateMode:'grid-preserve'") && visualConfiguratorV4Source.includes("stageDraftVersion:'3.16.13-stage-coordinate-preserve'") && quickCalculatorsV4Source.includes('syncOpenQuickModalSections(root); mount.innerHTML'), 'v3.16.13 should preserve quick stage grid coordinates on modal reopen and sync before closing the modal');
+assert(visualConfiguratorV4Source.includes('handleStageCellPointerDown') && visualConfiguratorV4Source.includes("mode:'toggle'"), 'v4 stage visual editor should use click/drag toggle drawing instead of visible add/remove modes');
+assert(visualConfiguratorV4Source.includes('v4-stage-controls-layout') && visualConfiguratorV4Source.includes('v4-stage-control-stack--build') && visualConfiguratorV4Source.includes('v4-stage-control-stack--dimensions') && visualConfiguratorV4Source.includes('v4-stage-control-stack--closure') && visualConfiguratorV4Source.includes('Включить закрытие торцов') && v4DesignSystemSource.includes('.v4-stage-controls-layout') && v4DesignSystemSource.includes('.v4-stage-secondary-layout') && v4StageConfiguratorLayoutPolishDoc.includes('Перекладина') && v4StageConfiguratorLayoutPolishDoc.includes('Тип закрытия торцов'), 'v3.17.13 should keep ordered stage control columns and secondary tool/help row');
+assert(quoteWizardSource.includes('buildEquipmentSelectionMap') && quoteWizardSource.includes('data-quote-equipment-linked-subrent-supplier') && quoteWizardSource.includes('data-quote-equipment-deficit-subrent') && quoteWizardSource.includes('auto_deficit_subrent') && quoteWizardSource.includes('mergeEquipmentInputItems') && !quoteWizardSource.includes('data-quote-equipment-source-smart') && quoteEquipmentPickerSource.includes("1.2.1-auto-deficit-subrent-split") && quoteEquipmentPickerSource.includes('linkedSubrent') && quoteEquipmentPickerSource.includes('lineIdSuffix') && quoteSummaryBuilderSource.includes('getEquipmentCustomerRows') && quoteSummaryBuilderSource.includes('catalog:${toText(line.itemId)}') && v4DesignSystemSource.includes('.v4-equipment-deficit-subrent'), 'v3.17.14 should automatically split deficit subrent rows internally while keeping customer equipment rows grouped by catalog item');
+assert(visualConfiguratorV4Source.includes('renderTrussSubrentNeeds') && visualConfiguratorV4Source.includes('data-truss-subrent-row') && visualConfiguratorV4Source.includes('data-truss-add-subrentor') && visualConfiguratorV4Source.includes('data-truss-subrent-field="supplierId"') && v4StructureConfiguratorSource.includes('applyTrussLinkedSubrent') && v4StructureConfiguratorSource.includes('supplierId: link.supplierId') && quoteWizardSource.includes('data-quote-stage-subrent-field="widthM"') && quoteWizardSource.includes('data-quote-led-subrent-field="pitch"') && quoteWizardSource.includes('STAGE-SUBRENT') && quoteWizardSource.includes('LED-SUBRENT') && v4DesignSystemSource.includes('.v4-linked-subrent-override') && v4DesignSystemSource.includes('.v4-truss-subrent-row'), 'v3.17.15 should add truss deficit subrent inputs and stage/LED subrent override modes');
+assert(quoteWizardSource.includes('Сценическая конструкция') && quoteWizardSource.includes('LED - Экран') && quoteWizardSource.includes('data-quote-stage-subrent-field="clientPrice"') && quoteWizardSource.includes('data-quote-led-subrent-field="clientPrice"') && quoteWizardSource.includes('data-quote-equipment-linked-client-price') && visualConfiguratorV4Source.includes('data-truss-subrent-field="clientPrice"') && v4StructureConfiguratorSource.includes('clientPrice: link.clientPrice || link.subrentPrice') && subrentPlannerSource.includes('1.1.0-client-fallback') && subrentPlannerSource.includes('? subrentPrice'), 'v3.17.21 should split subrent/client prices and fallback empty client price to subrent cost');
+assert(quoteWizardSource.includes('v4-equipment-linked-subrent-top') && quoteWizardSource.includes('v4-equipment-linked-subrent-prices') && visualConfiguratorV4Source.includes('v4-truss-subrent-main') && visualConfiguratorV4Source.includes('v4-truss-subrent-prices') && v4DesignSystemSource.includes('.v4-equipment-linked-subrent-top') && v4DesignSystemSource.includes('.v4-truss-subrent-main') && v4SubrentLayoutPolishDoc.includes('Субаренда/ед.') && v4SubrentLayoutPolishDoc.includes('Клиент/ед.'), 'v3.17.21 should keep aligned two-level subrent layouts for equipment and truss rows');
+assert(quoteWizardSource.includes('data-quote-equipment-row-delete') && quoteWizardSource.includes('data-quote-equipment-row-clear') && quoteWizardSource.includes('clearEquipmentActionRow') && quoteWizardSource.includes('clearManualEquipmentRow') && v4DesignSystemSource.includes('.v4-equipment-row-actions') && v4DesignSystemSource.includes('.v4-equipment-row-icon') && v4QuoteEquipmentRowActionsDoc.includes('manual rows'), 'v3.17.16 should add delete and clear actions to warehouse and manual equipment rows');
+assert(quoteWizardSource.includes('v4-step-check-meta') && quoteWizardSource.includes('renderStepErrors(activeValidation, activeStep, steps)') && !quoteWizardSource.includes('v4-card v4-section-card v4-active-step-card') && v4DesignSystemSource.includes('.v4-step-check-card') && v4QuoteWizardActiveStepFrameCleanupDoc.includes('финальная сводка, документы, дефицит и субаренда не переносились'), 'v3.17.17 should remove the extra active step card frame and move step number/title into the validation card only');
+assert(indexHtmlSource.includes('stage-deck-texture.png') && indexHtmlSource.includes('v4 stage stairs / edge closure / 40px cells'), 'v4 stage UI should include centered templates, deck texture and height styling');
+assert(visualConfiguratorV4Source.includes('data-stage-height') && v4StructureConfiguratorSource.includes('stageHeightM'), 'v4 stage manual height should flow through visual input and stage section data');
+assert(indexHtmlSource.includes('width: 40px') && visualConfiguratorV4Source.includes('data-stage-tool="stair"') && v4StructureConfiguratorSource.includes('STG-909') && v4StructureConfiguratorSource.includes('stage_edge_raus_banner'), 'v3.15.49 should restore desktop 40px cells and add stage stairs / edge closure BOM accessories');
+assert(quoteDraftStorageSource.includes('saveDraftWithBom') && quoteDraftStorageSource.includes('attachBom:true') && quoteWizardSource.includes('data-quote-bom-refresh') && quoteWizardSource.includes('quote-wizard-light-autosave') && quoteProjectStorageSource.includes('rebuildMissing:false'), 'v3.15.52 should keep linear wizard and draft/project storage on a lazy BOM performance path');
+assert(v4StructureConfiguratorSource.includes('STG-910') && v4StructureConfiguratorSource.includes('STG-911') && v4StructureConfiguratorSource.includes('stageHeightM') && v4StructureConfiguratorSource.includes('frameDependency'), 'v3.15.52 should preserve stage height, stairs, edge closure and post/frame dependency metadata in stage BOM rows');
+const ledCalculatorSource = await readFile(repoPath('src/modules/LedCalculator.js'), 'utf8');
+const ledCalculatorUiSource = await readFile(repoPath('src/modules/LedCalculatorUI.js'), 'utf8');
+assert(ledCalculatorSource.includes('calculateLedLayout') && ledCalculatorSource.includes('constructionRows') && ledCalculatorUiSource.includes('data-led-template="left"') && ledCalculatorUiSource.includes('Отчёт по отдельным конструкциям') && v4LedBomBridgeSource.includes('layoutBlocks') && quickTechnicalSheetsSource.includes('Отдельные LED-конструкции'), 'v3.15.53 should add LED freeform constructions, templates and per-construction reports without changing legacy flows');
+assert(ledCalculatorUiSource.includes('expandGridAroundPoint') && ledCalculatorUiSource.includes('data-led-action="copy-active"') && ledCalculatorUiSource.includes('data-led-parts-list') && ledCalculatorUiSource.includes('explicitEmptyLayout') && ledCalculatorSource.includes('calculateEmptyLedLayout') && indexHtmlSource.includes('led-cabinet-texture.png') && serviceWorkerSource.includes('./led-cabinet-texture.png'), 'v3.15.54/3.15.55 should keep LED freeform UI, dedicated texture asset and auto-expand behavior without changing formulas');
+
+assert(ledCalculatorSource.includes('mountStanding') && ledCalculatorSource.includes('mountHanging') && ledCalculatorSource.includes('LED-HANGING-BAR') && ledCalculatorSource.includes('makeAspectRatio') && ledCalculatorUiSource.includes('data-led="mountMode"') && ledCalculatorUiSource.includes('Соотношение') && v4LedBomBridgeSource.includes('hanging_bar'), 'v3.15.56/3.15.58 should preserve LED standing/hanging mount mode, Hanging Bar BOM rows and per-construction aspect ratios while using the new mount dropdown UI');
+assert(!ledCalculatorSource.includes('LED_PLACEMENTS') && !ledCalculatorSource.includes('buildPlacementLayer') && !ledCalculatorUiSource.includes('data-led-placement') && !ledCalculatorUiSource.includes('Положение относительно сцены') && !v4LedBomBridgeSource.includes('placementMetaPreserved') && !quoteWizardSource.includes('data-quote-led-field="placementId"'), 'v3.15.60 should remove LED-to-stage placement UI/meta from the LED calculator so positioning can move to the future visualizer');
+assert(ledCalculatorSource.includes('buildPowerconSchukoByConstruction') && ledCalculatorUiSource.includes('PowerCON–Schuko</th>') && (quoteWizardSource.includes('data-quote-led-field="mountMode"') || quoteWizardSource.includes('data-quote-led-constructor')) && v4LedBomBridgeSource.includes('powerconSchukoByConstruction'), 'v3.15.58 should count PowerCON-Schuko per LED construction and expose a dropdown mount mode without touching protected flows');
+assert(ledCalculatorSource.includes('buildHangingRiggingByConstruction') && ledCalculatorSource.includes('m8x20-bolt') && ledCalculatorUiSource.includes('Печеньки висим') && indexHtmlSource.includes('layout overflow guard') && v4LedBomBridgeSource.includes('m8x20_bolt'), 'v3.15.59 should add hanging-mode cookies/M8x20 fasteners and keep the LED window inside its container');
+assert(ledCalculatorSource.includes('powerconSchukoWattsPerCable') && ledCalculatorSource.includes('calculatePowerconSchukoCablesForPower') && ledCalculatorSource.includes('countHorizontalModuleConnections'), 'v3.15.62 should count PowerCON-Schuko by construction power and hanging fasteners by (width-1)×rows per construction');
+assert(ledCalculatorSource.includes('LED-SPANSET') && ledCalculatorSource.includes('LED-SHACKLE') && ledCalculatorSource.includes('spansetCount') && ledCalculatorUiSource.includes('Спанцет'), 'v3.15.63 should add hanging-mode Spanset and Shackle rows from Hanging Bar count');
+assert(v4StabilizationSmokeMapSource.includes('buildStabilizationSmokeMap') && v4StabilizationSmokeMapSource.includes('led_no_placement_meta') && indexHtml.includes('src/modules/V4StabilizationSmokeMap.js') && serviceWorkerSource.includes('./src/modules/V4StabilizationSmokeMap.js') && v4StabilizationSmokeMapDoc.includes('section summary') && v4StabilizationSmokeMapDoc.includes('visualModel'), 'v3.15.64 should add read-only Stage/Truss/LED stabilization smoke map before visualizer work');
+assert(stageVisualAdapterSource.includes('adaptStageSection') && stageVisualAdapterSource.includes('quote.sections.stage') && visualModelBuilderSource.includes('buildVisualModel') && visualModelBuilderSource.includes('attachVisualModelToQuote') && visualModelBuilderSource.includes('data_only_no_renderer') && indexHtml.includes('src/modules/visual/StageVisualAdapter.js') && indexHtml.includes('src/modules/visual/VisualModelBuilder.js') && serviceWorkerSource.includes('./src/modules/visual/VisualModelBuilder.js') && visualModelFoundationDoc.includes('quote.visualModel') && visualModelFoundationDoc.includes('noHeavyRenderOnInput'), 'v3.16.0 should keep read-only visual model foundation and stage adapter');
+assert(projectRenderer2DSource.includes('renderStageTopViewSvg') && projectRenderer2DSource.includes('data-feg-view=\"stage-top\"') && projectRenderer2DSource.includes('feg-stage-deck-top-texture') && projectRenderer2DSource.includes('buildRendererSmokeReport') && indexHtml.includes('src/modules/visual/ProjectRenderer2D.js') && serviceWorkerSource.includes('./src/modules/visual/ProjectRenderer2D.js') && stageTopViewRendererDoc.includes('ProjectRenderer2D') && stageTopViewRendererDoc.includes('вид сверху'), 'v3.16.1 should add on-demand SVG stage top view renderer without protected-flow mutations');
+assert(projectRenderer2DSource.includes('renderStageFrontViewSvg') && projectRenderer2DSource.includes('data-feg-view=\"stage-front\"') && projectRenderer2DSource.includes('feg-stage-front-skirt-texture') && projectRenderer2DSource.includes('renderStageFrontViewDataUri') && stageFrontViewRendererDoc.includes('фронтальный') && stageFrontViewRendererDoc.includes('renderStageFrontViewSvg'), 'v3.16.2 should add on-demand SVG stage front view renderer without protected-flow mutations');
+assert(projectRenderer2DSource.includes('renderStageIsoViewSvg') && projectRenderer2DSource.includes('data-feg-view=\"stage-iso\"') && projectRenderer2DSource.includes('feg-stage-iso-side-gradient') && projectRenderer2DSource.includes('renderStageIsoViewDataUri') && stageIsoPreviewDoc.includes('изометрический') && stageIsoPreviewDoc.includes('renderStageIsoViewSvg'), 'v3.16.3 should add on-demand SVG stage isometric preview without protected-flow mutations');
+assert(trussVisualAdapterSource.includes('adaptTrussSection') && trussVisualAdapterSource.includes('quote.sections.truss') && trussVisualAdapterSource.includes('VISUAL_TRUSS_ADAPTER_VERSION') && visualModelBuilderSource.includes('buildTrussVisual') && visualModelBuilderSource.includes('truss_adapter_ready') && indexHtml.includes('src/modules/visual/TrussVisualAdapter.js') && serviceWorkerSource.includes('./src/modules/visual/TrussVisualAdapter.js') && trussVisualAdapterDoc.includes('TrussVisualAdapter') && trussVisualAdapterDoc.includes('quote.visualModel.truss'), 'v3.16.4 should add read-only truss visual adapter and wire it into visualModel');
+  assert(trussVisualAdapterSource.includes('ROOF_TYPES') && trussVisualAdapterSource.includes('buildRoofSeed') && trussVisualAdapterSource.includes('visual_only_no_load_calculation') && visualModelBuilderSource.includes('truss_roof_seed_ready') && trussRoofVisualSeedDoc.includes('quote.visualModel.truss.roof') && trussRoofVisualSeedDoc.includes('noLoadFormulaChanged'), 'v3.16.5 should add read-only roof visual seed without load/BOM mutations');
+assert(ledVisualAdapterSource.includes('adaptLedSection') && ledVisualAdapterSource.includes('quote.sections.led') && ledVisualAdapterSource.includes('placementReservedForVisualizer') && ledVisualAdapterSource.includes('noFormulaMutation') && visualModelBuilderSource.includes('buildLedVisual') && visualModelBuilderSource.includes('led_adapter_ready') && indexHtml.includes('src/modules/visual/LedVisualAdapter.js') && serviceWorkerSource.includes('./src/modules/visual/LedVisualAdapter.js') && ledVisualAdapterDoc.includes('quote.visualModel.led') && ledVisualAdapterDoc.includes('Placement относительно сцены не возвращается'), 'v3.16.6 should add read-only LED visual adapter and keep placement reserved for visualizer');
+assert(audioVisualAdapterSource.includes('adaptAudioSection') && audioVisualAdapterSource.includes('PA') && audioVisualAdapterSource.includes('frontFill') && audioVisualAdapterSource.includes('noPricingMutation') && lightVisualAdapterSource.includes('adaptLightSection') && lightVisualAdapterSource.includes('fixturesOnTruss') && lightVisualAdapterSource.includes('floorFixtures') && lightVisualAdapterSource.includes('noPricingMutation') && visualModelBuilderSource.includes('buildAudioVisual') && visualModelBuilderSource.includes('buildLightVisual') && visualModelBuilderSource.includes('audio_adapter_ready') && visualModelBuilderSource.includes('light_adapter_ready') && indexHtml.includes('src/modules/visual/AudioVisualAdapter.js') && indexHtml.includes('src/modules/visual/LightVisualAdapter.js') && serviceWorkerSource.includes('./src/modules/visual/AudioVisualAdapter.js') && serviceWorkerSource.includes('./src/modules/visual/LightVisualAdapter.js') && audioLightVisualDoc.includes('quote.visualModel.audio') && audioLightVisualDoc.includes('quote.visualModel.light'), 'v3.16.7 should add read-only audio/light visual placeholder adapters');
+assert(visualExportSource.includes('buildVisualExportPack') && visualExportSource.includes('buildVisualPreviewSnapshot') && visualExportSource.includes('svgToPngDataUri') && visualExportSource.includes('manualExportOnly') && visualExportSource.includes('noPdfInsertionInThisStep') && indexHtml.includes('src/modules/visual/VisualExport.js') && serviceWorkerSource.includes('./src/modules/visual/VisualExport.js') && visualExportDoc.includes('VisualExport') && visualExportDoc.includes('SVG') && visualExportDoc.includes('PNG'), 'v3.16.8 should add manual visual export helpers without UI/PDF/protected-flow mutations');
+assert(visualPreviewPanelSource.includes('renderVisualPreviewPanel') && visualPreviewPanelSource.includes('Обновить визуализацию') && visualPreviewPanelSource.includes('buildVisualPreviewPanelSmokeReport') && visualPreviewPanelSource.includes('noAutomaticRenderOnInput') && indexHtml.includes('src/modules/visual/VisualPreviewPanel.js') && serviceWorkerSource.includes('./src/modules/visual/VisualPreviewPanel.js') && visualPreviewPanelDoc.includes('VisualPreviewPanel') && visualPreviewPanelDoc.includes('QuickCalculators') && visualPreviewPanelDoc.includes('Обновить визуализацию'), 'v3.16.9 should add manual visual preview panel without render-on-input or protected-flow mutations');
+assert(stageVisualAdapterSource.includes('inferStairSideFromGrid') && stageVisualAdapterSource.includes("placementMode: hasGridPosition ? 'plan-cell' : 'edge-position'") && stageVisualAdapterSource.includes('stairsPlanCellsReady') && projectRenderer2DSource.includes('getStagePlanBounds') && projectRenderer2DSource.includes('isPlanCellStair') && projectRenderer2DSource.includes('feg-stair-plan-cell') && visualStageStairsPlanCellFixDoc.includes('plan-cell'), 'v3.16.10 should keep v4 stage stairs on their source scheme cells in visual preview');
+assert(projectRenderer2DSource.includes('renderTrussTopOverlay') && projectRenderer2DSource.includes('renderTrussFrontOverlay') && projectRenderer2DSource.includes('renderTrussIsoOverlay') && projectRenderer2DSource.includes('data-feg-layer="truss"') && projectRenderer2DSource.includes('data-feg-truss-live="true"') && trussVisualRendererSeedDoc.includes('live truss quick preview'), 'v3.16.12 should use live truss blocks in visual preview and keep protected-flow mutations off');
+assert(trussVisualAdapterSource.includes('portal_two_posts_beam') && trussVisualAdapterSource.includes('buildTrussLayoutProfile') && projectRenderer2DSource.includes('renderPortalFrontOverlay') && projectRenderer2DSource.includes('renderPortalIsoOverlay') && projectRenderer2DSource.includes('portal_top_projection') && projectRenderer2DSource.includes('meter-proportional') && projectRenderer2DSource.includes('data-feg-truss-layout="portal_two_posts_beam"') && projectRenderer2DSource.includes('renderLedFrontOverlay') && projectRenderer2DSource.includes('data-feg-led-placement-source="visualizer-controls"') && visualPreviewPanelSource.includes('LED_PLACEMENT_LABELS') && visualPreviewPanelSource.includes('data-visual-led-placement'), 'v3.16.17 should keep regular portal meter-proportional layout and add LED visualizer placement controls without freeform 3D block projection');
+assert(projectRenderer2DSource.includes('buildLedPlacementContexts') && projectRenderer2DSource.includes('data-feg-led-layout="placement_lanes"') && projectRenderer2DSource.includes('data-feg-led-placement-slot') && visualPreviewPanelSource.includes('getLedPlacementScopeId') && visualPreviewPanelSource.includes('ledPlacementScopeId') && ledVisualizerMultiConstructionDoc.includes('placement_lanes') && ledVisualizerMultiConstructionDoc.includes('не возвращает placement в LED-калькулятор'), 'v3.16.20 should add project-scoped multi-construction LED placement lanes in visualizer only');
+assert(quoteModelSource.includes('hasSectionMetric') && quoteModelSource.includes('sumEquipmentItemMetric') && quoteEquipmentPickerSource.includes("PICKER_VERSION = '1.2.1-auto-deficit-subrent-split'") && quoteEquipmentPickerSource.includes("sectionKey: 'equipment'") && quoteSmartRowsFlowDoc.includes('summary/BOM/quote_items'), 'v3.16.21 should stabilize smart equipment rows through summary/BOM/quote_items without double counting');
+assert(quoteWizardSource.includes('data-quote-summary-flow') && quoteWizardSource.includes('renderSummaryFlowRows') && quoteSummaryFlowDoc.includes('buildFlowDiagnosticRows'), 'v3.16.22 should add a read-only final summary flow map for section → BOM → quote_items → warehouse diagnostics');
+assert(quoteWizardSource.includes('data-quote-led-constructor') && quoteWizardSource.includes('initLedConstructors') && quoteWizardSource.includes('data-quote-save-project'), 'v3.16.23 should mount LED constructor and expose final save quote action in QuoteWizard');
+assert(ledCalculatorUiSource.includes('getLedInput') && ledCalculatorUiSource.includes('getLedSection') && quoteLedConstructorFastSaveDoc.includes('Fast Save'), 'v3.16.23 should export LED constructor readers and document the fast save guard');
+assert(quoteDraftStorageSource.includes('sortAndDedupeRaw') && quoteProjectStorageSource.includes('sortAndDedupeProjects'), 'v3.16.23 should avoid full-history normalization on every quote/project save');
+assert(quoteWizardSource.includes('hasVisibleEquipmentPanel') && quoteWizardSource.includes('hasEquipmentControls') && quoteWizardSource.includes("if (!hasEquipmentControls) return null") && quoteEquipmentSummaryPreserveDoc.includes('summary формы подбора оборудования уже нет'), 'v3.16.24 should preserve configured equipment rows when rendering summary/documents without equipment controls');
+  const quoteSectionBinderV4Source = await readFile(repoPath('src/modules/QuoteSectionBinder.js'), 'utf8');
+  const v4StructureDoc = await readFile(repoPath('docs/V4_STRUCTURE_CONFIGURATOR_SHARED_BOM.md'), 'utf8');
+  const v4StructureVisualSource = await readFile(repoPath('src/modules/V4StructureVisualConfigurator.js'), 'utf8');
+  const v4StructureVisualDoc = await readFile(repoPath('docs/V4_STRUCTURE_VISUAL_CONFIGURATORS.md'), 'utf8');
+  const v4SharedBomBridgeSource = await readFile(repoPath('src/modules/V4SharedBomBridge.js'), 'utf8');
+  assert(v4SharedBomBridgeSource.includes('stageHeightM'), 'shared BOM bridge should preserve stageHeightM for stage rows');
+  const v4SharedBomBridgeDoc = await readFile(repoPath('docs/V4_SHARED_BOM_BRIDGE_3_15_35.md'), 'utf8');
+  const v4BomInspectorSource = await readFile(repoPath('src/modules/V4BomInspector.js'), 'utf8');
+  const v4BomContractSource = await readFile(repoPath('src/modules/V4BomContract.js'), 'utf8');
+  const v4BomContractDoc = await readFile(repoPath('docs/V4_BOM_CONTRACT_READINESS_3_15_42.md'), 'utf8');
+  const v4BomInspectorDoc = await readFile(repoPath('docs/V4_BOM_INSPECTOR_3_15_36.md'), 'utf8');
+  const v4UnifiedBomExportSource = await readFile(repoPath('src/modules/V4UnifiedBomExport.js'), 'utf8');
+  const v4UnifiedBomExportDoc = await readFile(repoPath('docs/V4_UNIFIED_BOM_EXPORT_3_15_39.md'), 'utf8');
+  const v4QuoteDraftBomSinkSource = await readFile(repoPath('src/modules/V4QuoteDraftBomSink.js'), 'utf8');
+  assert(indexHtmlSource.includes('src/modules/QuickIdealCatalog.js') && quickIdealCatalogSource.includes('QUICK_IDEAL_CATALOG_VERSION') && quickIdealCatalogSource.includes('quick_ideal_catalog') && v4StructureConfiguratorSource.includes('getCatalogMode') && v4StructureConfiguratorSource.includes('quick_ideal') && availabilitySource.includes('1.2.0-quick-ideal-isolation') && availabilitySource.includes("inventoryStatus: 'quick_ideal'") && v4SharedBomBridgeSource.includes('quick_ideal') && v4QuoteDraftBomSinkSource.includes('rematerializeSectionsForQuoteCatalog') && quoteWizardSource.includes("catalogMode: 'quote'") && quickCalculatorsV4Source.includes("catalogMode: 'quick'") && v4TrussCatalogStockBindingDoc.includes('quick_ideal_catalog') && v4StructureConfiguratorSource.includes('STRUCTURE_PART_ALIASES') && v4StructureConfiguratorSource.includes('migratedAliasFrom'), 'v3.17.39 should isolate quick ideal catalog while keeping quote truss compatibility alternatives');
+  assert(v4StructureConfiguratorSource.includes('TRUSS_DEFAULT_COMPATIBILITY_GROUP') && v4StructureConfiguratorSource.includes('trussCompatibilityGroup') && v4StructureConfiguratorSource.includes('buildTrussStraightRowsWithAlternatives') && v4StructureConfiguratorSource.includes('alternativeLengthExtraConnections') && v4StructureConfiguratorSource.includes('ensureTrussCompatibilityMetadata') && v4TrussCompatibleAlternativesDoc.includes('T29Q-C2-BOX-290') && v4TrussCompatibleAlternativesDoc.includes('MDM') && v4TrussCompatibleAlternativesDoc.includes('бабышка') && v4TrussCompatibleAlternativesDoc.includes('500 ₽'), 'v3.17.39 should keep truss compatibility groups and clean MDM catalog metadata in quote mode');
+  const v4QuoteDraftBomSinkDoc = await readFile(repoPath('docs/V4_QUOTE_DRAFT_BOM_SINK_3_15_40.md'), 'utf8');
+  const v4QuoteDraftHydratorSource = await readFile(repoPath('src/modules/V4QuoteDraftHydrator.js'), 'utf8');
+  const v4QuoteDraftHydratorDoc = await readFile(repoPath('docs/V4_QUOTE_DRAFT_RESTORE_HYDRATE_3_15_41.md'), 'utf8');
+  const v4StageBomBridgeDoc = await readFile(repoPath('docs/V4_STAGE_BOM_BRIDGE_PREP_3_15_37.md'), 'utf8');
+  const v4StageBomInspectorDoc = await readFile(repoPath('docs/V4_STAGE_BOM_INSPECTOR_3_15_38.md'), 'utf8');
+  const v4TrussFullEngineDoc = await readFile(repoPath('docs/V4_TRUSS_FULL_ENGINE_DARK_THEME.md'), 'utf8');
+  assert(v4StructureConfiguratorSource.includes('V4StructureConfigurator') && v4StructureConfiguratorSource.includes('STG-901') && v4StructureConfiguratorSource.includes('TRS-940') && v4StructureConfiguratorSource.includes('buildStageSection') && v4StructureConfiguratorSource.includes('buildTrussSection'), 'V4StructureConfigurator should expose shared stage/truss system parts and section builders');
+  assert(v4StructureConfiguratorSource.includes('buildStageSharedBomSnapshot') && v4StructureVisualSource.includes('Stage BOM bridge') && quickCalculatorsV4Source.includes('shared BOM'), 'v3.15.37 should expose a stage shared BOM bridge preview for quick calculators and quote wizard');
+  assert(v4SharedBomBridgeSource.includes('buildSectionFlowSnapshot') && v4SharedBomBridgeSource.includes('buildStageFlowSnapshot') && v4BomInspectorSource.includes('renderStageFlowPanel') && v4StageBomInspectorDoc.includes('quote.stage → shared BOM → quote_items → складской лист'), 'v3.15.38 should expose stage-to-unified BOM inspector flow');
+  assert(v4UnifiedBomExportSource.includes('buildUnifiedExportPayload') && v4UnifiedBomExportSource.includes('buildUnifiedTechnicalSheet') && v4UnifiedBomExportSource.includes('buildUnifiedWarehouseSheet') && quickCalculatorsV4Source.includes('Общий техлист v4') && quickCalculatorsV4Source.includes('Unified JSON') && v4UnifiedBomExportDoc.includes('V4UnifiedBomExport'), 'v3.15.39 should expose unified BOM export and no-price tech/warehouse sheet seed');
+  assert(v4QuoteDraftBomSinkSource.includes('V4QuoteDraftBomSink') && v4QuoteDraftBomSinkSource.includes('attachBomSnapshot') && v4QuoteDraftBomSinkSource.includes('quote.v4Bom') && quickCalculatorsV4Source.includes('В черновик сметы v4') && v4QuoteDraftBomSinkDoc.includes('quote.v4Bom'), 'v3.15.40 should attach unified BOM snapshot to quote drafts');
+  assert(v4QuoteDraftHydratorSource.includes('V4QuoteDraftHydrator') && v4QuoteDraftHydratorSource.includes('hydrateDraft') && v4QuoteDraftHydratorSource.includes('hydrateProjectRecord') && v4QuoteDraftHydratorDoc.includes('quote.v4Bom') && v4QuoteDraftHydratorDoc.includes('BOM snapshot'), 'v3.15.41 should restore hydrated v4 BOM snapshots for drafts and projects');
+  assert(v4BomContractSource.includes('V4BomContract') && v4BomContractSource.includes('buildBomReadinessReport') && v4BomContractSource.includes('validateQuoteBomContract') && v4BomContractSource.includes('exportContractJson') && v4BomContractDoc.includes('BOM contract') && quickCalculatorsV4Source.includes('BOM contract') && indexHtml.includes('src/modules/V4BomContract.js'), 'v3.15.42 should finalize the v4 BOM contract/readiness layer');
+  assert(v4StructureConfiguratorSource.includes('loadCheck') && v4StructureVisualSource.includes('v4-truss-load-panel') && v4TrussFullEngineDoc.includes('LoadChecker tables'), 'V4 truss wrapper should include full v3 load check tables, dark theme and summary flow');
+  assert(quickCalculatorsV4Source.includes('V4StructureVisualConfigurator') && quickCalculatorsV4Source.includes('Быстрый визуальный конфигуратор сцены') && quickCalculatorsV4Source.includes('Быстрый блочный конфигуратор ферм'), 'QuickCalculators should mount shared visual configurators for stage/truss');
+  assert(quoteSectionBinderV4Source.includes('QuoteSectionBinder.v4-stage') && quoteSectionBinderV4Source.includes('QuoteSectionBinder.v4-truss'), 'QuoteSectionBinder should prefer v4 structure configurator for stage/truss sections');
+  assert(v4StructureDoc.includes('V4StructureConfigurator') && v4StructureDoc.includes('STG-901') && v4StructureDoc.includes('TRS-943'), 'V4 structure shared BOM doc should describe system parts');
+  assert(v4StructureVisualSource.includes('renderStageConfigurator') && v4StructureVisualSource.includes('renderTrussConfigurator') && v4StructureVisualSource.includes('TrussBlockConstructor') && v4StructureVisualSource.includes('buildVisualConfiguratorReport'), 'V4StructureVisualConfigurator should expose shared visual stage/truss editors');
+  assert(v4StructureVisualDoc.includes('V4StructureVisualConfigurator') && v4StructureVisualDoc.includes('менеджер') && v4StructureVisualDoc.includes('техник'), 'V4 visual configurator doc should explain shared technician/manager usage');
+  assert(v4SharedBomBridgeSource.includes('V4SharedBomBridge') && v4SharedBomBridgeSource.includes('collectQuoteBomRows') && v4SharedBomBridgeSource.includes('buildQuoteItemRows') && v4SharedBomBridgeSource.includes('bindTrussInputToQuote') && v4SharedBomBridgeSource.includes('buildUnifiedBomSummary'), 'V4SharedBomBridge should expose shared BOM bridge helpers for quote and truss flows');
+  assert(v4BomInspectorSource.includes('V4BomInspector') && v4BomInspectorSource.includes('buildInspectorSnapshot') && v4BomInspectorSource.includes('renderInspector') && v4BomInspectorSource.includes('quote_items') && v4BomInspectorSource.includes('stageFlow') && v4BomInspectorSource.includes('renderContractPanel'), 'V4BomInspector should expose read-only BOM diagnostics including stage flow and BOM contract');
+  assert(v4StructureConfiguratorSource.includes("resolvedSourceType") && v4StructureConfiguratorSource.includes("equipment_database_system_part") && v4StructureConfiguratorSource.includes("quick_ideal_catalog"), 'v4 system BOM rows should carry quote/quick source type with sourceSystem metadata');
+  assert(v4SharedBomBridgeDoc.includes('quote_items') && v4SharedBomBridgeDoc.includes('WarehousePickListBuilder') && v4SharedBomBridgeDoc.includes('QuoteItemBuilder'), 'V4 shared BOM bridge doc should explain quote/warehouse/document flow');
+  assert(v4BomInspectorDoc.includes('V4BomInspector') && v4BomInspectorDoc.includes('Shared BOM') && v4BomInspectorDoc.includes('складской лист'), 'V4 BOM inspector doc should explain shared BOM diagnostics');
+  assert(v4StageBomBridgeDoc.includes('buildStageSharedBomSnapshot') && v4StageBomBridgeDoc.includes('quote.stage') && v4StageBomBridgeDoc.includes('складской лист'), 'v4 stage BOM bridge prep doc should explain stage shared BOM path');
   assert(quoteBackendSyncPackSource.includes('runQuoteControlledWriteEdge') && quoteBackendSyncPackSource.includes('WRITE QUOTE') && quoteBackendSyncPackSource.includes('fegV4QuoteControlledWriteReports'), 'QuoteBackendSyncPack should expose quote controlled write runner and history');
   assert(quoteBackendSyncPackSource.includes('runQuotePostWriteVerification') && quoteBackendSyncPackSource.includes('fegV4QuotePostWriteVerificationReports'), 'QuoteBackendSyncPack should expose quote post-write verification loop and history');
+  assert(quoteBackendSyncPackSource.includes('buildQuoteSyncAuditTrail') && quoteBackendSyncPackSource.includes('fegV4QuoteSyncAuditSnapshots') && quoteBackendSyncPackSource.includes('buildQuoteSyncRollbackHints'), 'QuoteBackendSyncPack should expose quote sync audit and rollback safety helpers');
   assert(quoteControlledWriteFunction.includes('FEG_ENABLE_QUOTE_REMOTE_WRITE') && quoteControlledWriteFunction.includes('quote_controlled_write_executed') && quoteControlledWriteFunction.includes('no_stock_movements'), 'quote-controlled-write edge should stay behind env gate and avoid stock movements');
   assert(quoteRemoteDryRunFunction.includes('verify_after_controlled_write') && quoteRemoteDryRunFunction.includes('post_write_verification_gate'), 'quote dry-run edge should support read-only post-write verification gate');
   assert(quoteControlledWriteDoc.includes('WRITE QUOTE') && quoteControlledWriteDoc.includes('No reservation creation'), 'quote controlled write runner doc should explain final gates and non-goals');
   assert(quotePostWriteVerificationDoc.includes('post-write verification') && quotePostWriteVerificationDoc.includes('remote_only'), 'quote post-write verification doc should explain gate and remote_only handling');
+  const quoteSyncAuditDoc = await readFile(repoPath('docs/SUPABASE_QUOTES_SYNC_AUDIT_ROLLBACK.md'), 'utf8');
+  const authSessionPreflightDoc = await readFile(repoPath('docs/SUPABASE_AUTH_SESSION_WORKSPACE_PREFLIGHT.md'), 'utf8');
+  const authSessionDryRunFunction = await readFile(repoPath('supabase/functions/auth-session-dry-run/index.ts'), 'utf8');
+  const authSessionPreflightMigration = await readFile(repoPath('supabase/migrations/202605120005_auth_session_workspace_preflight.sql'), 'utf8');
+  const authRuntimeBridgeDoc = await readFile(repoPath('docs/SUPABASE_AUTH_RUNTIME_BRIDGE_TEMPLATES.md'), 'utf8');
+  const authRuntimeBridgeMigration = await readFile(repoPath('supabase/migrations/202605120006_auth_runtime_bridge_templates.sql'), 'utf8');
+  const authActionDryRunDoc = await readFile(repoPath('docs/SUPABASE_AUTH_ACTION_DRY_RUN_AUDIT.md'), 'utf8');
+  const authActionDryRunMigration = await readFile(repoPath('supabase/migrations/202605120007_auth_action_dry_run_audit.sql'), 'utf8');
+  const authActionApprovalDoc = await readFile(repoPath('docs/SUPABASE_AUTH_ACTION_APPROVAL_EXECUTION.md'), 'utf8');
+  const authActionApprovalMigration = await readFile(repoPath('supabase/migrations/202605120008_auth_action_approval_execution.sql'), 'utf8');
+  const authActionPostVerifyDoc = await readFile(repoPath('docs/SUPABASE_AUTH_ACTION_POST_VERIFY_AUDIT.md'), 'utf8');
+  const authActionPostVerifyMigration = await readFile(repoPath('supabase/migrations/202605120009_auth_action_post_verify_audit.sql'), 'utf8');
+  const authActionCapabilityDoc = await readFile(repoPath('docs/SUPABASE_AUTH_ACTION_CAPABILITY_PROMOTION_GATE.md'), 'utf8');
+  const authActionCapabilityMigration = await readFile(repoPath('supabase/migrations/202605120010_auth_action_capability_promotion_gate.sql'), 'utf8');
+  const authControlledActionFunction = await readFile(repoPath('supabase/functions/auth-controlled-action/index.ts'), 'utf8');
+  assert(quoteSyncAuditDoc.includes('quote sync audit') && quoteSyncAuditDoc.includes('automatic_rollback: false'), 'quote sync audit rollback doc should explain audit and non-destructive rollback hints');
   assert(indexHtml.includes('jspdf@4.2.1/dist/jspdf.umd.min.js'), 'jsPDF CDN must be pinned to 4.2.1');
   assert(indexHtml.includes('@supabase/supabase-js@2.105.4/dist/umd/supabase.min.js'), 'Supabase CDN must be pinned to 2.105.4');
   assert(!indexHtml.includes('@supabase/supabase-js@2"></script>'), 'Supabase CDN must not use a floating @2 tag');
@@ -121,6 +374,8 @@ async function checkStaticSecurity() {
   assert(indexHtml.includes('src/modules/ReportsCenter.js'), 'reports center module must be loaded');
   assert(indexHtml.includes('src/modules/CommandCenter.js'), 'command center module must be loaded');
   assert(indexHtml.includes('src/modules/RolePermissions.js'), 'role permissions module must be explicitly loaded');
+  assert(indexHtml.includes('src/modules/SiteChecklist.js'), 'admin user access module must be explicitly loaded for tech director');
+  assert(indexHtml.includes('src/modules/ProjectCrewAssignments.js'), 'project crew assignments module must be explicitly loaded');
   assert(indexHtml.includes('src/modules/EquipmentDatabase.js'), 'equipment database module must be explicitly loaded');
   assert(indexHtml.includes('src/modules/EquipmentDatabaseUI.js'), 'equipment database UI module must be explicitly loaded');
   assert(equipmentDbSource.includes('generateNextCode,') && equipmentDbSource.includes('getCategoryCodePrefix,'), 'EquipmentDatabase must export code generator helpers for editor button');
@@ -143,10 +398,16 @@ async function checkStaticSecurity() {
   assert(indexHtml.includes('src/modules/QuoteModel.js'), 'quote model module must be explicitly loaded');
   assert(indexHtml.includes('src/modules/QuoteDraftStorage.js'), 'quote draft storage module must be explicitly loaded');
   assert(indexHtml.includes('src/modules/QuoteProjectStorage.js'), 'quote project storage module must be explicitly loaded');
-  assert(indexHtml.includes('src/modules/QuoteLegacyBridge.js'), 'quote legacy bridge module must be explicitly loaded');
+  assert(!indexHtml.includes('src/modules/QuoteLegacyBridge.js'), 'v4-only shell must not load quote legacy bridge');
   assert(indexHtml.includes('src/modules/QuoteEquipmentPicker.js'), 'quote equipment picker module must be explicitly loaded');
   assert(indexHtml.includes('src/modules/QuoteSectionBinder.js'), 'quote section binder module must be explicitly loaded');
+  assert(indexHtml.includes('src/modules/V4SharedBomBridge.js'), 'v4 shared BOM bridge module must be explicitly loaded');
+  assert(indexHtml.includes('src/modules/V4LedBomBridge.js'), 'v4 LED BOM bridge module must be explicitly loaded');
+  assert(v4LedBomBridgeSource.includes('buildLedSection') && v4LedBomBridgeSource.includes('buildLedFlowSnapshot') && v4LedBomBridgeSource.includes('equipment_database_system_part') && v4LedBomBridgeSource.includes('quick_ideal_catalog'), 'v4 LED BOM bridge should expose LED section/flow and normalize quote/quick catalog inventory rows');
+  assert(ledUiSource.includes('_v4LedOnChange') && ledUiSource.includes('LED BOM bridge'), 'LED calculator UI should publish quick LED sections and show LED BOM bridge preview');
+  assert(indexHtml.includes('src/modules/V4UnifiedBomExport.js') && indexHtml.includes('src/modules/V4QuoteDraftBomSink.js') && indexHtml.includes('src/modules/V4BomInspector.js') && indexHtml.includes('.v4-bom-inspector'), 'v4 BOM inspector module and styles must be explicitly loaded');
   assert(indexHtml.includes('src/modules/QuoteSummaryBuilder.js'), 'quote summary builder module must be explicitly loaded');
+  assert(indexHtml.includes('src/modules/V4StabilizationSmokeMap.js'), 'v4 stabilization smoke map module must be explicitly loaded');
   assert(indexHtml.includes('src/modules/AvailabilityChecker.js'), 'availability checker module must be explicitly loaded');
   assert(indexHtml.includes('src/modules/WarehousePickListBuilder.js'), 'warehouse pick-list builder module must be explicitly loaded');
   assert(indexHtml.includes('src/modules/SupplierDirectory.js'), 'supplier directory module must be explicitly loaded');
@@ -181,7 +442,7 @@ async function checkStaticSecurity() {
   assert(indexHtml.includes('.v4-equipment-card-list { display:none;'), 'equipment database should provide mobile card layout');
   assert(indexHtml.includes('.v4-client-card-list { display:none;'), 'v4 clients panel should provide mobile card layout');
   assert(indexHtml.includes('.v4-table--clients { min-width:980px; }'), 'v4 clients table should keep readable desktop width');
-  assert(indexHtml.includes('.v4-table--projects { min-width:1180px; }'), 'project table should keep readable desktop width');
+  assert(indexHtml.includes('.v4-table--projects { min-width:1080px; }'), 'project table should keep readable desktop width');
   assert(indexHtml.includes('.v4-project-card-list { display:none;'), 'project history should provide mobile card layout');
   assert(indexHtml.includes('.v4-project-timeline'), 'project history should have timeline styles');
   assert(indexHtml.includes('@media (max-width: 680px)') && indexHtml.includes('.v4-table-wrap--equipment { display:none; }'), 'equipment table should switch to cards on mobile');
@@ -212,6 +473,8 @@ async function checkStaticSecurity() {
   const quickCalculatorsSource = await readFile(repoPath('src/modules/QuickCalculators.js'), 'utf8');
   assert(quickCalculatorsSource.includes('data-v4-quick-doc="stage:tech"'), 'quick calculators should expose stage no-price tech sheet action');
   assert(quickCalculatorsSource.includes('data-v4-quick-doc="truss:warehouse"'), 'quick calculators should expose truss no-price warehouse sheet action');
+  assert(quickCalculatorsSource.includes('openQuickModal') && quickCalculatorsSource.includes('renderStageConfigurator') && quickCalculatorsSource.includes('renderTrussConfigurator') && quickCalculatorsSource.includes('renderLedConfigurator'), 'quick calculators should open modal configurators for stage, truss and LED');
+  assert(indexHtml.includes('.v4-quick-modal-backdrop') && indexHtml.includes('.v4-quick-stage-grid') && indexHtml.includes('.v4-truss-chip-field'), 'quick calculator modal styles should be available');
   assert(quoteWizardSource.includes('data-quote-doc="customer"'), 'quote summary should expose customer KP document action');
   assert(quoteWizardSource.includes('data-quote-doc="warehouse:all"'), 'quote summary should expose common warehouse document action');
   assert(projectsUiSource.includes('data-v4-project-status'), 'project history should expose inline status selector');
@@ -239,6 +502,29 @@ async function checkStaticSecurity() {
   assert(adminShellSource.includes('bootstrapAdminKey') && !adminShellSource.includes('FEG-BOOTSTRAP-'), 'admin shell should not hard-code a bootstrap admin key');
   assert(adminShellSource.includes('exportAccessState') && adminShellSource.includes('invite_keys'), 'admin shell should export Supabase-ready access state');
   assert(supabaseAuthAdapterSource.includes('buildAuthReadinessReport') && supabaseAuthAdapterSource.includes('mapSupabaseUserToProfile'), 'SupabaseAuthAdapter should build auth readiness and profile mappings');
+  assert(supabaseAuthAdapterSource.includes('buildAuthSessionPreflight') && supabaseAuthAdapterSource.includes('buildRoleGuardMatrix') && supabaseAuthAdapterSource.includes('buildInviteBootstrapPreflight'), 'SupabaseAuthAdapter should expose auth session, role guard and invite/bootstrap preflight');
+  assert(supabaseAuthAdapterSource.includes('buildSupabaseSessionBridgeReport') && supabaseAuthAdapterSource.includes('buildRuntimeRoleGuardReport') && supabaseAuthAdapterSource.includes('buildAuthRequestTemplatePack'), 'SupabaseAuthAdapter should expose runtime bridge, role guard report and auth request template pack');
+  assert(supabaseBackendPackSource.includes('auth-session-dry-run') && serverTestHarnessSource.includes('authSession'), 'backend pack and test harness should include auth-session dry-run');
+  assert(authSessionDryRunFunction.includes('no_profile_write') && authSessionDryRunFunction.includes('no_invite_consume') && authSessionDryRunFunction.includes('remote_write_executed'), 'auth-session-dry-run edge should stay read-only');
+  assert(authSessionPreflightMigration.includes('feg_auth_workspace_preflight') && authSessionPreflightDoc.includes('Role guard matrix'), 'auth session workspace preflight migration/doc should exist');
+  assert(authRuntimeBridgeMigration.includes('feg_auth_runtime_bridge_preflight') && authRuntimeBridgeDoc.includes('Session bridge preview'), 'auth runtime bridge templates migration/doc should exist');
+  assert(supabaseAuthAdapterSource.includes('buildAuthActionDryRunRequest') && supabaseAuthAdapterSource.includes('feg_auth_action_dry_run_request.json') && supabaseAuthAdapterSource.includes('buildAuthActionAuditTrail'), 'SupabaseAuthAdapter should expose auth action dry-run and audit helpers');
+  assert(authSessionDryRunFunction.includes('auth_action_advisory') && authSessionDryRunFunction.includes('ready_for_auth_action_dry_run'), 'auth-session-dry-run should expose auth action advisory');
+  assert(authActionDryRunDoc.includes('Auth action dry-run') && authActionDryRunDoc.includes('raw_secret_exported'), 'auth action dry-run/audit doc should describe safety');
+  assert(authActionDryRunMigration.includes('feg_auth_action_dry_run_preflight') && authActionDryRunMigration.includes('no_bootstrap_mutation'), 'auth action dry-run migration should stay read-only');
+  assert(supabaseAuthAdapterSource.includes('buildAuthActionApprovalPackage') && supabaseAuthAdapterSource.includes('buildApprovedAuthActionExecutionTemplate') && supabaseAuthAdapterSource.includes('feg_auth_action_approval.json'), 'SupabaseAuthAdapter should expose auth action approval and execution template helpers');
+  assert(authSessionDryRunFunction.includes('auth_action_checksum') && authSessionDryRunFunction.includes('auth_action_execution_advisory'), 'auth-session-dry-run should expose auth action checksum and execution advisory');
+  assert(authControlledActionFunction.includes('FEG_ENABLE_AUTH_REMOTE_ACTIONS') && authControlledActionFunction.includes('remote_write_executed: false') && authControlledActionFunction.includes('EXECUTE AUTH ACTION'), 'auth-controlled-action skeleton should stay gated and non-mutating');
+  assert(authControlledActionFunction.includes('post_action_verification_required') && authControlledActionFunction.includes('sync_audit_required') && authControlledActionFunction.includes('rollback_hints'), 'auth-controlled-action should require post-action verification and audit hints');
+  assert(authActionApprovalDoc.includes('Auth action approval') && authActionApprovalDoc.includes('auth_remote_actions_not_implemented_in_static_milestone'), 'auth action approval doc should explain skeleton-only execution');
+  assert(authActionApprovalMigration.includes('feg_auth_action_approval_preflight') && authActionApprovalMigration.includes('no_invite_consume'), 'auth action approval migration should stay read-only');
+  assert(supabaseAuthAdapterSource.includes('buildAuthActionPostActionVerificationRequest') && supabaseAuthAdapterSource.includes('buildAuthActionSafetyAuditTrail') && supabaseAuthAdapterSource.includes('feg_auth_action_rollback_hints.json'), 'SupabaseAuthAdapter should expose auth action post-verification, safety audit and rollback hints');
+  assert(authSessionDryRunFunction.includes('post_action_verification_gate') && authSessionDryRunFunction.includes('ready_for_auth_post_action_verification'), 'auth-session-dry-run should expose post-action verification gate');
+  assert(authActionPostVerifyDoc.includes('post-action verification') && authActionPostVerifyDoc.includes('rollback hints'), 'auth post-verify audit doc should describe verification and rollback hints');
+  assert(authActionPostVerifyMigration.includes('feg_auth_action_post_verify_preflight') && authActionPostVerifyMigration.includes('rollback_automatic'), 'auth post-verify migration should stay read-only and non-rollback');
+  assert(authActionCapabilityDoc.includes('Auth action capability') && authActionCapabilityDoc.includes('remote_write_executed: false'), 'auth capability docs should explain non-mutating gate');
+  assert(authActionCapabilityMigration.includes('feg_auth_action_capability_preflight') && authActionCapabilityMigration.includes('promotion_blocked_non_mutating_milestone'), 'auth capability migration should expose read-only promotion helper');
+  assert(supabaseBackendPackSource.includes('auth-controlled-action') && serverTestHarnessSource.includes('authControlledAction'), 'backend pack and server test harness should include auth controlled action skeleton');
   assert(supabaseAuthProfilesDoc.includes('Supabase Auth & Profiles'), 'Supabase auth profiles doc should exist');
   assert(localAuthProviderSource.includes('registerWithInvite'), 'LocalAuthProvider should register users by invite key');
   assert(localAuthProviderSource.includes('signInProfile'), 'LocalAuthProvider should support local email login');
@@ -320,12 +606,23 @@ async function checkModules() {
   require(repoPath('src/modules/QuoteModel.js'));
   require(repoPath('src/modules/QuoteDraftStorage.js'));
   require(repoPath('src/modules/QuoteProjectStorage.js'));
-  require(repoPath('src/modules/QuoteLegacyBridge.js'));
+  // v3.17.0: QuoteLegacyBridge removed from v4-only runtime.
   require(repoPath('src/modules/QuoteEquipmentPicker.js'));
   require(repoPath('src/modules/QuoteSectionBinder.js'));
+  require(repoPath('src/modules/V4SharedBomBridge.js'));
   require(repoPath('src/modules/QuoteSummaryBuilder.js'));
   require(repoPath('src/modules/AvailabilityChecker.js'));
   require(repoPath('src/modules/WarehousePickListBuilder.js'));
+  require(repoPath('src/modules/V4StabilizationSmokeMap.js'));
+  require(repoPath('src/modules/visual/StageVisualAdapter.js'));
+  require(repoPath('src/modules/visual/TrussVisualAdapter.js'));
+  require(repoPath('src/modules/visual/LedVisualAdapter.js'));
+  require(repoPath('src/modules/visual/AudioVisualAdapter.js'));
+  require(repoPath('src/modules/visual/LightVisualAdapter.js'));
+  require(repoPath('src/modules/visual/VisualModelBuilder.js'));
+  require(repoPath('src/modules/visual/ProjectRenderer2D.js'));
+  require(repoPath('src/modules/visual/VisualExport.js'));
+  require(repoPath('src/modules/visual/VisualPreviewPanel.js'));
   require(repoPath('src/modules/SupplierDirectory.js'));
   require(repoPath('src/modules/SubrentPlanner.js'));
   require(repoPath('src/modules/ReservationPlanner.js'));
@@ -338,6 +635,8 @@ async function checkModules() {
   require(repoPath('src/modules/CalendarIntegration.js'));
   require(repoPath('src/modules/QuoteDocumentBuilder.js'));
   require(repoPath('src/modules/QuoteItemBuilder.js'));
+  require(repoPath('src/modules/V4QuoteDraftBomSink.js'));
+  require(repoPath('src/modules/V4BomInspector.js'));
   require(repoPath('src/modules/BackendSyncAdapter.js'));
   require(repoPath('src/modules/SupabaseSyncConsole.js'));
   require(repoPath('src/modules/SupabaseBackendPack.js'));
@@ -350,12 +649,15 @@ async function checkModules() {
   require(repoPath('src/modules/ClientProjectLinks.js'));
   require(repoPath('src/modules/ProjectTimelineView.js'));
   require(repoPath('src/modules/ProjectReadinessChecklist.js'));
+  require(repoPath('src/modules/SiteChecklist.js'));
+  require(repoPath('src/modules/ProjectCrewAssignments.js'));
   require(repoPath('src/modules/UserDashboard.js'));
   require(repoPath('src/modules/V4ClientsPanel.js'));
   require(repoPath('src/modules/QuoteWizard.js'));
+  // v3.17.0: LegacyConsolidationReport removed with v3 runtime UI.
   // EquipmentDatabaseUI and LedCalculatorUI are browser-DOM only and are checked with node --check.
 
-  const { StageCalculator, ProjectStorage, ClientsStorage, RolePermissions, TestFixtures, DemoAuthProvider, SupabaseAuthAdapter, SupabaseBackendPack, ServerTestHarness, AuthProvider, AdminShell, AdminControlCenter, DataQualityCenter, ReportsCenter, EquipmentDatabase, AvailabilityChecker, SupplierDirectory, SubrentPlanner, LedCalculator, QuickTechnicalSheets, QuoteModel, QuoteDraftStorage, QuoteProjectStorage, QuoteLegacyBridge, QuoteEquipmentPicker, QuoteSectionBinder, QuoteSummaryBuilder, WarehousePickListBuilder, PdfTemplateEngine, QuoteDocumentBuilder, WorkspaceSettings, CalendarIntegration, QuoteItemBuilder, BackendSyncAdapter, SupabaseSyncConsole, BackendWriteDryRun, QuoteServerSyncQueue, EquipmentServerSyncQueue, ProjectAuditLog, ImportRestoreCenter, ClientProjectLinks, ProjectTimelineView, ProjectReadinessChecklist,
+  const { StageCalculator, ProjectStorage, ClientsStorage, RolePermissions, TestFixtures, DemoAuthProvider, SupabaseAuthAdapter, SupabaseBackendPack, ServerTestHarness, AuthProvider, AdminShell, AdminControlCenter, DataQualityCenter, ReportsCenter, EquipmentDatabase, AvailabilityChecker, SupplierDirectory, SubrentPlanner, LedCalculator, QuickTechnicalSheets, QuoteModel, QuoteDraftStorage, QuoteProjectStorage, QuoteEquipmentPicker, QuoteSectionBinder, V4SharedBomBridge, QuoteSummaryBuilder, WarehousePickListBuilder, V4StabilizationSmokeMap, StageVisualAdapter, TrussVisualAdapter, LedVisualAdapter, AudioVisualAdapter, LightVisualAdapter, VisualModelBuilder, ProjectRenderer2D, VisualExport, VisualPreviewPanel, PdfTemplateEngine, QuoteDocumentBuilder, WorkspaceSettings, CalendarIntegration, QuoteItemBuilder, V4QuoteDraftBomSink, V4BomInspector, BackendSyncAdapter, SupabaseSyncConsole, BackendWriteDryRun, QuoteServerSyncQueue, EquipmentServerSyncQueue, ProjectAuditLog, ImportRestoreCenter, ClientProjectLinks, ProjectTimelineView, ProjectReadinessChecklist, SiteChecklist, ProjectCrewAssignments,
     ReservationPlanner, StockMovementPlanner, WarehouseWorkflow, WarehouseOperationsHub, DocumentCenter, UserDashboard, V4ClientsPanel, QuoteWizard } = globalThis.FEGModules;
   assert(StageCalculator, 'StageCalculator module missing');
   assert(ProjectStorage, 'ProjectStorage module missing');
@@ -378,16 +680,27 @@ async function checkModules() {
   assert(QuoteModel, 'QuoteModel module missing');
   assert(QuoteDraftStorage, 'QuoteDraftStorage module missing');
   assert(QuoteProjectStorage, 'QuoteProjectStorage module missing');
-  assert(QuoteLegacyBridge, 'QuoteLegacyBridge module missing');
+  assert(!globalThis.FEGModules.QuoteLegacyBridge, 'QuoteLegacyBridge should be removed from v4-only runtime');
   assert(QuoteEquipmentPicker, 'QuoteEquipmentPicker module missing');
   assert(QuoteSectionBinder, 'QuoteSectionBinder module missing');
+  assert(V4SharedBomBridge, 'V4SharedBomBridge module missing');
   assert(QuoteSummaryBuilder, 'QuoteSummaryBuilder module missing');
   assert(WarehousePickListBuilder, 'WarehousePickListBuilder module missing');
+  assert(V4StabilizationSmokeMap, 'V4StabilizationSmokeMap module missing');
+  assert(StageVisualAdapter, 'StageVisualAdapter module missing');
+  assert(TrussVisualAdapter, 'TrussVisualAdapter module missing');
+  assert(LedVisualAdapter, 'LedVisualAdapter module missing');
+  assert(VisualModelBuilder, 'VisualModelBuilder module missing');
+  assert(VisualExport, 'VisualExport module missing');
+  assert(VisualPreviewPanel, 'VisualPreviewPanel module missing');
   assert(QuoteDocumentBuilder, 'QuoteDocumentBuilder module missing');
   assert(WorkspaceSettings, 'WorkspaceSettings module missing');
   assert(CalendarIntegration, 'CalendarIntegration module missing');
   assert(QuoteItemBuilder, 'QuoteItemBuilder module missing');
+  assert(V4BomInspector, 'V4BomInspector module missing');
+  assert(V4QuoteDraftBomSink, 'V4QuoteDraftBomSink module missing');
   assert(BackendSyncAdapter, 'BackendSyncAdapter module missing');
+  assert(!globalThis.FEGModules.LegacyConsolidationReport, 'LegacyConsolidationReport should be removed from v4-only runtime');
   assert(SupabaseSyncConsole, 'SupabaseSyncConsole module missing');
   assert(BackendWriteDryRun, 'BackendWriteDryRun module missing');
   assert(QuoteServerSyncQueue, 'QuoteServerSyncQueue module missing');
@@ -426,6 +739,8 @@ async function checkModules() {
   assert(!AdminShell.canCreateFirstAdmin(adminStorage), 'first admin bootstrap should disable after admin creation');
   const invite = AdminShell.saveInviteDraft({ role: 'warehouse', workspace: 'MAIN', maxUses: 1, note: 'Smoke warehouse' }, adminStorage);
   assert(AdminShell.validateInviteKey(invite.key, adminStorage).ok, 'fresh invite key should validate');
+  const permanentInvite = AdminShell.saveInviteDraft({ keyType: 'permanent', role: 'technician', workspace: 'MAIN', projectId: 'perm-project', projectName: 'Permanent Project' }, adminStorage);
+  assert(permanentInvite.keyType === 'permanent' && AdminShell.validateInviteKey(permanentInvite.key, adminStorage).ok, 'permanent project invite key should validate without an end date');
   const consumed = AdminShell.consumeInviteKey(invite.key, { email: 'warehouse@feg.local', displayName: 'Warehouse Smoke' }, adminStorage);
   assert(consumed.ok && consumed.profile.role === 'warehouse', 'invite key should create a profile with assigned role');
   assert(!AdminShell.validateInviteKey(invite.key, adminStorage).ok, 'single-use invite key should be invalid after consumption');
@@ -436,6 +751,30 @@ async function checkModules() {
   assert(adminHealth.ok && adminHealth.activeAdmins === 1 && adminHealth.activeUsers >= 2, 'admin control center should build a healthy access report');
   assert(AdminControlCenter.buildRoleMatrix(adminControlState.profiles).some(row => row.role === 'warehouse' && row.active === 1), 'admin control center role matrix should include warehouse user');
   assert(AdminControlCenter.exportAdminControlState(adminStorage).includes('feg-stage-pro-admin-control-state'), 'admin control center should export access pack JSON');
+  const createdUser = AdminShell.createProfile({ email: 'sound@feg.local', displayName: 'Sound Smoke', role: 'sound', temporaryPassword: 'sound-pass' }, adminStorage);
+  assert(createdUser.ok && createdUser.profile.role === 'sound', 'admin shell should create users manually');
+  const scoped = AdminShell.setProfilePermissions('sound@feg.local', ['reports:view'], ['equipment:edit'], adminStorage);
+  assert(scoped && scoped.permissionsAdd.includes('reports:view') && scoped.permissionsRemove.includes('equipment:edit'), 'admin shell should store manual permission overrides');
+  assert(RolePermissions.hasUserPermission(scoped, 'reports:view') && !RolePermissions.hasUserPermission(scoped, 'equipment:edit'), 'RolePermissions should evaluate user permission overrides');
+  const reset = AdminShell.resetProfilePassword('sound@feg.local', adminStorage);
+  assert(reset.ok && reset.token && AdminShell.validatePasswordResetToken('sound@feg.local', reset.token, adminStorage).ok, 'admin shell should create valid password reset tokens');
+  const changed = AdminShell.completePasswordReset('sound@feg.local', reset.token, 'new-sound-pass', adminStorage);
+  assert(changed.ok && AdminShell.verifyPassword('new-sound-pass', changed.profile.passwordHash), 'admin shell should complete password reset and store new local hash');
+  const crewRoles = ProjectCrewAssignments.getCrewRoles();
+  assert(crewRoles.some(row => row.id === 'sound_engineer') && crewRoles.some(row => row.id === 'loader') && crewRoles.some(row => row.id === 'project_tech_director'), 'project crew roles should include rental/event production roles');
+  const crewAssignment = ProjectCrewAssignments.normalizeAssignment({ userEmail: 'guest@feg.local', displayName: 'Guest Spec', projectRole: 'guest_specialist', isGuest: true, payMode: 'hourly', hourlyRate: 1000, hours: 6, accessFrom: '2026-09-09', accessTo: '2026-09-15' });
+  assert(crewAssignment.totalCost === 6000 && crewAssignment.isGuest, 'project crew assignment should calculate hourly work cost');
+  const crewInvite = ProjectCrewAssignments.createOrExtendInvite(crewAssignment, { id: 'quote-crew', workspaceId: 'MAIN', project: { name: 'Crew Project' }, venue: { date: '2026-09-09' } }, adminStorage);
+  assert(crewInvite.ok && crewInvite.invite.projectId === 'quote-crew' && crewInvite.invite.keyType === 'temporary', 'project crew should create a temporary invite linked to the quote project');
+  const crewQuote = QuoteModel.createQuoteDraft({ id: 'quote-crew-summary', project: { name: 'Crew Summary' }, client: { name: 'Client' }, crewAssignments: [crewAssignment] });
+  const crewSummary = QuoteSummaryBuilder.buildFinalSummary(crewQuote);
+  const crewItems = QuoteItemBuilder.buildQuoteItems(crewQuote, { includeTransport: false });
+  const crewTechDoc = QuoteDocumentBuilder.buildTechnicalSheet(crewQuote);
+  assert(crewSummary.customerRows.some(row => row.key && row.key.startsWith('crew:') && row.total === 6000 && row.title === 'Работы: Приглашённый спец') && !crewSummary.customerRows.some(row => String(row.title || '').includes('Guest Spec') || String(row.title || '').includes('guest@feg.local')) && crewSummary.crewRows.length === 1, 'project crew should appear in customer rows as role-only rows and summary crewRows');
+  assert(crewItems.rows.some(row => row.sectionKey === 'crew' && row.totalClient === 6000 && row.name === 'Работы: Приглашённый спец') && !crewItems.rows.some(row => row.sectionKey === 'crew' && (String(row.name || '').includes('Guest Spec') || String(row.name || '').includes('guest@feg.local'))), 'project crew should appear in quote_items as role-only labor layer');
+  assert(crewTechDoc.crewRows.length === 1 && crewTechDoc.totals.crewCost === 6000, 'project crew should appear in technical sheet crewRows');
+  assert(AdminShell.deleteProfile('sound@feg.local', adminStorage).ok, 'admin shell should delete users manually');
+
   const authReadiness = SupabaseAuthAdapter.buildAuthReadinessReport({ authMode: 'supabase', enableSupabaseAuth: false, workspaceId: 'MAIN' }, { storage: adminStorage });
   assert(authReadiness.type === 'feg-stage-pro-supabase-auth-readiness-report' && authReadiness.auth_mode === 'local', 'SupabaseAuthAdapter should keep auth local unless explicitly enabled');
   assert(authReadiness.rows.profiles.some(profile => profile.email === 'admin@feg.local'), 'SupabaseAuthAdapter should map local admin profiles');
@@ -540,19 +879,29 @@ async function checkModules() {
   assert(availabilityReport.deficitRows.some(row => row.itemId === 'eq-truss-3m' && row.subrentQty > 0), 'availability report should suggest subrent for deficits');
   assert(availabilityReport.rows.some(row => row.code === 'SND-005' && row.inventoryStatus === 'ok'), 'availability report should match imported Excel items by legacy code and return generated code');
   assert(availabilityReport.unmatchedRows.length === 1, 'availability report should show unmatched rows');
-  assert(RolePermissions.hasPermission('manager', 'equipment:edit'), 'manager should be able to edit equipment');
+  assert(!RolePermissions.hasPermission('manager', 'equipment:edit'), 'manager should not edit equipment after role cleanup');
   assert(RolePermissions.hasPermission('warehouse', 'availability:view'), 'warehouse should see availability');
-  assert(RolePermissions.hasPermission('manager', 'data_quality:view'), 'manager should see data quality center');
+  assert(!RolePermissions.canSeeSection('manager', 'quality'), 'manager should not see data quality center after dev cleanup');
   assert(RolePermissions.hasPermission('manager', 'reports:view'), 'manager should see reports center');
   assert(RolePermissions.canSeeSection('technician', 'quick'), 'technician should see quick section');
   assert(!RolePermissions.canSeeSection('technician', 'quote'), 'technician should not see quote wizard');
   assert(RolePermissions.canSeeSection('warehouse', 'warehouse'), 'warehouse should see warehouse section');
   assert(!RolePermissions.canSeeSection('viewer', 'equipment'), 'viewer should not see equipment database');
+  assert(RolePermissions.canSeeSection('sound', 'equipment') && RolePermissions.canEditEquipmentItem('sound', { category: 'sound_pa', type: 'sound' }) && !RolePermissions.canEditEquipmentItem('sound', { category: 'light', type: 'light_fixture' }), 'sound role should edit only sound/backline/commutation equipment');
+  assert(RolePermissions.canSeeSection('light', 'equipment') && RolePermissions.canEditEquipmentItem('light', { category: 'light', type: 'light_fixture' }) && !RolePermissions.canEditEquipmentItem('light', { category: 'led', type: 'led_cabinet' }), 'light role should edit only light equipment');
+  assert(RolePermissions.canSeeSection('screens', 'equipment') && RolePermissions.canEditEquipmentItem('screens', { category: 'led', type: 'led_cabinet' }) && !RolePermissions.canEditEquipmentItem('screens', { category: 'truss', type: 'truss_segment' }), 'screens role should edit only LED equipment');
+  assert(RolePermissions.canSeeSection('truss_stage', 'equipment') && RolePermissions.canEditEquipmentItem('truss_stage', { category: 'truss', type: 'truss_segment' }) && RolePermissions.canEditEquipmentItem('truss_stage', { category: 'stage', type: 'stage_deck' }), 'truss/stage role should edit stage and truss equipment');
+  assert(RolePermissions.canSeeSection('invited_specialist', 'communication') && RolePermissions.canSeeSection('invited_specialist', 'documents') && !RolePermissions.canSeeSection('invited_specialist', 'equipment'), 'invited specialist should only see project communication/documents');
+  assert(RolePermissions.hasPermission('director', '*') && RolePermissions.canSeeSection('director', 'admin'), 'director should have full program access');
+  assert(RolePermissions.hasPermission('tech_director', 'site_checklist:edit') && RolePermissions.canSeeSection('tech_director', 'site_checklist'), 'tech director should access and edit admin user access');
+  assert(SiteChecklist && SiteChecklist.VERSION === '1.0.0-techdirector-site-checklist' && SiteChecklist.TEXT_FIELDS.some(row => row[0] === 'generatorPlan'), 'admin user access should expose generator/cable planning fields');
+  assert(ProjectCrewAssignments && ProjectCrewAssignments.VERSION === '1.0.0-project-crew-keys' && ProjectCrewAssignments.PROJECT_CREW_ROLES.some(row => row.id === 'led_engineer') && v4ProjectCrewKeysDoc.includes('Временный ключ') && v4ProjectCrewKeysDoc.includes('Постоянный ключ'), 'v3.17.26 should add project crew assignments with temporary and permanent keys');
   assert(UserDashboard.getDefaultSectionForRole('technician') === 'quick', 'technician dashboard should open quick calculators by default');
   assert(UserDashboard.getDefaultSectionForRole('warehouse') === 'warehouse', 'warehouse dashboard should open warehouse by default');
   assert(UserDashboard.getVisibleSections('manager').some(section => section.id === 'quote'), 'manager dashboard should include quote wizard');
   assert(UserDashboard.getVisibleSections('manager').some(section => section.id === 'reports'), 'manager dashboard should include reports center');
   assert(UserDashboard.getHiddenSections('viewer').some(section => section.id === 'admin'), 'viewer dashboard should hide admin');
+  assert(UserDashboard.getDefaultSectionForRole('tech_director') === 'site_checklist', 'tech director dashboard should open admin user access by default');
 
   const clientSmoke = ClientsStorage.normalizeClient({ id: 'CL-SMOKE', name: 'Smoke Client', contact: 'Contact', phone: '+123', email: 'smoke@example.com', address: 'Smoke street', note: 'VIP' });
   assert(clientSmoke && clientSmoke.name === 'Smoke Client', 'client storage should normalize v4 client records');
@@ -594,8 +943,9 @@ async function checkModules() {
   assert(wizardScoped.wizard.activeStep === 'stage', 'quote model should preserve valid active wizard step');
   const wizardInvalid = QuoteModel.createQuoteDraft({ scope: { stage: false }, wizard: { activeStep: 'stage' } });
   assert(wizardInvalid.wizard.activeStep === 'client', 'quote model should fall back when active step is not enabled');
-  assert(QuoteWizard.getEnabledSteps(quote).some(step => step.id === 'summary'), 'quote wizard should expose summary step');
+  assert(QuoteWizard.getEnabledSteps(quote).some(step => step.id === 'crew') && QuoteWizard.getEnabledSteps(quote).some(step => step.id === 'summary'), 'quote wizard should expose crew and summary steps');
   const savedQuote = QuoteDraftStorage.saveDraft(quote);
+  assert(savedQuote.v4Bom && savedQuote.v4Bom.type === 'feg-stage-pro-v4-quote-draft-bom-mount', 'saved quote draft should include v4 BOM snapshot');
   assert(QuoteDraftStorage.loadActiveDraft().id === savedQuote.id, 'active quote draft should load after save');
   const savedProject = QuoteProjectStorage.saveActiveDraftAsProject();
   assert(savedProject.projectName === savedQuote.project.name, 'active quote draft should save into project storage');
@@ -622,6 +972,26 @@ async function checkModules() {
   assert(boundLedQuote.sections.led.status === 'configured', 'LED section should be configured by binder');
   assert(boundLedQuote.sections.led.bomRows.some(row => row.id === 'led-cabinet'), 'bound LED section should include cabinet BOM rows');
   assert(QuoteModel.validateQuote(boundLedQuote).ok, 'quote with bound LED section should pass validation');
+  const ledVisualSmoke = LedVisualAdapter.buildLedVisualSmokeReport(boundLedQuote.sections.led);
+  assert(ledVisualSmoke.ok && ledVisualSmoke.led.sourceSection === 'quote.sections.led' && ledVisualSmoke.led.visualizerBoundary.placementReservedForVisualizer === true, 'v3.16.6 LED visual adapter smoke should pass and reserve placement for visualizer');
+  const visualEquipmentSection = {
+    type: 'equipment',
+    status: 'configured',
+    selectedScopes: ['sound', 'light'],
+    items: [
+      { id: 'smoke-pa', name: 'Line Array PA', category: 'sound_pa', type: 'sound', qty: 2, weightKg: 40, powerW: 0 },
+      { id: 'smoke-sub', name: 'Subwoofer', category: 'sound_pa', type: 'sound', qty: 2, weightKg: 60, powerW: 0 },
+      { id: 'smoke-front-fill', name: 'Front Fill', category: 'sound_pa', type: 'sound', qty: 2, weightKg: 10, powerW: 0 },
+      { id: 'smoke-truss-light', name: 'Moving Head Beam', category: 'light', type: 'light_fixture', qty: 8, weightKg: 16, powerW: 300, note: 'на ферме' },
+      { id: 'smoke-floor-light', name: 'Floor Wash', category: 'light', type: 'light_fixture', qty: 4, weightKg: 8, powerW: 180, note: 'floor' },
+      { id: 'smoke-tower-light', name: 'Tower blinders', category: 'light', type: 'light_fixture', qty: 2, weightKg: 12, powerW: 250, note: 'tower' }
+    ],
+    bomRows: []
+  };
+  const audioVisualSmoke = AudioVisualAdapter.buildAudioVisualSmokeReport(visualEquipmentSection, { scope: { sound: true } });
+  const lightVisualSmoke = LightVisualAdapter.buildLightVisualSmokeReport(visualEquipmentSection, { scope: { light: true } });
+  assert(audioVisualSmoke.ok && audioVisualSmoke.audio.pa.left.qty === 1 && audioVisualSmoke.audio.subs.totalQty === 2 && audioVisualSmoke.audio.frontFill.qty === 2, 'v3.16.7 AudioVisualAdapter smoke should expose PA/sub/front fill placeholders');
+  assert(lightVisualSmoke.ok && lightVisualSmoke.light.fixturesOnTruss.qty === 8 && lightVisualSmoke.light.floorFixtures.qty === 4 && lightVisualSmoke.light.towers.qty === 2, 'v3.16.7 LightVisualAdapter smoke should expose truss/floor/tower placeholders');
   const stageBoundQuote = QuoteSectionBinder.bindStageSection(boundLedQuote, {
     mode: 'stage-grid',
     lastResult: {
@@ -656,7 +1026,7 @@ async function checkModules() {
 
   const trussBoundQuote = QuoteSectionBinder.bindTrussSection(stageBoundQuote, {
     mode: 'block',
-    state: { pricePerMeter: 600, weightPerMeter: 6, basePrice: 300, baseWeight: 12, pinPrice: 80, pinWeight: 0.25, c2PinWeight: 0.04, cotterWeight: 0, halfConnectorPrice: 0, halfConnectorWeight: 0.27 },
+    state: { pricePerMeter: 600, weightPerMeter: 6, basePrice: 300, baseWeight: 12, pinPrice: 80, pinWeight: 0.25, c2PinWeight: 0.04, cotterWeight: 0.003, halfConnectorPrice: 0, halfConnectorWeight: 0.27 },
     specs: { truss3: { label: 'Ферма 3 м', type: 'truss', len: 3, defaultWeight: 18, defaultPrice: 1800 }, base: { label: 'База / блин', type: 'base', len: 0, defaultWeight: 12, defaultPrice: 300 }, pin: { label: 'C2-88', type: 'pin', len: 0, defaultWeight: 0.25, defaultPrice: 80 } },
     result: {
       counts: { truss3: 4, base: 2 },
@@ -677,6 +1047,68 @@ async function checkModules() {
   assert(trussQuickTech.hasPrices === false && trussQuickTech.title.includes('Фермы'), 'truss quick tech sheet should be no-price and titled for truss');
   const trussQuickWarehouse = QuickTechnicalSheets.buildSectionWarehouseSheet('truss', trussBoundQuote.sections.truss);
   assert(trussQuickWarehouse.hasPrices === false && Array.isArray(trussQuickWarehouse.rows), 'truss quick warehouse sheet should expose rows without prices');
+  const trussSharedBridge = V4SharedBomBridge.buildQuoteBomBridge(trussBoundQuote, { enrichAvailability: false });
+  assert(trussSharedBridge.version === '3.15.36' && trussSharedBridge.rows.some(row => row.sectionKey === 'truss'), 'shared BOM bridge should expose bound truss rows');
+  assert(V4SharedBomBridge.collectQuoteBomRows(trussBoundQuote, { sectionKey: 'truss', enrichAvailability: false }).every(row => row.sourceType === 'own' || row.sourceType === 'subrent' || row.sourceType === 'manual' || row.sourceType === 'subrent_needed'), 'shared BOM bridge should normalize truss source types for quote pipeline');
+  assert(V4SharedBomBridge.buildQuoteItemRows(trussBoundQuote).some(row => row.section_key === 'truss' && row.quote_id === trussBoundQuote.id), 'shared BOM bridge should build truss quote_items rows');
+  const trussUnifiedBom = V4SharedBomBridge.buildUnifiedBomSummary(trussBoundQuote, { enrichAvailability: false });
+  assert(trussUnifiedBom.type === 'feg-stage-pro-v4-unified-bom-summary' && trussUnifiedBom.sectionTotals.some(row => row.sectionKey === 'truss'), 'shared BOM bridge should build unified BOM summary');
+  const stabilizationSmokeMap = V4StabilizationSmokeMap.buildStabilizationSmokeMap(trussBoundQuote);
+  assert(stabilizationSmokeMap.ok && stabilizationSmokeMap.sections.map(row => row.sectionKey).join(',') === 'stage,truss,led', 'v3.15.64 smoke map should pass stage/truss/led summary-to-BOM flow');
+  assert(V4StabilizationSmokeMap.buildSmokeMapText(stabilizationSmokeMap).includes('Protected flows'), 'v3.15.64 smoke map should render plain text with protected flows');
+  const visualSmokeReport = VisualModelBuilder.buildVisualModelSmokeReport(trussBoundQuote);
+  assert(visualSmokeReport.ok && visualSmokeReport.model.version === '0.1' && visualSmokeReport.model.renderStatus === 'data_only_no_renderer', 'v3.16.0 visual model smoke should pass data-only foundation checks');
+  assert(visualSmokeReport.model.stage.enabled && visualSmokeReport.model.stage.decks.length > 0 && visualSmokeReport.model.stage.bomLink.sectionKey === 'stage', 'v3.16.0 stage visual adapter should expose decks and BOM link from stage section');
+  assert(visualSmokeReport.model.truss.enabled && visualSmokeReport.model.truss.status === 'ready' && visualSmokeReport.model.truss.bomLink.sectionKey === 'truss' && visualSmokeReport.model.truss.renderHints.rendererRequired === false, 'v3.16.4 truss visual adapter should expose a read-only truss block with BOM link and no renderer');
+  assert(visualSmokeReport.model.truss.roof && visualSmokeReport.model.truss.roof.engineeringStatus === 'visual_only_no_load_calculation' && visualSmokeReport.model.truss.roof.protectedFlows.noBomRowsCreated === true, 'v3.16.5 roof seed should be present and isolated from BOM/load flows');
+  assert(visualSmokeReport.model.led.enabled && visualSmokeReport.model.led.constructions.length > 0 && visualSmokeReport.model.led.bomLink.sectionKey === 'led' && visualSmokeReport.model.led.visualizerBoundary.placementReservedForVisualizer === true, 'v3.16.6 LED visual adapter should expose LED constructions and keep visualizer boundary');
+  const equipmentVisualQuote = QuoteModel.mergeQuotePatch(trussBoundQuote, { scope: { sound: true, light: true }, sections: { equipment: visualEquipmentSection } });
+  const equipmentVisualSmoke = VisualModelBuilder.buildVisualModelSmokeReport(equipmentVisualQuote);
+  assert(equipmentVisualSmoke.ok && equipmentVisualSmoke.model.audio.enabled && equipmentVisualSmoke.model.audio.pa.left.qty === 1 && equipmentVisualSmoke.model.light.enabled && equipmentVisualSmoke.model.light.fixturesOnTruss.qty === 8, 'v3.16.7 visualModel should include audio/light placeholders from equipment section');
+  const trussVisualSmoke = TrussVisualAdapter.buildTrussVisualSmokeReport(trussBoundQuote.sections.truss);
+  assert(trussVisualSmoke.ok && trussVisualSmoke.truss.sourceSection === 'quote.sections.truss' && trussVisualSmoke.truss.roof, 'v3.16.5 TrussVisualAdapter smoke should pass with roof seed on bound truss section');
+  assert(ProjectRenderer2D, 'ProjectRenderer2D module missing');
+  const stageTopSvg = ProjectRenderer2D.renderStageTopViewSvg(visualSmokeReport.model, { cellPx: 40 });
+  assert(stageTopSvg.includes('<svg') && stageTopSvg.includes('data-feg-view=\"stage-top\"') && stageTopSvg.includes('feg-stage-deck-top-texture'), 'v3.16.1 ProjectRenderer2D should render stage top view SVG from visualModel');
+  const stairPlanModel = VisualModelBuilder.buildVisualModel({ sections: { stage: { status: 'configured', input: { modules: [{ x: 1, y: 1 }, { x: 2, y: 1 }], stairs: [{ id: 'smoke-front-stair', x: 1, y: 2 }, { id: 'smoke-left-stair', x: 0, y: 1 }], moduleWidthM: 1.2, moduleDepthM: 1.2, edgeClosureEnabled: false }, result: { widthMeters: 2.4, depthMeters: 1.2, stageHeightM: 0.8, stageAccessories: { stairs: [{ id: 'smoke-front-stair', x: 1, y: 2 }, { id: 'smoke-left-stair', x: 0, y: 1 }] } } } } });
+  assert(stairPlanModel.stage.stairs.length === 2 && stairPlanModel.stage.stairs.every(stair => stair.placementMode === 'plan-cell') && stairPlanModel.stage.stairs.some(stair => stair.side === 'left' && stair.x === -1) && stairPlanModel.stage.stairs.some(stair => stair.side === 'front' && stair.y === 1), 'v3.16.10 StageVisualAdapter should preserve stair plan-cell coordinates and infer sides from scheme position');
+  const stairPlanSvg = ProjectRenderer2D.renderStageTopViewSvg(stairPlanModel, { cellPx: 40 });
+  assert(stairPlanSvg.includes('feg-stair-plan-cell') && stairPlanSvg.includes('data-source-x="0"') && stairPlanSvg.includes('data-source-y="2"'), 'v3.16.10 ProjectRenderer2D should render stair plan cells at source scheme coordinates, not a front-left row');
+  const stageFrontSvg = ProjectRenderer2D.renderStageFrontViewSvg(visualSmokeReport.model, { cellPx: 40 });
+  assert(stageFrontSvg.includes('<svg') && stageFrontSvg.includes('data-feg-view=\"stage-front\"') && stageFrontSvg.includes('feg-stage-front-skirt-texture'), 'v3.16.2 ProjectRenderer2D should render stage front view SVG from visualModel');
+  const stageIsoSvg = ProjectRenderer2D.renderStageIsoViewSvg(visualSmokeReport.model, { cellPx: 40 });
+  assert(stageIsoSvg.includes('<svg') && stageIsoSvg.includes('data-feg-view=\"stage-iso\"') && stageIsoSvg.includes('feg-stage-iso-side-gradient'), 'v3.16.3 ProjectRenderer2D should render stage isometric SVG from visualModel');
+  const projectTopSvg = ProjectRenderer2D.renderProjectTopViewSvg(visualSmokeReport.model, { cellPx: 40 });
+  const projectFrontSvg = ProjectRenderer2D.renderProjectFrontViewSvg(visualSmokeReport.model, { cellPx: 40 });
+  const projectIsoSvg = ProjectRenderer2D.renderProjectIsoViewSvg(visualSmokeReport.model, { cellPx: 40 });
+  assert(projectTopSvg.includes('data-feg-layer="truss"') && projectTopSvg.includes('data-feg-truss-view="top"') && projectFrontSvg.includes('data-feg-truss-view="front"') && projectIsoSvg.includes('data-feg-truss-view="iso"'), 'v3.16.12 ProjectRenderer2D should add live truss overlays to project top/front/iso SVG views');
+  assert(projectTopSvg.includes('data-feg-layer="led"') && projectFrontSvg.includes('data-feg-led-view="front"') && projectIsoSvg.includes('data-feg-led-view="iso"') && projectFrontSvg.includes('data-feg-led-placement-source="visualizer-controls"'), 'v3.16.17 ProjectRenderer2D should add read-only LED overlays to project top/front/iso views with placement controlled only in visualizer layer');
+  const proportionalPortalModel = {
+    type: 'feg-stage-pro-visual-model',
+    version: '0.1',
+    stage: { enabled: true, widthM: 7.2, depthM: 4.8, heightM: 0.8, moduleWidthM: 1.2, moduleDepthM: 1.2, bounds: { columns: 6, rows: 4 }, decks: [{ x:0, y:0 }, { x:1, y:0 }, { x:2, y:0 }, { x:3, y:0 }, { x:4, y:0 }, { x:5, y:0 }], stairs: [], edgeClosure: { enabled: false } },
+    truss: { enabled: true, structureType: 'portal', trussSeries: 'T29Q', dimensions: { widthM: 8, heightM: 4 }, bounds: { physical: { minX: 0, minY: 0, width: 8, height: 4, maxX: 8, maxY: 4 } }, layoutProfile: { mode: 'portal_two_posts_beam', portal: { widthM: 8, heightM: 4, leftX: 0, rightX: 8, topY: 0, bottomY: 4, middlePosts: [] } }, blocks: [{ id: 'portal-smoke-beam', kind: 'straight', orientation: 'horizontal', meters: { x: 0, y: 0, width: 8, height: 0.5 } }] }
+  };
+  const proportionalTopSvg = ProjectRenderer2D.renderProjectTopViewSvg(proportionalPortalModel, { cellPx: 40 });
+  const proportionalFrontSvg = ProjectRenderer2D.renderProjectFrontViewSvg(proportionalPortalModel, { cellPx: 40 });
+  const proportionalIsoSvg = ProjectRenderer2D.renderProjectIsoViewSvg(proportionalPortalModel, { cellPx: 40 });
+  assert(proportionalTopSvg.includes('portal_top_projection') && proportionalTopSvg.includes('data-stage-width-m="7.2"') && proportionalTopSvg.includes('data-portal-width-m="8"') && proportionalFrontSvg.includes('data-feg-scale-mode="meter-proportional"') && proportionalIsoSvg.includes('data-feg-scale-mode="meter-proportional"'), 'v3.16.15 portal visual scale should keep an 8m portal wider than a 7.2m stage and avoid top-view depth legs');
+  const rendererSmokeReport = ProjectRenderer2D.buildRendererSmokeReport(trussBoundQuote, { cellPx: 40 });
+  assert(rendererSmokeReport.ok && rendererSmokeReport.stageEnabled && rendererSmokeReport.svgLength > 500 && rendererSmokeReport.frontSvgLength > 500 && rendererSmokeReport.isoSvgLength > 500 && rendererSmokeReport.checks.some(row => row.key === 'truss_visual_seed' && row.ok), 'v3.16.12 renderer smoke should pass for top/front/iso views with live truss overlays without mutating protected flows');
+  assert(rendererSmokeReport.checks.some(row => row.key === 'portal_two_posts_beam') && rendererSmokeReport.checks.some(row => row.key === 'portal_meter_proportional'), 'v3.16.15 renderer smoke should include portal layout and meter-proportional scale checks');
+  assert(rendererSmokeReport.checks.some(row => row.key === 'led_visual_seed' && row.ok) && rendererSmokeReport.checks.some(row => row.key === 'led_visualizer_boundary' && row.ok), 'v3.16.17 renderer smoke should include LED visual seed and visualizer-only placement checks');
+  const visualExportSmoke = VisualExport.buildVisualExportSmokeReport(visualSmokeReport.model, { cellPx: 40, fileBase: 'smoke-project' });
+  assert(visualExportSmoke.ok && visualExportSmoke.pack.itemCount === 3 && visualExportSmoke.pack.items.every(item => item.dataUri.startsWith('data:image/svg+xml')) && visualExportSmoke.pack.performancePolicy.noBackendWrite === true, 'v3.16.8 VisualExport smoke should package top/front/iso SVG data URI exports without protected-flow mutations');
+  const visualPreview = VisualExport.buildVisualPreviewSnapshot(visualSmokeReport.model, { mode: 'iso', cellPx: 40 });
+  assert(visualPreview.type === 'feg-stage-pro-visual-preview' && visualPreview.imageSvg.includes('data-feg-view="stage-iso"') && visualPreview.imagePng === '', 'v3.16.8 visual preview snapshot should expose SVG preview while leaving PNG to browser helper');
+  const visualPreviewPanelSmoke = VisualPreviewPanel.buildVisualPreviewPanelSmokeReport(visualSmokeReport.model, { cellPx: 40 });
+  assert(visualPreviewPanelSmoke.ok && visualPreviewPanelSmoke.type === 'feg-stage-pro-visual-preview-panel-smoke-report' && visualPreviewPanelSmoke.packSummary.itemCount === 3, 'v3.16.17 VisualPreviewPanel smoke should build manual top/front/iso preview pack without protected-flow mutations');
+  const quoteWithVisualModel = VisualModelBuilder.attachVisualModelToQuote(trussBoundQuote);
+  assert(quoteWithVisualModel.visualModel && quoteWithVisualModel.sections.stage.status === trussBoundQuote.sections.stage.status && !quoteWithVisualModel.visualPreview, 'v3.16.0 should attach quote.visualModel without mutating sections or creating rendered previews');
+  const bomInspectorSnapshot = V4BomInspector.buildInspectorSnapshot(trussBoundQuote, { sourceMode: 'smoke', sourceLabel: 'Smoke test' });
+  const quoteDraftBomMount = V4QuoteDraftBomSink.buildDraftBomMount(trussBoundQuote, { source: 'smoke' });
+  assert(quoteDraftBomMount.type === 'feg-stage-pro-v4-quote-draft-bom-mount' && quoteDraftBomMount.rowCounts.sharedBom > 0 && quoteDraftBomMount.rowCounts.quoteItems >= quoteDraftBomMount.rowCounts.sharedBom, 'quote draft BOM sink should build shared BOM and quote_items snapshot');
+  assert(bomInspectorSnapshot.type === 'feg-stage-pro-v4-bom-inspector-snapshot' && bomInspectorSnapshot.sharedBom.rows.some(row => row.sectionKey === 'truss') && bomInspectorSnapshot.quoteItems.rows.length >= bomInspectorSnapshot.sharedBom.rows.length, 'V4 BOM inspector should expose shared BOM, quote_items and picklist snapshots');
   const scopedQuote = QuoteSectionBinder.ensureSectionsForScope(QuoteModel.createQuoteDraft({ scope: { stage: true, truss: true, led: false, sound: true } }));
   assert(scopedQuote.sections.stage && scopedQuote.sections.truss && scopedQuote.sections.equipment, 'scope binder should create placeholder sections');
   assert(!scopedQuote.sections.led, 'disabled LED scope should be pruned');
@@ -688,11 +1120,19 @@ async function checkModules() {
   assert(equipmentSection.status === 'configured', 'equipment picker should build configured section');
   assert(equipmentSection.items.some(row => row.itemId === 'eq-pa-sub' && row.deficitQty > 0), 'equipment picker should detect stock deficit');
   assert(equipmentSection.items.some(row => row.sourceType === 'subrent' && row.supplierName === 'Поставщик'), 'equipment picker should keep subrent supplier');
+  assert(equipmentSection.bomRows.every(row => row.sectionKey === 'equipment' && row.sectionTitle), 'v3.16.21 equipment picker BOM rows should carry section identity for summary/BOM/quote_items');
   const equipmentBoundQuote = QuoteSectionBinder.bindEquipmentSection(scopedQuote, { scope: scopedQuote.scope, items: [{ itemId: 'eq-pa-sub', qty: 10 }] });
   assert(equipmentBoundQuote.sections.equipment.status === 'configured', 'equipment section should bind into quote');
+  const equipmentTotals = QuoteModel.summarizeQuote(equipmentBoundQuote).totals;
+  assert(equipmentTotals.weightKg === equipmentBoundQuote.sections.equipment.weightKg && equipmentTotals.powerW === equipmentBoundQuote.sections.equipment.powerW, 'v3.16.21 equipment totals should not double count smart rows in QuoteModel summary');
+  const explicitSubrentQuote = QuoteSectionBinder.bindEquipmentSection(scopedQuote, { scope: scopedQuote.scope, items: [{ itemId: 'eq-pa-sub', qty: 3, sourceType: 'subrent', supplierName: 'DryHire', subrentPrice: 900, clientPrice: 1400 }] });
+  assert(explicitSubrentQuote.sections.equipment.items.some(row => row.sourceType === 'subrent' && row.deficitQty === 0 && row.subrentQty === 3), 'v3.16.21 explicit smart-row subrent should not show as own-stock deficit');
   const summaryFoundation = QuoteSummaryBuilder.buildFinalSummary(equipmentBoundQuote);
   assert(summaryFoundation.customerRows.some(row => row.key === 'transport'), 'quote summary should include transport customer row');
   assert(Array.isArray(summaryFoundation.bomRows), 'quote summary should collect BOM rows');
+  const summaryFlowRows = QuoteSummaryBuilder.buildFlowDiagnosticRows(equipmentBoundQuote);
+  assert(summaryFoundation.version === '1.3.1-auto-deficit-subrent-customer-merge' && Array.isArray(summaryFoundation.flowRows) && summaryFoundation.flowRows.some(row => row.key === 'equipment'), 'v3.17.14 final summary should expose flowRows and automatic deficit subrent customer merge from QuoteSummaryBuilder 1.3.1');
+  assert(summaryFlowRows.some(row => row.key === 'equipment' && row.bomRows > 0 && row.quoteItems > 0 && row.warehouseRows > 0), 'v3.16.22 flow diagnostics should prove equipment rows reach BOM, quote_items and warehouse lists');
   const pickLists = WarehousePickListBuilder.buildPickLists(equipmentBoundQuote);
   assert(pickLists.all && Array.isArray(pickLists.all.rows), 'warehouse builder should produce all pick list');
   assert(pickLists.deficits.rows.some(row => row.deficitQty > 0), 'warehouse builder should expose deficit rows from availability checker');
@@ -847,7 +1287,7 @@ async function checkModules() {
   assert(led.columns === 9, `LED 4.3m width with 500 cabinet should round up to 9, got ${led.columns}`);
   assert(led.rows === 5, `LED 2.4m height with 500 cabinet should round up to 5, got ${led.rows}`);
   assert(led.cabinetCount === 45, 'LED cabinet count should be columns × rows');
-  assert(led.powerconSchukoCables === 5, 'LED PowerCON-Schuko should round ceil(cabinets / 10)');
+  assert(led.powerconSchukoCables === 3, 'LED PowerCON-Schuko should round ceil(construction power / 3400W)');
   assert(led.brackets === 0 && led.m8Bolts === 0, 'LED brackets and bolts should come from legs, not cabinet joints');
   assert(led.powerLinks === led.cabinetCount && led.rj45Links === led.cabinetCount, 'LED should add one power and one RJ45 link per cabinet');
   const led640 = LedCalculator.calculateLedScreen({ widthM: 3.2, heightM: 1.92, format: '640x640', pitch: 'p4', legType: '3m', legCount: 2 });
@@ -855,7 +1295,7 @@ async function checkModules() {
   assert(led640.cabinetWeightKg === 14 && led640.cabinetPowerW === 320 && led640.cabinetStartupPowerW === 600, '640 cabinet defaults should match user scheme');
   assert(led640.cabinetPixelsX === 160 && led640.cabinetPixelsY === 160, '640 P4 cabinet should be 160x160 px');
   assert(led640.totalPowerW === 4800 && led640.totalStartupPowerW === 9000, '640 LED power and startup totals should be calculated');
-  assert(led640.powerconSchukoCables === 2, '15 cabinets / 10 should round up to 2 PowerCON-Schuko cables');
+  assert(led640.powerconSchukoCables === 2, '4800W / 3400W should round up to 2 PowerCON-Schuko cables');
   assert(led640.brackets === 8 && led640.m8Bolts === 32, '2 legs should add 8 brackets and 32 M8x60 bolts');
   assert(led640.legWeightKg === 4 && led640.legsWeightKg === 8, '3m LED legs should weigh 4kg each');
   assert(LedCalculator.calculateLedScreen({ legType: '2m', legCount: 1 }).legsWeightKg === 3, '2m LED leg should weigh 3kg');
@@ -863,8 +1303,50 @@ async function checkModules() {
   const ledRows = LedCalculator.buildLedBomRows(led640);
   assert(ledRows.some(row => row.id === 'led-cabinet' && row.qty === 15), 'LED BOM should include cabinets');
   assert(ledRows.some(row => row.id === 'led-powercon-schuko' && row.qty === 2), 'LED BOM should include PowerCON-Schuko cables');
+  const ledLayoutPowercon = LedCalculator.calculateLedLayout({
+    format: '640x640',
+    pitch: 'p4',
+    layoutMode: 'freeform',
+    accessories: { powerconSchukoWattsPerCable: 3400 },
+    layoutBlocks: [
+      { id: 'pc-a', name: 'A', cells: Array.from({ length: 5 }, (_, x) => ({ x, y: 0 })) },
+      { id: 'pc-b', name: 'B', cells: Array.from({ length: 7 }, (_, x) => ({ x: x + 10, y: 0 })) },
+      { id: 'pc-c', name: 'C', cells: Array.from({ length: 12 }, (_, i) => ({ x: 20 + (i % 6), y: Math.floor(i / 6) })) }
+    ]
+  });
+  assert(ledLayoutPowercon.cabinetCount === 24, 'freeform LED PowerCON test should have 24 active cabinets');
+  assert(ledLayoutPowercon.powerconSchukoCables === 4, 'PowerCON-Schuko should be counted per construction power: ceil(1600/3400)+ceil(2240/3400)+ceil(3840/3400)=4');
+  assert(ledLayoutPowercon.powerconSchukoByConstruction.map(row => row.powerconSchukoCables).join(',') === '1,1,2', 'PowerCON-Schuko detail should preserve per-construction cable counts from power');
+  assert(ledLayoutPowercon.powerconSchukoByConstruction.map(row => row.powerW).join(',') === '1600,2240,3840', 'PowerCON-Schuko detail should expose per-construction working power');
+  assert(ledLayoutPowercon.constructions.every(part => Number(part.powerconSchukoCables || 0) > 0), 'each LED construction should expose its own PowerCON-Schuko count');
+  assert(LedCalculator.buildLedBomRows(ledLayoutPowercon).some(row => row.id === 'led-powercon-schuko' && row.qty === 4 && row.note.includes('По мощности каждой отдельной LED-конструкции')), 'LED BOM should explain per-construction PowerCON-Schuko power grouping');
+  const powercon3600 = LedCalculator.calculateLedLayout({
+    format: '640x640',
+    pitch: 'p4',
+    cabinetPowerW: 600,
+    layoutMode: 'freeform',
+    layoutBlocks: [{ id: 'pc-3600', name: '3600W', columns: 6, rows: 1 }]
+  });
+  assert(powercon3600.powerconSchukoCables === 2 && powercon3600.powerconSchukoByConstruction[0].powerW === 3600, '3600W in one LED construction should require two PowerCON-Schuko cables');
+  const ledMountHanging = LedCalculator.calculateLedScreen({ widthM: 1.28, heightM: 1.28, mountMode: 'hanging', legCount: 2 });
+  assert(ledMountHanging.mountStanding === false && ledMountHanging.mountHanging === true && ledMountHanging.legCount === 0 && ledMountHanging.hangingBarCount > 0, 'mountMode hanging should disable legs and keep Hanging Bar');
+  assert(ledMountHanging.hangingBrackets === 2 && ledMountHanging.m8x20Bolts === ledMountHanging.hangingBrackets * 4, 'mountMode hanging should add one cookie per (width-1)×rows bracket slot and four M8x20 bolts per cookie');
+  assert(ledMountHanging.spansetCount === ledMountHanging.hangingBarCount && ledMountHanging.shackleCount === ledMountHanging.hangingBarCount, 'mountMode hanging should add one Spanset and one Shackle per Hanging Bar');
+  const ledMountHangingWide = LedCalculator.calculateLedScreen({ widthM: 2.56, heightM: 1.92, mountMode: 'hanging' });
+  assert(ledMountHangingWide.columns === 4 && ledMountHangingWide.rows === 3 && ledMountHangingWide.hangingBrackets === 9 && ledMountHangingWide.m8x20Bolts === 36, '4×3 hanging LED should use (4-1)×3 = 9 cookies and 36 M8x20 bolts');
+  const ledLayoutHangingRows = LedCalculator.calculateLedLayout({ mountMode: 'hanging', layoutBlocks: [{ id: 'hang-a', name: 'Hang A', columns: 4, rows: 3 }, { id: 'hang-b', name: 'Hang B', columns: 2, rows: 2 }] });
+  assert(ledLayoutHangingRows.hangingBrackets === 11 && ledLayoutHangingRows.m8x20Bolts === 44 && ledLayoutHangingRows.hangingRiggingByConstruction.map(row => row.hangingBrackets).join(',') === '9,2', 'hanging cookies should apply (width-1)×rows separately to each LED construction');
+  assert(ledLayoutHangingRows.spansetCount === ledLayoutHangingRows.hangingBarCount && ledLayoutHangingRows.shackleCount === ledLayoutHangingRows.hangingBarCount && ledLayoutHangingRows.hangingRiggingByConstruction.map(row => row.spansetCount).join(',') === ledLayoutHangingRows.hangingRiggingByConstruction.map(row => row.hangingBarCount).join(','), 'Spanset/Shackle should be counted separately per LED construction from Hanging Bar count');
+  const ledMountBoth = LedCalculator.calculateLedScreen({ widthM: 1.28, heightM: 1.28, mountMode: 'stand+hanging', legCount: 2 });
+  assert(ledMountBoth.mountStanding === true && ledMountBoth.mountHanging === true && ledMountBoth.legCount === 2 && ledMountBoth.hangingBarCount > 0, 'mountMode stand+hanging should include both legs and Hanging Bar');
+  assert(ledMountBoth.standingBrackets === 8 && ledMountBoth.hangingBrackets === 2 && ledMountBoth.brackets === ledMountBoth.standingBrackets + ledMountBoth.hangingBrackets, 'mountMode stand+hanging should add hanging cookies from (width-1)×rows bracket slots on top of standing cookies');
+  const ledMountNone = LedCalculator.calculateLedScreen({ mountMode: 'none', legCount: 2 });
+  assert(ledMountNone.mountStanding === false && ledMountNone.mountHanging === false && ledMountNone.legCount === 0 && ledMountNone.hangingBarCount === 0 && ledMountNone.m8x20Bolts === 0, 'mountMode none should disable legs, Hanging Bar and hanging fasteners');
   assert(ledRows.some(row => row.id === 'led-bracket' && row.qty === led640.brackets), 'LED BOM should include brackets from legs');
   assert(ledRows.some(row => row.id === 'm8-bolt' && row.qty === led640.m8Bolts), 'LED BOM should include M8x60 bolts from legs');
+  assert(!ledRows.some(row => row.id === 'm8x20-bolt'), 'standing-only LED BOM should not include M8x20 bolts');
+  assert(LedCalculator.buildLedBomRows(ledMountHanging).some(row => row.id === 'm8x20-bolt' && row.qty === ledMountHanging.m8x20Bolts), 'hanging LED BOM should include separate M8x20 bolts');
+  assert(LedCalculator.buildLedBomRows(ledMountHanging).some(row => row.id === 'led-spanset' && row.qty === ledMountHanging.hangingBarCount) && LedCalculator.buildLedBomRows(ledMountHanging).some(row => row.id === 'led-shackle' && row.qty === ledMountHanging.hangingBarCount), 'hanging LED BOM should include Spanset and Shackle rows by Hanging Bar count');
   assert(typeof LedCalculator.buildLedTechSheet === 'function', 'LED calculator should build a no-price tech sheet');
   assert(typeof LedCalculator.buildLedWarehouseSheet === 'function', 'LED calculator should build a no-price warehouse sheet');
   const ledTechSheet = LedCalculator.buildLedTechSheet(led640);
@@ -1085,6 +1567,37 @@ assert(quoteDryRunEdgeFinal.includes('approval_advisory') && quoteDryRunEdgeFina
 assert(quoteDryRunMigrationFinal.includes('feg_can_write_quotes') && quoteDryRunMigrationFinal.includes('quote_sections_workspace_local_id_idx'), 'quote sync migration should add quote local_id helpers and indexes');
 assert(quoteRemoteDryRunDocFinal.includes('Clients/quotes remote dry-run') && quoteRemoteDryRunDocFinal.includes('no_stock_movements'), 'quote remote dry-run docs should describe no-stock safety');
 assert(quoteWriteApprovalDocFinal.includes('fegV4QuoteWriteApprovalPackage') && quoteWriteApprovalDocFinal.includes('Stale protection') && quoteWriteApprovalDocFinal.includes('controlled_quote_write_enabled'), 'quote write approval docs should explain approval package and disabled write');
+
+
+const authRuntimeBridgeDocFinal = await readFile(repoPath('docs/SUPABASE_AUTH_RUNTIME_BRIDGE_TEMPLATES.md'), 'utf8');
+const authRuntimeBridgeMigrationFinal = await readFile(repoPath('supabase/migrations/202605120006_auth_runtime_bridge_templates.sql'), 'utf8');
+const authActionDryRunDocFinal = await readFile(repoPath('docs/SUPABASE_AUTH_ACTION_DRY_RUN_AUDIT.md'), 'utf8');
+const authActionDryRunMigrationFinal = await readFile(repoPath('supabase/migrations/202605120007_auth_action_dry_run_audit.sql'), 'utf8');
+const authActionPostVerifyDocFinal = await readFile(repoPath('docs/SUPABASE_AUTH_ACTION_POST_VERIFY_AUDIT.md'), 'utf8');
+const authActionPostVerifyMigrationFinal = await readFile(repoPath('supabase/migrations/202605120009_auth_action_post_verify_audit.sql'), 'utf8');
+const authActionCapabilityDocFinal = await readFile(repoPath('docs/SUPABASE_AUTH_ACTION_CAPABILITY_PROMOTION_GATE.md'), 'utf8');
+const authActionCapabilityMigrationFinal = await readFile(repoPath('supabase/migrations/202605120010_auth_action_capability_promotion_gate.sql'), 'utf8');
+assert(supabaseAuthAdapterSourceFinal.includes('buildSupabaseSessionBridgeReport') && supabaseAuthAdapterSourceFinal.includes('feg_auth_session_bridge.json'), 'SupabaseAuthAdapter should expose session bridge report and JSON export');
+assert(supabaseAuthAdapterSourceFinal.includes('buildRuntimeRoleGuardReport') && supabaseAuthAdapterSourceFinal.includes('assertRuntimeSectionAccess') && supabaseAuthAdapterSourceFinal.includes('feg_auth_runtime_role_guard.json'), 'SupabaseAuthAdapter should expose runtime role guard report and section assertion');
+assert(supabaseAuthAdapterSourceFinal.includes('buildInviteRegistrationRequestTemplate') && supabaseAuthAdapterSourceFinal.includes('buildFirstAdminBootstrapRequestTemplate') && supabaseAuthAdapterSourceFinal.includes('feg_auth_request_templates.json'), 'SupabaseAuthAdapter should expose invite/bootstrap request template pack');
+assert(authProviderSourceFinal.includes('getSessionBridgeReport') && authProviderSourceFinal.includes('assertRuntimeSectionAccess'), 'AuthProvider should expose session bridge and runtime role guard helpers');
+assert(v4AppShellAuthSourceFinal.includes('getSectionGuard') && v4AppShellAuthSourceFinal.includes('runtime guard'), 'V4AppShell should route section access through runtime guard');
+assert(authRuntimeBridgeDocFinal.includes('Auth runtime bridge/templates') && authRuntimeBridgeDocFinal.includes('no_local_session_mutation'), 'auth runtime bridge doc should describe bridge/template safety');
+assert(authRuntimeBridgeMigrationFinal.includes('feg_auth_runtime_bridge_preflight') && authRuntimeBridgeMigrationFinal.includes('no_invite_consume'), 'auth runtime bridge migration should be read-only');
+assert(authSessionDryRunFunction.includes('session_bridge_advisory') && authSessionDryRunFunction.includes('first_admin_bootstrap_advisory'), 'auth session dry-run should expose bridge/bootstrap advisory blocks');
+assert(supabaseAuthAdapterSourceFinal.includes('buildAuthActionDryRunRequest') && supabaseAuthAdapterSourceFinal.includes('runAuthActionDryRunEdge') && supabaseAuthAdapterSourceFinal.includes('feg_auth_action_audit.json'), 'SupabaseAuthAdapter should expose auth action dry-run/audit helpers and exports');
+assert(authSessionDryRunFunction.includes('auth_action_advisory') && authSessionDryRunFunction.includes('ready_for_auth_action_dry_run'), 'auth session dry-run should expose auth action advisory and promotion gate');
+assert(authActionDryRunDocFinal.includes('Auth action dry-run') && authActionDryRunDocFinal.includes('no_invite_consume'), 'auth action dry-run doc should describe dry-run safety');
+assert(authActionDryRunMigrationFinal.includes('feg_auth_action_dry_run_preflight') && authActionDryRunMigrationFinal.includes('remote_write_executed'), 'auth action dry-run migration should expose read-only helper');
+assert(supabaseAuthAdapterSourceFinal.includes('buildAuthActionPostActionVerificationRequest') && supabaseAuthAdapterSourceFinal.includes('buildAuthActionRollbackHints') && supabaseAuthAdapterSourceFinal.includes('feg_auth_action_safety_audit.json'), 'SupabaseAuthAdapter should expose post-action verification/audit exports');
+assert(authSessionDryRunFunction.includes('post_action_verification_gate') && authSessionDryRunFunction.includes('verify_after_controlled_action'), 'auth session dry-run should support post-action verification mode');
+assert(authActionPostVerifyDocFinal.includes('Auth action post-action verification') && authActionPostVerifyDocFinal.includes('fegV4AuthActionSafetyAuditSnapshots'), 'auth post verify doc should explain local safety audit snapshots');
+assert(authActionPostVerifyMigrationFinal.includes('feg_auth_action_post_verify_preflight') && authActionPostVerifyMigrationFinal.includes('no_profile_write'), 'auth post verify migration should remain read-only');
+assert(supabaseAuthAdapterSourceFinal.includes('buildAuthActionCapabilityMatrix') && supabaseAuthAdapterSourceFinal.includes('buildAuthRemoteActionsPromotionGate') && supabaseAuthAdapterSourceFinal.includes('feg_auth_action_capability_matrix.json'), 'SupabaseAuthAdapter should expose auth capability/promotion helpers and exports');
+assert(authSessionDryRunFunction.includes('auth_action_capability_matrix') && authSessionDryRunFunction.includes('auth_remote_actions_promotion_gate'), 'auth session dry-run should return capability and promotion gates');
+assert(authControlledActionFunction.includes('action_adapter_plan') && authControlledActionFunction.includes('promotion_blocked_non_mutating_milestone'), 'auth controlled action should expose non-mutating adapter plan');
+assert(authActionCapabilityDocFinal.includes('Auth action capability') && authActionCapabilityDocFinal.includes('no_bootstrap_mutation'), 'auth capability docs should describe safety flags');
+assert(authActionCapabilityMigrationFinal.includes('feg_auth_action_capability_preflight') && authActionCapabilityMigrationFinal.includes('promotion_ready'), 'auth capability migration should remain read-only');
 
 console.log('final equipment editor checks ok');
 if (typeof process !== 'undefined' && process.reallyExit) process.reallyExit(0);
