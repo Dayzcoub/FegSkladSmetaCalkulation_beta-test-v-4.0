@@ -4,6 +4,8 @@ This folder contains active project documentation and archived historical notes.
 
 ## Active docs
 
+- `APP_LOGIC.md` — core product logic: project-quote as the central entity, quick/quote modes, risk-based tech director checklist and confirmation flow.
+- `PROJECT_LIFECYCLE.md` — project statuses, readiness checks and actions from draft to closeout.
 - `ARCHITECTURE.md` — current runtime structure and module ownership.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
 - `DOCUMENTATION_POLICY.md` — what belongs in docs, changelog and code comments.
