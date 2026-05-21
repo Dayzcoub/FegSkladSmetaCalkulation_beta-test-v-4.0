@@ -7,6 +7,7 @@ This folder contains active project documentation and archived historical notes.
 - `ARCHITECTURE.md` — current runtime structure and module ownership.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
 - `DOCUMENTATION_POLICY.md` — what belongs in docs, changelog and code comments.
+- `CHANGELOG_POLICY.md` — rules for keeping release history readable.
 - `UI_SYSTEM.md` — durable UI rules and technical canvas constraints.
 - `CONSTRUCTORS.md` — durable Stage, Truss and LED constructor rules.
 - `BACKEND_CONTRACT.md` — backend, sync, auth and controlled-write rules.
