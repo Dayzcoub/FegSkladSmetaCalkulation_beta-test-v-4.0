@@ -188,3 +188,10 @@
 ## v3.6.6
 
 Вынесен runtime-модуль `StageCalculator`: чистая геометрия сцены, связность, габариты, текст формы, отражение, поворот, прямоугольник и базовый snapshot расчёта. Старый `legacy-app.js` остаётся мостом совместимости и делегирует эти операции модулю через `window.FEGModules.StageCalculator`.
+# FEG Stage PRO current runtime note
+
+The browser runtime is now the v4-only shell. `src/legacy-app.js` is no longer
+loaded by `index.html`; older entries below are retained as historical migration
+notes. Current active runtime additions include `CommunicationCenter`,
+`ProjectRendererIso`, v4 calculators, Quote Wizard, warehouse, documents,
+backend sync consoles and visual preview/export modules.

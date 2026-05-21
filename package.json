@@ -1,8 +1,8 @@
 {
   "name": "feg-stage-pro",
-  "version": "3.13.1",
+  "version": "3.17.50",
   "private": true,
-  "description": "FEG Stage PRO 3.13.1: Clients/quotes post-write verification loop.",
+  "description": "FEG Stage PRO 3.17.50: quick PDF export fixes summary card contrast in stage/truss/LED PDFs.",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 4173",
     "build": "vite build",

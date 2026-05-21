@@ -1,10 +1,10 @@
 {
-  "name": "FEG Stage PRO v3.13.1",
-  "short_name": "FEG PRO 3.13.1",
+  "name": "FEG Stage PRO v3.17.50",
+  "short_name": "FEG 3.17.50",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#080c10",
-  "theme_color": "#111820",
+  "background_color": "#08090a",
+  "theme_color": "#0f1011",
   "icons": [
     {
       "src": "icon-180.png",
@@ -22,5 +22,6 @@
       "type": "image/png"
     }
   ],
-  "description": "FEG Stage PRO 3.13.1: Clients/quotes post-write verification loop."
+  "description": "FEG Stage PRO v4-only shell with quick PDF constructor scheme snapshots and readable dark PDF text",
+  "version": "3.17.50"
 }
