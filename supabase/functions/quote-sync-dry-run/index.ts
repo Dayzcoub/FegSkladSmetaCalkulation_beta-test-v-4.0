@@ -284,7 +284,7 @@ Deno.serve(async (req) => {
   return jsonResponse({
     ok: validation.ok,
     type: 'feg-stage-pro-quote-edge-dry-run-report',
-    version: '3.13.1',
+    version: '3.13.2',
     dry_run: true,
     remote_write_executed: false,
     workspace,
