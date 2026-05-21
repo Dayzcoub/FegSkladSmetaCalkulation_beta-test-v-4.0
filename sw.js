@@ -1,7 +1,6 @@
-const CACHE_VERSION = 'FEG_STAGE_PRO_3_17_50_QUICK_PDF_SUMMARY_DARK_TEXT';
-const CACHE_NAME = 'feg-stage-pro-v3-17-50-quick-pdf-summary-dark-text';
+const CACHE_VERSION = 'FEG_STAGE_PRO_3_17_50_DOCS_CLEANUP';
+const CACHE_NAME = 'feg-stage-pro-v3-17-50-docs-cleanup';
 const RUNTIME_CACHE = 'feg-stage-runtime-v3-17-50';
-// PROJECT_CREW_KEYS compatibility marker: v3.17.25 key layer remains; v3.17.50 strengthens dark text contrast in quick PDF summary cards without touching quote/warehouse flows.
 
 const CORE_ASSETS = [
   './',
@@ -29,7 +28,6 @@ const CORE_ASSETS = [
   './src/modules/TrussBlockConstructor.js',
   './src/modules/LoadChecker.js',
   './src/modules/RolePermissions.js',
-  './src/modules/TestFixtures.js',
   './src/modules/DemoAuthProvider.js',
   './src/modules/LocalAuthProvider.js',
   './src/modules/SupabaseAuthAdapter.js',

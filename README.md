@@ -1,197 +1,162 @@
-# FEG Stage PRO v3.6.48 — TrussBootstrap bridge
+# FEG Stage PRO / PACK.IT
 
-Изменения v3.6.48:
-- базой взята `v3.6.47 — AppBootstrap bridge`;
-- добавлен runtime-модуль `src/modules/TrussBootstrap.js`;
-- часть стартовой инициализации 2D truss-workspace вынесена из `legacy-app.js` в `TrussBootstrap.initTrussWorkspace()`;
-- чтение/сохранение `trussDraftSettings` и привязка базовых truss input-listeners делегируются в `TrussBootstrap`;
-- старые функции `initTrussModule()`, `bindTrussInputs()`, `loadTrussDraftSettings()`, `saveTrussDraftSettings()` сохранены как совместимые bridge/fallback;
-- расчёты, PDF, 3D-режим, проекты, Supabase и визуальное поведение конструктора не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+FEG Stage PRO — браузерное приложение для подготовки технических расчётов, смет, складских листов и проектной документации для event/technical production.
 
-# FEG Stage PRO v3.6.47 — AppBootstrap bridge
+Рабочее направление продукта постепенно переводится в бренд **PACK.IT / ПАК.ИТ**, но в кодовой базе пока сохраняется историческое имя FEG Stage PRO.
 
-- добавлен runtime-модуль `src/modules/AppBootstrap.js`;
-- часть стартовой инициализации stage-workspace вынесена из `legacy-app.js` в `AppBootstrap.initStageWorkspace()`;
-- старый `init()` сохранён как совместимый bridge с fallback-логикой;
-- расчёты, PDF, визуальное поведение и конструктор ферм не менялись.
+## Текущий статус
 
-# FEG Stage PRO v3.6.46 — dom utils bridge
+- Текущий app package: `feg-stage-pro`.
+- Текущая версия package: `3.17.50`.
+- Активная ветка разработки: `main` + рабочие feature/cleanup branches через pull request.
+- Текущий runtime: v4-only shell без старого видимого v3-интерфейса.
+- Тип приложения: static/Vite browser app, PWA-ready.
+- Backend-ready слой: Supabase adapters, migrations, sync queues, dry-run and controlled-write modules.
 
-Изменения v3.6.46:
-- базой взята `v3.6.45 — format utils bridge`;
-- добавлен runtime-модуль `src/modules/DomUtils.js`;
-- общие DOM-helper’ы `q()`, `getValue()`, `setValue()`, `getNumber()`, `setText()`, `setHtml()` теперь делегируются в `DomUtils`;
-- первичные DOM-ссылки и базовые truss get/set helpers переведены на общий мост;
-- `legacy-app.js` оставлен как совместимый bridge со старыми глобальными helper-функциями;
-- расчёты, PDF, Supabase, проекты, клиенты, ферменный конструктор и визуальное поведение не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+## Что умеет приложение
 
-# FEG Stage PRO v3.6.45 — format utils bridge
+### Быстрые технические конструкторы
 
-Изменения v3.6.45:
-- базой взята `v3.6.44 — toast manager bridge`;
-- добавлен runtime-модуль `src/modules/FormatUtils.js`;
-- общие helpers `escapeHtml()`, `money()`, `metric()`, `kg()` теперь делегируются в `FormatUtils`;
-- добавлены безопасные общие форматтеры `formatNumber()`, `moneyWithCurrency()`, `formatDate()`, `formatTime()`, `formatDateTime()`, `safeFilePart()` для следующих маленьких переносов;
-- `legacy-app.js` оставлен как совместимый bridge со старыми глобальными helper-функциями;
-- расчёты, PDF, Supabase, проекты, клиенты, ферменный конструктор и визуальное поведение не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+- Сцена.
+- Фермы.
+- LED-экраны.
+- Быстрые технические листы и PDF-экспорт без клиентских цен.
 
-# FEG Stage PRO v3.6.43 — modal manager bridge
+### Линейный сметчик
 
-Изменения v3.6.43:
-- базой взята `v3.6.42 — PWA manager bridge`;
-- добавлен runtime-модуль `src/modules/ModalManager.js`;
-- общие действия модалок `open/close`, закрытие по клику на backdrop и закрытие по Escape вынесены в `ModalManager`;
-- `legacy-app.js` оставлен как совместимый bridge: старые функции `closePdfPreview()`, `closeWeightsModal()`, `closeAppSettingsModal()`, `closeTransportModal()` сохранены;
-- PDF, настройки веса/цен, настройки приложения и транспорт используют прежние DOM-элементы и прежние close-функции;
-- расчёты, PDF-содержимое, Supabase, проекты, клиенты, ферменный конструктор и визуальное поведение не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+- Клиент и проект.
+- Объект / площадка.
+- Состав сметы.
+- Сцена, фермы, LED.
+- Звук, свет, бэклайн, коммутация, услуги и ручные позиции.
+- Транспорт.
+- Команда проекта.
+- Финальная клиентская и внутренняя сводка.
 
-# FEG Stage PRO v3.6.41 — navigation init bridge
+### Склад и операции
 
-Изменения v3.6.41:
-- базой взята `v3.6.40 — navigation manager bridge`;
-- расширен runtime-модуль `NavigationManager`;
-- стартовая навигационная инициализация `load/hashchange` вынесена в `src/modules/NavigationManager.js`;
-- переключение страниц `stage / clients / truss` по-прежнему проходит через `NavigationManager`;
-- `legacy-app.js` оставлен как совместимый bridge для старого глобального `setAppPage()` и inline-кнопок;
-- hash-навигация `#stage / #clients / #truss` сохранена;
-- расчёты, PDF, Supabase-схема, проекты, ферменный конструктор и визуальное поведение не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+- База оборудования.
+- Проверка наличия.
+- Дефицит и закрытие субарендой.
+- Складские листы.
+- Резервы и движения склада как плановые операции.
+- Warehouse operations hub.
 
-# FEG Stage PRO v3.6.39 — clients UI bridge
+### Документы и визуализация
 
-Изменения v3.6.39:
-- базой взята `v3.6.38 — clients storage manager bridge`;
-- добавлен runtime-модуль `ClientsUI`;
-- UI-helper’ы клиентской базы вынесены в `src/modules/ClientsUI.js`: select клиентов, datalist, форма карточки и таблица клиентов;
-- `legacy-app.js` оставлен как совместимый bridge со старыми глобальными функциями и текущими обработчиками;
-- расчёты, PDF, Supabase-схема, проекты, ферменный конструктор и визуальное поведение не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+- КП / клиентские документы.
+- Технические листы.
+- Складские листы.
+- PDF / HTML / JSON exports.
+- Top / front / isometric visual preview adapters.
 
-# FEG Stage PRO v3.6.37 — truss cloud manager bridge
+### Управление и backend-readiness
 
-Изменения v3.6.37:
-- базой взята `v3.6.36 — project manager bridge`;
-- `ProjectManager` расширен cloud-операциями ферменных проектов;
-- подготовка truss cloud-row, save/upload и load/merge ферм теперь делегируются через `ProjectManager`;
-- `legacy-app.js` оставлен как совместимый UI-мост со старыми fallback-ветками;
-- расчёты, PDF, схемы, Supabase-таблица и визуальное поведение не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+- Auth shell и роли.
+- Админка и управление доступом.
+- Клиенты и проекты.
+- Reports / Data Quality / Command Center.
+- Supabase migrations, dry-run tools, sync queues and controlled-write preparation.
 
-# FEG Stage PRO v3.6.36 — project manager bridge
+## Быстрый старт локально
 
-Изменения v3.6.36:
-- базой взята `v3.6.35 — project/orders cleanup 3`;
-- добавлен runtime-модуль `ProjectManager`;
-- `ProjectManager` связывает `ProjectStorage` и `SupabaseStorage` для cloud-save/load заказов сцены;
-- `legacy-app.js` теперь делегирует подготовку cloud-row, сохранение в облако, загрузку/merge из облака и upload сохранённого заказа в `ProjectManager`;
-- старые fallback-ветки оставлены для совместимости;
-- расчёты, PDF, схемы, таблица Supabase и визуальное поведение не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+```bash
+npm install
+npm run dev
+```
 
-# FEG Stage PRO v3.6.35 — project/orders cleanup 3
+По умолчанию dev server запускается через Vite.
 
-Изменения v3.6.35:
-- базой взята `v3.6.34 — project/orders cleanup 2`;
-- `ProjectStorage` расширен stage-order save/delete/replace операциями;
-- `saveOrder()` теперь делегирует сохранение и обновление stage-заказов в storage-модуль;
-- удаление stage-заказов и обновление cloud-снимков переведены на единый storage API;
-- `legacy-app.js` оставлен как совместимый UI-мост;
-- расчёты, PDF, схемы, Supabase-таблица и визуальное поведение не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+Для проверки перед PR:
 
-# FEG Stage PRO v3.6.34 — project/orders cleanup 2
+```bash
+npm run check
+npm run build
+```
 
-Изменения v3.6.34:
-- базой взята `v3.6.33 — project storage module`;
-- `ProjectStorage` расширен helpers для JSON-экспорта/импорта проектов сцены и ферменных проектов;
-- поиск сохранённого проекта сцены и ферменного проекта теперь делегируется в `ProjectStorage`;
-- сохранение и удаление ферменных проектов переведено на единый storage API;
-- `legacy-app.js` оставлен как совместимый мост для старых inline-кнопок и UI;
-- расчёты, PDF, Supabase-синхронизация, визуальное поведение конструктора и калибровка не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+Дополнительно, если задача затрагивает e2e-сценарии:
 
-# FEG Stage PRO v3.6.33 — project storage module
+```bash
+npm run test:e2e
+```
 
-Изменения v3.6.33:
-- базой взята `v3.6.32 — pdf bridge cleanup`;
-- добавлен runtime-модуль `ProjectStorage`;
-- локальная история заказов сцены и список ферменных проектов теперь читаются/пишутся через общий storage-мост;
-- прямые обращения к `localStorage` для stage orders/truss projects в рабочих местах legacy-моста заменены на helper-функции;
-- расчёты, PDF, Supabase-синхронизация, визуальное поведение конструктора и калибровка не менялись;
-- обновлён `sw.js`, чтобы браузер не держал старый кэш.
+Для static preview/helper:
 
-# FEG Stage PRO v3.6.18 — truss UI summary module
+```bash
+npm run preview
+npm run serve:static
+```
 
-Изменения v3.6.18:
-- базой взята `v3.6.17 — truss actions module`;
-- в `TrussBlockConstructor` вынесены helpers итоговой таблицы, ведомости блоков и счетчика конструктора;
-- расчеты, PDF, нагрузка, drag/snap и SVG-отрисовка не менялись.
+## Карта репозитория
 
-# FEG Stage PRO v3.6.7 — truss catalog module
+```text
+index.html                 Порядок загрузки browser-модулей и mount app shell
+src/modules/               Runtime-модули приложения
+src/modules/visual/        Visual model adapters and renderers
+src/styles/main.css        Общий UI layer, tokens, shell layout, constructors UI
+scripts/                   Static checks and helper scripts
+supabase/migrations/       Supabase schema migrations
+tests/e2e/                 Playwright checks
+assets / icons / textures  PWA icons and constructor textures
+docs/                      Активная документация и исторические заметки
+CHANGELOG.md               Актуальная история релизов
+```
 
-Изменения v3.6.7:
-- Начат осторожный перенос TrussBlockConstructor.
-- Каталог блоков, группы библиотеки объектов и legacy-маппинг вынесены в `src/modules/TrussBlockConstructor.js`.
-- Отрисовка, drag/snap, BOM, PDF и расчёты пока остаются в `legacy-app.js`.
-- Поведение конструктора не менялось.
+## Главные входные файлы
 
----
+- `index.html` — порядок подключения модулей и стартовая разметка.
+- `src/modules/V4AppShell.js` — основной v4 shell.
+- `src/modules/V4DesignSystem.js` — runtime-слой дизайн-системы.
+- `src/styles/main.css` — главный CSS-файл проекта.
+- `sw.js` — service worker и PWA cache.
+- `manifest.json` — PWA manifest.
 
-# FEG Stage PRO v3.6.6 — calibration manager module
+## Документация
 
-Изменения v3.6.6:
+Начинать лучше отсюда:
 
-- базой взята рабочая `v3.6.3 — price/weight settings module`;
-- продолжена миграция из `src/legacy-app.js` в отдельные runtime-модули;
-- вынесен рабочий модуль `CalibrationManager`:
-  - нормализация SVG-калибровки;
-  - загрузка `feg_svg_calibration.json`;
-  - PIN-доступ `7663` к админ-калибровке;
-  - локальные черновики калибровки в браузере;
-  - сбор и скачивание серверного файла калибровки;
-- `legacy-app.js` пока остаётся совместимым мостом и делегирует калибровочные операции в модуль;
-- визуальная логика конструктора, расчёты, PDF, темы, транспорт и настройки цен/веса не менялись.
+- `docs/README.md` — индекс документации.
+- `docs/ARCHITECTURE.md` — архитектура и группы модулей.
+- `docs/DEVELOPMENT.md` — локальная разработка и проверки.
+- `docs/DOCUMENTATION_POLICY.md` — правила документации.
+- `docs/CHANGELOG_POLICY.md` — правила changelog.
+- `docs/UI_SYSTEM.md` — правила UI и технических canvas.
+- `docs/CONSTRUCTORS.md` — правила Stage / Truss / LED конструкторов.
+- `docs/BACKEND_CONTRACT.md` — backend/sync/auth/controlled-write правила.
+- `docs/CLEANUP_AUDIT_2026_05_21.md` — аудит текущей чистки.
 
-Проверка:
+## Правила разработки
 
-- `src/legacy-app.js` через `node --check`;
-- все `src/modules/*.js` через `node --check`;
-- `sw.js`;
-- `manifest.json`;
-- `feg_svg_calibration.json`;
-- архив через `unzip -t`.
+- `main` считается защищённой основной веткой.
+- Рабочие изменения делаются в отдельной ветке.
+- В `main` изменения попадают через pull request.
+- Не смешивать UI-only правки с изменениями расчётов, BOM, склада, резервов или backend writes.
+- Не добавлять inline styles и точечные CSS-костыли без необходимости.
+- Общие визуальные изменения делать через tokens, shared classes и общий CSS.
+- Не грузить test/demo fixtures в production entry.
+- Не коммитить временные ТЗ, chat handoff, локальные архивы и служебный мусор.
 
+## Защищённые зоны
 
-## v3.6.39 — clients UI bridge
+Следующие области нельзя менять «заодно» во время документационной или UI-чистки:
 
-- Added `src/modules/ClientsUI.js` for client select, datalist, form and clients table rendering helpers.
-- Kept legacy global functions as compatibility bridges for existing inline handlers.
-- No calculation, PDF, Supabase schema or visual behavior changes.
+- формулы Stage / Truss / LED;
+- BOM quantities and normalized rows;
+- складские движения и резервы;
+- quote output / client totals;
+- Supabase/backend controlled writes;
+- PWA cache behavior без явного cache bump/review.
 
-## Последняя стабильная функциональная точка
+## История релизов
 
-`v3.5.62 — combined single transport`.
+Краткая актуальная история находится в `CHANGELOG.md`.
 
-## Миграционная ветка
+Полный старый changelog до cleanup сохранён в Git history на baseline commit:
 
-- `v3.6.0` — подготовка структуры модулей;
-- `v3.6.1` — `AppSettings` + `SupabaseStorage`;
-- `v3.6.2` — `TransportSettings`;
-- `v3.6.3` — `PriceWeightSettings`;
-- `v3.6.6` — `CalibrationManager`.
+```text
+df9da58b13fe9a769f38d439b549cbfb39b52f8d
+```
 
+## Cleanup note
 
-## v3.6.6
-
-Вынесен runtime-модуль `StageCalculator`: чистая геометрия сцены, связность, габариты, текст формы, отражение, поворот, прямоугольник и базовый snapshot расчёта. Старый `legacy-app.js` остаётся мостом совместимости и делегирует эти операции модулю через `window.FEGModules.StageCalculator`.
-# FEG Stage PRO current runtime note
-
-The browser runtime is now the v4-only shell. `src/legacy-app.js` is no longer
-loaded by `index.html`; older entries below are retained as historical migration
-notes. Current active runtime additions include `CommunicationCenter`,
-`ProjectRendererIso`, v4 calculators, Quote Wizard, warehouse, documents,
-backend sync consoles and visual preview/export modules.
+Корневой `README.md` должен быть входной страницей проекта, а не свалкой release notes. История релизов хранится в `CHANGELOG.md`, долговечные правила — в `docs/`, временные задачи и chat handoff в репозиторий не добавляются.
