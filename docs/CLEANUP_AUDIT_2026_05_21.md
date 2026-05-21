@@ -32,9 +32,15 @@ Action: added `ARCHITECTURE.md`, `DEVELOPMENT.md` and `DOCUMENTATION_POLICY.md`.
 
 ### Production demo/test data
 
-`index.html` loads `src/modules/TestFixtures.js` directly before auth modules. `TestFixtures.js` contains demo users, invite keys and a large fixture catalog. Demo auth itself has an environment guard, but the fixture payload is still loaded by the production entry.
+`index.html` loaded `src/modules/TestFixtures.js` directly before auth modules. `TestFixtures.js` contains demo users, invite keys and a large fixture catalog. Demo auth itself has an environment guard, but the fixture payload was still loaded by the production entry.
 
-Action planned in this branch: remove `TestFixtures.js` from production `index.html` and `sw.js` core precache. Keep fallback behavior in `DemoAuthProvider.js` so local/demo sign-in still works without the fixture file.
+Action: removed `TestFixtures.js` from production `index.html` and from `sw.js` core precache. Kept the file in the repository for a later guarded dev/demo loading strategy. `DemoAuthProvider.js` already has a fallback demo user path when `ROOT.TestFixtures` is unavailable.
+
+### Repository hygiene
+
+There was no `.gitignore` in the repository.
+
+Action: added `.gitignore` for dependencies, build output, logs, local env files, editor files, temporary archives and local Supabase runtime data.
 
 ## Follow-up queue
 
