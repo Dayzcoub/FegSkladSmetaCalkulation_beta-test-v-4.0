@@ -42,6 +42,12 @@ Action: added active rule documents:
 
 This makes the next cleanup step safer: old release notes can be reviewed against active docs instead of being kept only because they may contain hidden decisions.
 
+### Changelog compaction
+
+`CHANGELOG.md` contained repeated pasted `# Changelog` sections from previous archive handoffs. The file had become hard to read and duplicated many version entries.
+
+Action: compacted `CHANGELOG.md` into the current v3.17.x release line, added `docs/CHANGELOG_POLICY.md`, and documented that the full pre-cleanup changelog remains preserved in Git history at baseline commit `df9da58b13fe9a769f38d439b549cbfb39b52f8d`.
+
 ### Production demo/test data
 
 `index.html` loaded `src/modules/TestFixtures.js` directly before auth modules. `TestFixtures.js` contains demo users, invite keys and a large fixture catalog. Demo auth itself has an environment guard, but the fixture payload was still loaded by the production entry.
@@ -61,7 +67,6 @@ Action: added `.gitignore` for dependencies, build output, logs, local env files
 3. Add or update a release checklist if packaging continues from GitHub instead of local zip handoff.
 4. Consider a dedicated `docs/SECURITY.md` for demo auth, production fixtures, invite keys, RLS, PWA cache and secrets.
 5. Consider a dedicated `docs/RELEASE.md` for version bump, cache bump, build, PR and packaging procedure.
-6. Consider a dedicated changelog compaction pass because `CHANGELOG.md` contains repeated `# Changelog` sections from previous archive merges.
 
 ## Non-goals for this pass
 
