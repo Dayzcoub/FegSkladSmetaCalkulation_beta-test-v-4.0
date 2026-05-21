@@ -4,16 +4,16 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const SECTION_BINDER_VERSION = '1.0.0';
+  const SECTION_BINDER_VERSION = '1.2.1-v4-led-freeform-constructor';
 
   function model() {
     if (!ROOT.QuoteModel) throw new Error('QuoteModel is not available.');
     return ROOT.QuoteModel;
   }
 
-  function legacyBridge() {
-    if (!ROOT.QuoteLegacyBridge) throw new Error('QuoteLegacyBridge is not available.');
-    return ROOT.QuoteLegacyBridge;
+  function structureEngine() {
+    if (!ROOT.V4StructureConfigurator) throw new Error('V4StructureConfigurator is not available.');
+    return ROOT.V4StructureConfigurator;
   }
 
   function nowIso() {
@@ -96,12 +96,23 @@
   }
 
   function normalizeLedInput(input) {
+    if (ROOT.V4LedBomBridge && ROOT.V4LedBomBridge.normalizeLedInput) {
+      const normalized = ROOT.V4LedBomBridge.normalizeLedInput(input || {});
+      if (input && (input.subrentEnabled === true || input.subrentEnabled === 'true' || input.subrent)) {
+        normalized.subrentEnabled = input.subrentEnabled === true || input.subrentEnabled === 'true';
+        normalized.subrent = clone(input.subrent || {});
+      }
+      return normalized;
+    }
     const src = input || {};
     const calc = ROOT.LedCalculator;
     const formatId = toText(src.format || src.formatId) || '640x640';
     const pitchId = toText(src.pitch || src.pitchId) || 'p4';
     const format = calc && calc.getCabinetFormat ? calc.getCabinetFormat(formatId) : { id: '640x640', widthM: 0.64, heightM: 0.64, defaultWeightKg: 14, defaultPowerW: 320, defaultStartupPowerW: 600 };
     const legType = calc && calc.getLegType ? calc.getLegType(src.legType || src.legTypeId || '3m') : { id: '3m' };
+    const mount = calc && calc.getMountFlags
+      ? calc.getMountFlags(src)
+      : { standing: src.mountStanding !== false && src.standing !== false, hanging: src.mountHanging === true || src.mountHanging === 'true' || src.hanging === true || src.hanging === 'true', mode: '' };
     return {
       widthM: clampNonNegative(src.widthM, 4),
       heightM: clampNonNegative(src.heightM, 2.56),
@@ -111,11 +122,22 @@
       cabinetPowerW: clampNonNegative(src.cabinetPowerW, format.defaultPowerW || 0),
       cabinetStartupPowerW: clampNonNegative(src.cabinetStartupPowerW, format.defaultStartupPowerW || 0),
       legType: legType.id || '3m',
-      legCount: Math.max(0, Math.round(clampNonNegative(src.legCount, 0)))
+      legCount: Math.max(0, Math.round(clampNonNegative(src.legCount, 0))),
+      mountMode: toText(src.mountMode || src.mount, mount.mode),
+      mountStanding: mount.standing,
+      mountHanging: mount.hanging,
+      explicitEmptyLayout: src.explicitEmptyLayout === true || src.explicitEmptyLayout === 'true',
+      layoutMode: Array.isArray(src.layoutBlocks) && src.layoutBlocks.length || src.explicitEmptyLayout === true || src.explicitEmptyLayout === 'true' ? 'freeform' : toText(src.layoutMode, ''),
+      layoutBlocks: Array.isArray(src.layoutBlocks) ? clone(src.layoutBlocks) : [],
+      subrentEnabled: src.subrentEnabled === true || src.subrentEnabled === 'true',
+      subrent: clone(src.subrent || {})
     };
   }
 
   function buildLedSection(input, overrides) {
+    if (ROOT.V4LedBomBridge && ROOT.V4LedBomBridge.buildLedSection) {
+      return ROOT.V4LedBomBridge.buildLedSection(input || {}, Object.assign({ binderVersion: SECTION_BINDER_VERSION, source: 'QuoteSectionBinder.v4-led', catalogMode: 'quote', sourceMode: 'quote' }, overrides || {}));
+    }
     if (!ROOT.LedCalculator) throw new Error('LedCalculator is not available.');
     const ledInput = normalizeLedInput(input || {});
     const result = ROOT.LedCalculator.calculateLedScreen(ledInput);
@@ -123,6 +145,7 @@
     const rows = ROOT.LedCalculator.buildLedBomRows(result);
     return Object.assign({
       type: 'led',
+      sectionKey: 'led',
       binderVersion: SECTION_BINDER_VERSION,
       status: 'configured',
       source: 'LedCalculator',
@@ -150,12 +173,28 @@
         totalPixels: result.totalPixels,
         legTypeId: result.legType.id,
         legTypeName: result.legType.name,
+        mountMode: result.mountMode,
+        mountStanding: result.mountStanding,
+        mountHanging: result.mountHanging,
+        hangingBarCount: result.hangingBarCount || 0,
+        spansetCount: result.spansetCount || 0,
+        shackleCount: result.shackleCount || 0,
+        aspectRatioLabel: result.aspectRatioLabel || '',
         legCount: result.legCount,
+        standingBrackets: result.standingBrackets || 0,
+        hangingBrackets: result.hangingBrackets || 0,
+        hangingBarBrackets: result.hangingBarBrackets || 0,
+        hangingCabinetBrackets: result.hangingCabinetBrackets || 0,
         brackets: result.brackets,
+        standingM8x60Bolts: result.standingM8x60Bolts || result.m8Bolts || 0,
         m8Bolts: result.m8Bolts,
+        m8x20Bolts: result.m8x20Bolts || 0,
+        hangingRiggingByConstruction: clone(result.hangingRiggingByConstruction || []),
         powerLinks: result.powerLinks,
         rj45Links: result.rj45Links,
         powerconSchukoCables: result.powerconSchukoCables,
+        powerconSchukoWattsPerCable: result.powerconSchukoWattsPerCable || result.powerconSchukoPerCable || 3400,
+        powerconSchukoByConstruction: clone(result.powerconSchukoByConstruction || []),
         totalWeightKg: result.totalWeightKg,
         totalPowerW: result.totalPowerW,
         totalPowerKw: result.totalPowerKw,
@@ -171,12 +210,17 @@
         weightKg: row.weightKg,
         powerW: row.powerW,
         startupPowerW: row.startupPowerW || 0,
+        sourceType: 'own',
+        sourceSystem: 'equipment_database_system_part',
+        ledPart: row.id || row.code,
         note: row.note
       })),
       rental: clampNonNegative(overrides && overrides.rental, 0),
+      constructions: clone(result.constructions || []),
       weightKg: result.totalWeightKg,
       powerW: result.totalPowerW,
       startupPowerW: result.totalStartupPowerW,
+      readyFor: { sharedBom: true, quoteItems: true, warehousePickList: true, documents: true, bomContract: true, legacyV3Touched: false },
       updatedAt: nowIso()
     }, overrides || {});
   }
@@ -206,19 +250,25 @@
 
 
   function buildStageSection(source, overrides) {
-    return legacyBridge().buildStageSection(source, overrides || {});
+    if (ROOT.V4StructureConfigurator && ROOT.V4StructureConfigurator.buildStageSection) {
+      return ROOT.V4StructureConfigurator.buildStageSection(source || {}, Object.assign({ binderVersion: SECTION_BINDER_VERSION, source: 'QuoteSectionBinder.v4-stage', catalogMode: 'quote', sourceMode: 'quote' }, overrides || {}));
+    }
+    return structureEngine().buildStageSection(source || {}, Object.assign({ binderVersion: SECTION_BINDER_VERSION, source: 'QuoteSectionBinder.v4-stage-required', catalogMode: 'quote', sourceMode: 'quote' }, overrides || {}));
   }
 
   function buildTrussSection(source, overrides) {
-    return legacyBridge().buildTrussSection(source, overrides || {});
+    if (ROOT.V4StructureConfigurator && ROOT.V4StructureConfigurator.buildTrussSection) {
+      return ROOT.V4StructureConfigurator.buildTrussSection(source || {}, Object.assign({ binderVersion: SECTION_BINDER_VERSION, source: 'QuoteSectionBinder.v4-truss', catalogMode: 'quote', sourceMode: 'quote' }, overrides || {}));
+    }
+    return structureEngine().buildTrussSection(source || {}, Object.assign({ binderVersion: SECTION_BINDER_VERSION, source: 'QuoteSectionBinder.v4-truss-required', catalogMode: 'quote', sourceMode: 'quote' }, overrides || {}));
   }
 
-  function buildStageSectionFromLegacy(overrides) {
-    return legacyBridge().buildStageSectionFromLegacy(overrides || {});
+  function buildStageSectionFromV4(source, overrides) {
+    return buildStageSection(source || {}, overrides || {});
   }
 
-  function buildTrussSectionFromLegacy(overrides) {
-    return legacyBridge().buildTrussSectionFromLegacy(overrides || {});
+  function buildTrussSectionFromV4(source, overrides) {
+    return buildTrussSection(source || {}, overrides || {});
   }
 
   function bindSection(draft, key, section) {
@@ -244,14 +294,26 @@
     return bindSection(q, 'truss', buildTrussSection(source || {}, overrides || {}));
   }
 
-  function bindStageFromLegacy(draft, overrides) {
+  function bindStageFromV4(draft, source, overrides) {
     const q = ensureSectionsForScope(draft || {}, { pruneDisabled: false });
-    return bindSection(q, 'stage', buildStageSectionFromLegacy(overrides || {}));
+    return bindSection(q, 'stage', buildStageSectionFromV4(source || {}, overrides || {}));
   }
 
-  function bindTrussFromLegacy(draft, overrides) {
+  function bindTrussFromV4(draft, source, overrides) {
     const q = ensureSectionsForScope(draft || {}, { pruneDisabled: false });
-    return bindSection(q, 'truss', buildTrussSectionFromLegacy(overrides || {}));
+    return bindSection(q, 'truss', buildTrussSectionFromV4(source || {}, overrides || {}));
+  }
+
+  function getStageInputFromQuote(draft) {
+    const q = model().createQuoteDraft(draft || {});
+    const current = q.sections && q.sections.stage && q.sections.stage.input ? q.sections.stage.input : null;
+    return current || { explicitEmpty: true, widthModules: 4, depthModules: 3 };
+  }
+
+  function getTrussInputFromQuote(draft) {
+    const q = model().createQuoteDraft(draft || {});
+    const current = q.sections && q.sections.truss && q.sections.truss.input ? q.sections.truss.input : null;
+    return current || { lengthM: 6, baseCount: 2, connectionCount: 0 };
   }
 
   function getLedInputFromQuote(draft) {
@@ -301,8 +363,8 @@
     buildLedSection,
     buildStageSection,
     buildTrussSection,
-    buildStageSectionFromLegacy,
-    buildTrussSectionFromLegacy,
+    buildStageSectionFromV4,
+    buildTrussSectionFromV4,
     bindSection,
     bindLedSection,
     buildEquipmentSection,
@@ -310,8 +372,10 @@
     getEquipmentInputFromQuote,
     bindStageSection,
     bindTrussSection,
-    bindStageFromLegacy,
-    bindTrussFromLegacy,
+    bindStageFromV4,
+    bindTrussFromV4,
+    getStageInputFromQuote,
+    getTrussInputFromQuote,
     getLedInputFromQuote,
     isSectionConfigured,
     getSectionState,

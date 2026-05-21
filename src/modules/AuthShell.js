@@ -8,7 +8,14 @@
     MANAGER: 'manager',
     TECHNICIAN: 'technician',
     WAREHOUSE: 'warehouse',
-    VIEWER: 'viewer'
+    VIEWER: 'viewer',
+    DIRECTOR: 'director',
+    TECH_DIRECTOR: 'tech_director',
+    SOUND: 'sound',
+    LIGHT: 'light',
+    SCREENS: 'screens',
+    TRUSS_STAGE: 'truss_stage',
+    INVITED_SPECIALIST: 'invited_specialist'
   });
 
   function getBootstrapState(storage) {
@@ -110,14 +117,14 @@
     const enabled = Boolean(demo && demo.isDemoAuthEnabled && demo.isDemoAuthEnabled());
     if (!enabled) return '';
     const roles = ROOT.RolePermissions && ROOT.RolePermissions.ROLES
-      ? [ROOT.RolePermissions.ROLES.ADMIN, ROOT.RolePermissions.ROLES.MANAGER, ROOT.RolePermissions.ROLES.TECHNICIAN, ROOT.RolePermissions.ROLES.WAREHOUSE, ROOT.RolePermissions.ROLES.VIEWER]
-      : ['admin', 'manager', 'technician', 'warehouse', 'viewer'];
+      ? [ROOT.RolePermissions.ROLES.ADMIN, ROOT.RolePermissions.ROLES.DIRECTOR, ROOT.RolePermissions.ROLES.TECH_DIRECTOR, ROOT.RolePermissions.ROLES.MANAGER, ROOT.RolePermissions.ROLES.TECHNICIAN, ROOT.RolePermissions.ROLES.WAREHOUSE, ROOT.RolePermissions.ROLES.VIEWER, ROOT.RolePermissions.ROLES.SOUND, ROOT.RolePermissions.ROLES.LIGHT, ROOT.RolePermissions.ROLES.SCREENS, ROOT.RolePermissions.ROLES.TRUSS_STAGE, ROOT.RolePermissions.ROLES.INVITED_SPECIALIST]
+      : ['admin', 'director', 'tech_director', 'manager', 'technician', 'warehouse', 'viewer', 'sound', 'light', 'screens', 'truss_stage', 'invited_specialist'];
     const label = role => ROOT.RolePermissions && ROOT.RolePermissions.getRoleLabel ? ROOT.RolePermissions.getRoleLabel(role) : role;
     return `
       <div class="v4-demo-auth-panel">
-        <div class="v4-demo-badge">DEMO AUTH</div>
-        <b>Тестовый вход без ключа</b>
-        <p class="v4-muted">Для разработки интерфейса и проверки ролей. Данные не пишутся в боевой Supabase.</p>
+        <div class="v4-demo-badge">ЛОКАЛЬНЫЙ ВХОД</div>
+        <b>Быстрый локальный вход</b>
+        <p class="v4-muted">Локальный вход доступен для настройки ролей и первичной проверки доступа.</p>
         <div class="v4-auth-actions">
           ${roles.map(role => `<button type="button" class="btn-secondary" data-v4-demo-role="${escapeHtml(role)}">${escapeHtml(label(role))}</button>`).join('')}
         </div>

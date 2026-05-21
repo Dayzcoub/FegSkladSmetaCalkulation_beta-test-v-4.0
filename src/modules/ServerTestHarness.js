@@ -3,10 +3,12 @@
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
-  const HARNESS_VERSION = '3.13.1';
+  const HARNESS_VERSION = '3.15.0';
   const STORAGE_KEY = 'fegV4ServerTestReports';
   const ENDPOINTS = Object.freeze({
     health: 'backend-health',
+    authSession: 'auth-session-dry-run',
+    authControlledAction: 'auth-controlled-action',
     seed: 'test-seed-workspace',
     writeQuote: 'test-write-quote',
     quoteDryRun: 'quote-sync-dry-run',
@@ -116,6 +118,21 @@
     return quoteModel() && quoteModel().createEmptyQuote ? quoteModel().createEmptyQuote() : { id: 'test-quote', project: { name: 'Server Test Quote' } };
   }
 
+
+  function buildAuthSessionDryRunPayload(config) {
+    const cfg = getRuntimeConfig(config);
+    const auth = authAdapter();
+    if (auth && auth.buildAuthSessionDryRunRequest) return auth.buildAuthSessionDryRunRequest({ config: cfg, action: 'session_restore' });
+    return {
+      type: 'feg-stage-pro-auth-session-dry-run-request',
+      version: HARNESS_VERSION,
+      dry_run: true,
+      workspace_slug: cfg.workspaceId,
+      workspace_id: cfg.workspaceId,
+      safety: { remote_write_executed: false, no_profile_write: true, no_invite_consume: true }
+    };
+  }
+
   function buildTestWorkspacePayload(config) {
     const cfg = getRuntimeConfig(config);
     return {
@@ -167,6 +184,29 @@
   }
 
 
+
+
+  function buildAuthControlledActionPayload(config) {
+    const cfg = getRuntimeConfig(config);
+    const auth = ROOT.SupabaseAuthAdapter || null;
+    if (auth && auth.buildApprovedAuthActionExecutionTemplate) {
+      const template = auth.buildApprovedAuthActionExecutionTemplate({ config: cfg });
+      return Object.assign({}, template, {
+        dry_run: false,
+        confirm_phrase: 'EXECUTE AUTH ACTION',
+        note: 'Server Test Harness smoke payload. Edge function must keep remote_write_executed=false in v3.14.6 and return capability/promotion gates plus post-action verification.'
+      });
+    }
+    return {
+      type: 'feg-stage-pro-approved-auth-action-execution-template',
+      version: HARNESS_VERSION,
+      dry_run: false,
+      confirm_phrase: 'EXECUTE AUTH ACTION',
+      workspace_slug: cfg.workspaceId,
+      auth_action_request: { action: 'session_restore', dry_run: true },
+      approval_package: { approved: false, payload_checksum: '' }
+    };
+  }
 
   function buildQuoteDryRunPayload(config) {
     const cfg = getRuntimeConfig(config);
@@ -278,6 +318,8 @@
     const readiness = buildHarnessReadiness(cfg, testKey);
     const steps = [
       { key: 'health', label: 'Backend health', endpoint: getEndpoint(cfg, 'health'), method: 'GET', requires_test_key: false },
+      { key: 'authSession', label: 'Auth/session/action dry-run Edge payload', endpoint: getEndpoint(cfg, 'authSession'), method: 'POST', requires_test_key: true, payload: buildAuthSessionDryRunPayload(cfg) },
+      { key: 'authControlledAction', label: 'Auth controlled action skeleton Edge payload', endpoint: getEndpoint(cfg, 'authControlledAction'), method: 'POST', requires_test_key: true, payload: buildAuthControlledActionPayload(cfg) },
       { key: 'seed', label: 'Seed test workspace', endpoint: getEndpoint(cfg, 'seed'), method: 'POST', requires_test_key: true, payload: buildTestWorkspacePayload(cfg) },
       { key: 'writeQuote', label: 'Dry write test quote', endpoint: getEndpoint(cfg, 'writeQuote'), method: 'POST', requires_test_key: true, payload: buildTestQuotePayload({ config: cfg }) },
       { key: 'quoteDryRun', label: 'Dry-run clients/quotes Edge payload', endpoint: getEndpoint(cfg, 'quoteDryRun'), method: 'POST', requires_test_key: true, payload: buildQuoteDryRunPayload(cfg) },
@@ -308,9 +350,11 @@
     const started = nowIso();
     const readiness = buildHarnessReadiness(cfg, testKey);
     const results = [];
-    const steps = opts.steps || ['health', 'seed', 'writeQuote', 'quoteDryRun', 'equipmentDryRun', 'rlsCheck', 'cleanup'];
+    const steps = opts.steps || ['health', 'authSession', 'authControlledAction', 'seed', 'writeQuote', 'quoteDryRun', 'equipmentDryRun', 'rlsCheck', 'cleanup'];
     const payloads = {
       health: null,
+      authSession: buildAuthSessionDryRunPayload(cfg),
+      authControlledAction: buildAuthControlledActionPayload(cfg),
       seed: buildTestWorkspacePayload(cfg),
       writeQuote: buildTestQuotePayload({ config: cfg, quote: opts.quote }),
       quoteDryRun: buildQuoteDryRunPayload(cfg),
@@ -395,7 +439,7 @@
       root.innerHTML = `
         <div class="v4-kicker">Server Test Harness</div>
         <h3>Проверка сервера без admin-регистрации</h3>
-        <p class="v4-muted">Health → test seed → dry write → quote dry-run → equipment remote dry-run → RLS check → cleanup. Test key вводится вручную и не сохраняется.</p>
+        <p class="v4-muted">Health → auth/session/action dry-run → test seed → dry write → quote dry-run → equipment remote dry-run → RLS check → cleanup. Test key вводится вручную и не сохраняется.</p>
         <div class="v4-grid-3">
           <div class="v4-mini-stat"><span>Functions</span><strong>${escapeHtml(cfg.functionsBaseUrl || 'не задано')}</strong></div>
           <div class="v4-mini-stat"><span>Workspace</span><strong>${escapeHtml(cfg.testWorkspaceSlug)}</strong></div>
@@ -410,6 +454,8 @@
           <button type="button" class="btn-secondary" data-server-test-action="refresh">Обновить readiness</button>
           <button type="button" class="btn-primary" data-server-test-action="run-all" ${state.busy ? 'disabled' : ''}>Запустить полный test-flow</button>
           <button type="button" class="btn-secondary" data-server-test-action="health" ${state.busy ? 'disabled' : ''}>Только health</button>
+          <button type="button" class="btn-secondary" data-server-test-action="authSession" ${state.busy ? 'disabled' : ''}>Только auth/session dry-run</button>
+          <button type="button" class="btn-secondary" data-server-test-action="authControlledAction" ${state.busy ? 'disabled' : ''}>Только auth controlled skeleton</button>
           <button type="button" class="btn-secondary" data-server-test-action="quoteDryRun" ${state.busy ? 'disabled' : ''}>Только quote dry-run</button>
           <button type="button" class="btn-secondary" data-server-test-action="equipmentDryRun" ${state.busy ? 'disabled' : ''}>Только equipment dry-run</button>
           <button type="button" class="btn-secondary" data-server-test-action="cleanup" ${state.busy ? 'disabled' : ''}>Cleanup</button>
@@ -432,9 +478,9 @@
       if (action === 'refresh') { render(); return; }
       if (action === 'download-plan') { downloadFile('feg_server_test_plan.json', safeJson(buildStaticTestPlan(opts.config, state.testKey))); return; }
       if (action === 'download-report' && state.report) { downloadFile('feg_server_test_report.json', safeJson(state.report)); return; }
-      if (['run-all', 'health', 'quoteDryRun', 'equipmentDryRun', 'cleanup'].includes(action)) {
+      if (['run-all', 'health', 'authSession', 'authControlledAction', 'quoteDryRun', 'equipmentDryRun', 'cleanup'].includes(action)) {
         state.busy = true; render();
-        const steps = action === 'run-all' ? ['health', 'seed', 'writeQuote', 'quoteDryRun', 'equipmentDryRun', 'rlsCheck', 'cleanup'] : [action];
+        const steps = action === 'run-all' ? ['health', 'authSession', 'authControlledAction', 'seed', 'writeQuote', 'quoteDryRun', 'equipmentDryRun', 'rlsCheck', 'cleanup'] : [action];
         state.report = await runServerTestPlan({ config: opts.config, testKey: state.testKey, steps, fetcher: opts.fetcher });
         saveReport(state.report, opts.storage);
         state.busy = false; render();

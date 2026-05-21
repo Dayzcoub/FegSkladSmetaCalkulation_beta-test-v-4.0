@@ -21,7 +21,9 @@
 
   function getProjects(projects) {
     if (Array.isArray(projects)) return projects.slice();
-    return ROOT.QuoteProjectStorage && ROOT.QuoteProjectStorage.listProjects ? ROOT.QuoteProjectStorage.listProjects() : [];
+    const store = ROOT.QuoteProjectStorage;
+    if (store && store.listProjectIndex) return store.listProjectIndex();
+    return store && store.listProjects ? store.listProjects() : [];
   }
 
   function duplicateGroups(rows, keyGetter) {
@@ -39,8 +41,10 @@
     return { area, severity, title, detail: toText(detail), payload: payload || {}, at: nowIso() };
   }
 
-  function auditEquipment(items) {
+  function auditEquipment(items, options) {
     const db = ROOT.EquipmentDatabase;
+    const opts = options || {};
+    const deepAudit = opts.deepAudit === true || opts.deep === true;
     const rows = getEquipmentItems(items);
     const issues = [];
     rows.forEach(item => {
@@ -60,9 +64,9 @@
     });
     duplicateGroups(rows, item => item.code).forEach(group => issues.push(makeIssue('equipment', 'bad', 'Дублирующийся код', group.key, { count: group.count })));
     duplicateGroups(rows, item => `${item.category}:${item.name}`).forEach(group => issues.push(makeIssue('equipment', 'warn', 'Похожее название в категории', group.key, { count: group.count })));
-    const syncPreview = db && db.buildEquipmentSyncPreview ? db.buildEquipmentSyncPreview(rows, { includeRows: false }) : null;
-    const readinessReport = db && db.buildEquipmentReadinessReport ? db.buildEquipmentReadinessReport(rows, { includeRows: false }) : null;
-    const completionMatrix = db && db.buildManualCompletionMatrix ? db.buildManualCompletionMatrix(rows, { includeRows: false }) : null;
+    const syncPreview = deepAudit && db && db.buildEquipmentSyncPreview ? db.buildEquipmentSyncPreview(rows, { includeRows: false }) : null;
+    const readinessReport = deepAudit && db && db.buildEquipmentReadinessReport ? db.buildEquipmentReadinessReport(rows, { includeRows: false }) : null;
+    const completionMatrix = deepAudit && db && db.buildManualCompletionMatrix ? db.buildManualCompletionMatrix(rows, { includeRows: false }) : null;
     if (syncPreview && syncPreview.blockerCount) issues.push(makeIssue('equipment', 'bad', 'Sync preview blockers', `${syncPreview.blockerCount} blockers before equipment_items upsert`, { blockerCount: syncPreview.blockerCount }));
     if (syncPreview && syncPreview.warningCount) issues.push(makeIssue('equipment', 'warn', 'Sync preview warnings', `${syncPreview.warningCount} warnings before equipment_items upsert`, { warningCount: syncPreview.warningCount }));
     if (readinessReport && readinessReport.counts && readinessReport.counts.manual) issues.push(makeIssue('equipment', 'warn', 'Readiness manual tasks', `${readinessReport.counts.manual} задач ручной добивки перед sync`, { manualTasks: readinessReport.counts.manual, score: readinessReport.score }));
@@ -72,9 +76,10 @@
       area: 'equipment',
       total: rows.length,
       active: rows.filter(item => item.isActive).length,
-      categoryReport: db && db.buildCategoryReport ? db.buildCategoryReport(rows) : null,
-      typeReport: db && db.buildTypeReport ? db.buildTypeReport(rows) : null,
-      schemaReport: db && db.buildSyncSchemaReport ? db.buildSyncSchemaReport(rows) : null,
+      deepAudit,
+      categoryReport: deepAudit && db && db.buildCategoryReport ? db.buildCategoryReport(rows) : null,
+      typeReport: deepAudit && db && db.buildTypeReport ? db.buildTypeReport(rows) : null,
+      schemaReport: deepAudit && db && db.buildSyncSchemaReport ? db.buildSyncSchemaReport(rows) : null,
       syncPreview,
       readinessReport,
       completionMatrix,
@@ -107,9 +112,11 @@
       if (!toText(project.clientName)) issues.push(makeIssue('projects', 'bad', 'Проект без клиента', project.projectName || project.projectId, { projectId: project.projectId }));
       if (!toText(project.eventDate)) issues.push(makeIssue('projects', 'warn', 'Нет даты мероприятия', project.projectName || project.projectId, { projectId: project.projectId }));
       if (!hasScope) issues.push(makeIssue('projects', 'warn', 'Не выбран состав сметы', project.projectName || project.projectId, { projectId: project.projectId }));
-      if (ROOT.ProjectReadinessChecklist && ROOT.ProjectReadinessChecklist.buildChecklist) {
+      if (!project.indexOnly && ROOT.ProjectReadinessChecklist && ROOT.ProjectReadinessChecklist.buildChecklist) {
         const checklist = ROOT.ProjectReadinessChecklist.buildChecklist(quote);
         if (checklist && checklist.score < 70) issues.push(makeIssue('projects', 'warn', 'Низкая готовность проекта', `${project.projectName || project.projectId}: ${checklist.score}%`, { projectId: project.projectId, score: checklist.score }));
+      } else if (project.indexOnly && project.validation && Array.isArray(project.validation.errors) && project.validation.errors.length) {
+        issues.push(makeIssue('projects', 'warn', 'Есть ошибки в индексе проекта', `${project.projectName || project.projectId}: ${project.validation.errors.length}`, { projectId: project.projectId, errors: project.validation.errors.length }));
       }
     });
     return { area: 'projects', total: rows.length, issues, score: scoreFromIssues(rows.length || 1, issues) };
@@ -135,7 +142,7 @@
   function buildQualityReport(input) {
     const opts = input || {};
     const reports = [
-      auditEquipment(opts.equipmentItems),
+      auditEquipment(opts.equipmentItems, { deepAudit: opts.deepAudit === true }),
       auditClients(opts.clients),
       auditProjects(opts.projects)
     ];
@@ -180,7 +187,9 @@
   function renderDataQualityCenter(target, options) {
     const root = typeof target === 'string' ? document.getElementById(target) : target;
     if (!root) return null;
-    const report = buildQualityReport(options || {});
+    const opts = options || {};
+    const deepAudit = root._v4QualityDeepAudit === true || opts.deepAudit === true;
+    const report = buildQualityReport(Object.assign({}, opts, { deepAudit }));
     const activeArea = root._v4QualityArea || 'all';
     const issues = report.reports.flatMap(area => (area.issues || []).map(issue => Object.assign({ areaScore: area.score }, issue)))
       .filter(issue => activeArea === 'all' || issue.area === activeArea);
@@ -206,7 +215,9 @@
             <div class="v4-sync-issues ${escapeHtml(report.status)}">
               ${report.recommendations.map(item => `<span>${escapeHtml(item)}</span>`).join('')}
             </div>
+            <div class="v4-note">Режим: ${deepAudit ? 'глубокая проверка sync/readiness' : 'быстрая проверка без тяжёлых sync-отчётов'}.</div>
             <div class="v4-actions">
+              <button type="button" class="btn-secondary" data-v4-quality-deep>${deepAudit ? 'Быстрая проверка' : 'Глубокая проверка'}</button>
               <button type="button" class="btn-secondary" data-v4-quality-export>Quality JSON</button>
             </div>
           </div>
@@ -218,6 +229,8 @@
         <div data-v4-quality-output></div>
       </div>`;
     root.querySelectorAll('[data-v4-quality-area]').forEach(btn => btn.addEventListener('click', () => { root._v4QualityArea = btn.getAttribute('data-v4-quality-area') || 'all'; renderDataQualityCenter(root, options); }));
+    const deepBtn = root.querySelector('[data-v4-quality-deep]');
+    if (deepBtn) deepBtn.addEventListener('click', () => { root._v4QualityDeepAudit = !deepAudit; renderDataQualityCenter(root, options); });
     const exportBtn = root.querySelector('[data-v4-quality-export]');
     if (exportBtn) exportBtn.addEventListener('click', () => showExport(root, report));
     return root;

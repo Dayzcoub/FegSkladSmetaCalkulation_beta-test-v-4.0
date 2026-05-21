@@ -227,6 +227,11 @@
     };
   }
 
+  function normalizeCrewAssignments(input) {
+    if (ROOT.ProjectCrewAssignments && ROOT.ProjectCrewAssignments.normalizeAssignments) return ROOT.ProjectCrewAssignments.normalizeAssignments(input);
+    return Array.isArray(input) ? input.slice(0, 200) : [];
+  }
+
   function createQuoteDraft(overrides) {
     const data = overrides || {};
     const createdAt = toText(data.createdAt) || nowIso();
@@ -245,7 +250,9 @@
       transport,
       scope: normalizeScope(data.scope),
       sections: normalizeSections(data.sections),
+      crewAssignments: normalizeCrewAssignments(data.crewAssignments || data.projectCrew || data.team),
       totals: normalizeTotals(data.totals),
+      v4Bom: normalizeV4Bom(data.v4Bom || data.v4_bom),
       history: Array.isArray(data.history) ? data.history.slice(-50) : [],
       createdAt,
       updatedAt: toText(data.updatedAt) || createdAt,
@@ -254,6 +261,10 @@
     draft.wizard = normalizeWizard(data.wizard, draft);
     draft.totals = summarizeQuote(draft).totals;
     return draft;
+  }
+
+  function normalizeV4Bom(input) {
+    return input && typeof input === 'object' ? clone(input) : null;
   }
 
   function normalizeTotals(input) {
@@ -282,8 +293,10 @@
 
   function getEnabledWizardSteps(draft) {
     const enabled = getEnabledSectionKeys(draft);
-    const steps = ['client', 'venue', 'transport', 'scope'];
+    const steps = ['client', 'venue', 'scope'];
     enabled.forEach(key => steps.push(key));
+    steps.push('transport');
+    steps.push('crew');
     steps.push('summary');
     return steps;
   }
@@ -307,7 +320,14 @@
       const enabled = getEnabledSectionKeys(q);
       if (!enabled.length && !q.scope.transport) errors.push('Выберите хотя бы один раздел сметы.');
     }
+    if (stepId === 'stage' && q.scope.stage && (!q.sections.stage || q.sections.stage.status !== 'configured')) errors.push('Сцена выбрана, но схема ещё не сохранена в смету.');
+    if (stepId === 'truss' && q.scope.truss && (!q.sections.truss || q.sections.truss.status !== 'configured')) errors.push('Фермы выбраны, но блочная схема ещё не сохранена в смету.');
     if (stepId === 'led' && q.scope.led && (!q.sections.led || q.sections.led.status !== 'configured')) errors.push('LED-раздел выбран, но расчёт экрана ещё не добавлен.');
+    if (stepId === 'crew') {
+      (Array.isArray(q.crewAssignments) ? q.crewAssignments : []).forEach(row => {
+        if (row && row.isGuest && row.keyType !== 'permanent' && (!row.accessFrom || !row.accessTo)) errors.push('Для временного приглашённого спеца укажи интервал доступа с/по.');
+      });
+    }
     return { ok: errors.length === 0, errors };
   }
 
@@ -327,6 +347,26 @@
     return 0;
   }
 
+  function hasSectionMetric(section, keys) {
+    const src = section || {};
+    return keys.some(key => Number.isFinite(Number(src[key])));
+  }
+
+  function sumEquipmentItemMetric(items, priceKeys) {
+    return (Array.isArray(items) ? items : []).reduce((sum, row) => {
+      const qty = Math.max(0, toNumber(row && row.qty, 0));
+      const src = row || {};
+      let value = 0;
+      for (const key of priceKeys) {
+        if (src[key] !== undefined && src[key] !== null && src[key] !== '') {
+          value = Math.max(0, toNumber(src[key], 0));
+          break;
+        }
+      }
+      return sum + value * qty;
+    }, 0);
+  }
+
   function summarizeQuote(draft) {
     const q = { ...(draft || {}) };
     const sections = normalizeSections(q.sections);
@@ -339,21 +379,32 @@
     SECTION_KEYS.forEach(key => {
       const section = sections[key];
       if (!section) return;
+      if (key === 'equipment') return;
       rental += readSectionMetric(section, ['total', 'rental', 'price', 'rentalTotal']);
       weightKg += readSectionMetric(section, ['weightKg', 'weight', 'totalWeightKg']);
       powerW += readSectionMetric(section, ['powerW', 'power', 'totalPowerW']);
       startupPowerW += readSectionMetric(section, ['startupPowerW', 'totalStartupPowerW']);
     });
 
-    const equipmentItems = sections.equipment && Array.isArray(sections.equipment.items) ? sections.equipment.items : [];
-    equipmentItems.forEach(row => {
-      const qty = Math.max(0, toNumber(row.qty, 0));
-      rental += Math.max(0, toNumber(row.rentalPrice || row.price, 0)) * qty;
-      weightKg += Math.max(0, toNumber(row.weightKg, 0)) * qty;
-      powerW += Math.max(0, toNumber(row.powerW, 0)) * qty;
-      startupPowerW += Math.max(0, toNumber(row.startupPowerW, 0)) * qty;
-    });
+    const equipmentSection = sections.equipment || null;
+    const equipmentItems = equipmentSection && Array.isArray(equipmentSection.items) ? equipmentSection.items : [];
+    if (equipmentSection) {
+      rental += hasSectionMetric(equipmentSection, ['equipmentRental', 'total', 'rental', 'price', 'rentalTotal'])
+        ? readSectionMetric(equipmentSection, ['equipmentRental', 'total', 'rental', 'price', 'rentalTotal'])
+        : sumEquipmentItemMetric(equipmentItems, ['rentalPrice', 'price']);
+      weightKg += hasSectionMetric(equipmentSection, ['weightKg', 'weight', 'totalWeightKg'])
+        ? readSectionMetric(equipmentSection, ['weightKg', 'weight', 'totalWeightKg'])
+        : sumEquipmentItemMetric(equipmentItems, ['weightKg', 'weight']);
+      powerW += hasSectionMetric(equipmentSection, ['powerW', 'power', 'totalPowerW'])
+        ? readSectionMetric(equipmentSection, ['powerW', 'power', 'totalPowerW'])
+        : sumEquipmentItemMetric(equipmentItems, ['powerW', 'power']);
+      startupPowerW += hasSectionMetric(equipmentSection, ['startupPowerW', 'totalStartupPowerW'])
+        ? readSectionMetric(equipmentSection, ['startupPowerW', 'totalStartupPowerW'])
+        : sumEquipmentItemMetric(equipmentItems, ['startupPowerW']);
+    }
 
+    const crewTotal = ROOT.ProjectCrewAssignments && ROOT.ProjectCrewAssignments.calculateCrewCost ? ROOT.ProjectCrewAssignments.calculateCrewCost(q.crewAssignments || []) : 0;
+    rental += crewTotal;
     const transportTotal = calculateTransportTotal(transport);
     const totals = normalizeTotals({ rental, transport: transportTotal, total: rental + transportTotal, weightKg, powerW, startupPowerW });
     const scope = normalizeScope(q.scope || {});
@@ -426,6 +477,7 @@
     normalizeTransport,
     normalizeTransportVehicle,
     normalizeTransportTariffs,
+    normalizeV4Bom,
     getTransportVehicleLabel,
     getTransportTariff,
     applySelectedTransportTariff,

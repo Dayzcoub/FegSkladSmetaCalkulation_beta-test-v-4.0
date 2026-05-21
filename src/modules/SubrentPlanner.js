@@ -4,7 +4,7 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const SUBRENT_PLANNER_VERSION = '1.0.0';
+  const SUBRENT_PLANNER_VERSION = '1.1.0-client-fallback';
   const DEFAULT_MARGIN_RATE = 0.25;
 
   function toText(value) { return String(value == null ? '' : value).trim(); }
@@ -27,8 +27,8 @@
     const qty = getNeedQty(src);
     const subrentPrice = roundMoney(src.subrentPrice == null ? src.subrent_price == null ? src.rentalPrice : src.subrent_price : src.subrentPrice);
     const explicitClientPrice = src.clientPrice == null ? src.client_price : src.clientPrice;
-    const clientPrice = explicitClientPrice == null || explicitClientPrice === ''
-      ? roundMoney(subrentPrice * (1 + nonNegative(opts.defaultMarginRate, DEFAULT_MARGIN_RATE)))
+    const clientPrice = explicitClientPrice == null || explicitClientPrice === '' || Number(explicitClientPrice) <= 0
+      ? subrentPrice
       : roundMoney(explicitClientPrice);
     const margin = roundMoney((clientPrice - subrentPrice) * qty);
     const sourceType = src.sourceType === 'subrent' ? 'subrent' : 'subrent_needed';

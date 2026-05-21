@@ -3,7 +3,7 @@
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
-  const DOCUMENT_CENTER_VERSION = '3.9.8';
+  const DOCUMENT_CENTER_VERSION = '3.17.6';
 
   function documentBuilder() { return ROOT.QuoteDocumentBuilder || null; }
   function draftStorage() { return ROOT.QuoteDraftStorage || null; }
@@ -12,13 +12,23 @@
   function backendAdapter() { return ROOT.BackendSyncAdapter || null; }
   function auditLog() { return ROOT.ProjectAuditLog || null; }
   function templateEngine() { return ROOT.PdfTemplateEngine || null; }
+  function currentRoleIsAdmin() {
+    const auth = ROOT.AuthProvider && ROOT.AuthProvider.getAuthState ? ROOT.AuthProvider.getAuthState() : { role: 'viewer' };
+    const role = auth && auth.role || 'viewer';
+    return ROOT.RolePermissions && ROOT.RolePermissions.normalizeRole ? ROOT.RolePermissions.normalizeRole(role) === 'admin' : role === 'admin';
+  }
 
   function getActiveQuote() {
     const draft = draftStorage() && draftStorage().loadActiveDraft ? draftStorage().loadActiveDraft() : null;
     if (draft) return normalizeQuote(draft);
-    const projects = projectStorage() && projectStorage().listProjects ? projectStorage().listProjects() : [];
+    const store = projectStorage();
+    const projects = store && store.listProjectIndex ? store.listProjectIndex() : (store && store.listProjects ? store.listProjects() : []);
     const project = Array.isArray(projects) && projects[0] ? projects[0] : null;
-    if (project && project.quote) return normalizeQuote(project.quote);
+    if (project && project.projectId && store && store.loadProject) {
+      const full = store.loadProject(project.projectId);
+      if (full && full.quote) return normalizeQuote(full.quote);
+    }
+    if (project && project.quote && !project.indexOnly) return normalizeQuote(project.quote);
     return normalizeQuote({});
   }
 
@@ -31,31 +41,36 @@
   function buildDocumentList(quote, options) {
     const q = normalizeQuote(quote || getActiveQuote());
     const builder = documentBuilder();
+    const opts = options || {};
+    if (opts.fastIndex === true) return buildFastDocumentIndex(q, opts);
     if (!builder || !builder.buildAllDocuments) return [];
     const docs = builder.buildAllDocuments(q) || [];
-    const includeJson = !options || options.includeJson !== false;
+    const includeJson = opts.includeJson !== false;
     const unique = [];
     const seen = new Set();
     docs.forEach(doc => {
       const key = `${doc && doc.type || 'doc'}:${doc && doc.title || ''}`;
       if (seen.has(key)) return;
       seen.add(key);
-      unique.push(enrichDocument(doc, q));
+      unique.push(enrichDocument(doc, q, opts));
     });
     if (includeJson) {
-      unique.push(enrichDocument(buildQuoteJsonDocument(q), q));
-      unique.push(enrichDocument(buildExportPackDocument(q), q));
-      unique.push(enrichDocument(buildBackendPayloadDocument(q), q));
+      unique.push(enrichDocument(buildQuoteJsonDocument(q), q, opts));
+      unique.push(enrichDocument(buildExportPackDocument(q), q, opts));
+      unique.push(enrichDocument(buildBackendPayloadDocument(q), q, opts));
     }
     return unique;
   }
 
-  function enrichDocument(doc, quote) {
+  function enrichDocument(doc, quote, options) {
     const d = doc || {};
-    const text = documentToText(d);
+    const opts = options || {};
     const extension = d.type === 'calendar-ics' ? 'ics' : d.extension || 'txt';
     const id = makeDocumentId(d);
-    const renderedTemplate = buildTemplate(d, quote);
+    const shouldBuildText = opts.lazyText !== true;
+    const shouldRenderTemplate = opts.renderTemplates !== false;
+    const text = shouldBuildText ? documentToText(d) : '';
+    const renderedTemplate = shouldRenderTemplate ? buildTemplate(d, quote) : null;
     const htmlFileName = renderedTemplate ? makeFileName(d, quote, 'html') : '';
     return {
       ...d,
@@ -68,7 +83,9 @@
       bodyHtml: renderedTemplate && renderedTemplate.bodyHtml || '',
       templateCss: renderedTemplate && renderedTemplate.css || '',
       hasHtmlTemplate: Boolean(renderedTemplate),
-      size: text.length,
+      templateDeferred: !shouldRenderTemplate,
+      textDeferred: !shouldBuildText,
+      size: shouldBuildText ? text.length : estimateDocumentSize(d),
       group: getDocumentGroup(d),
       groupLabel: getGroupLabel(getDocumentGroup(d)),
       label: getDocumentLabel(d),
@@ -77,6 +94,145 @@
     };
   }
 
+  function materializeDocument(doc, quote, options) {
+    const d = doc || {};
+    const opts = options || {};
+    const q = quote || getActiveQuote();
+    if (d.deferBuild) {
+      const fullDoc = buildFullDocumentByType(d, q);
+      const enriched = enrichDocument(fullDoc, q, { lazyText: opts.text === false, renderTemplates: Boolean(opts.template) });
+      Object.keys(enriched).forEach(key => { d[key] = enriched[key]; });
+      d.deferBuild = false;
+    }
+    if (opts.text !== false && (d.textDeferred || !d.text)) {
+      d.text = documentToText(d);
+      d.textDeferred = false;
+      d.size = d.text.length;
+    }
+    if (opts.template && (d.templateDeferred || !d.html)) {
+      const renderedTemplate = buildTemplate(d, q);
+      if (renderedTemplate) {
+        d.html = renderedTemplate.html || '';
+        d.bodyHtml = renderedTemplate.bodyHtml || '';
+        d.templateCss = renderedTemplate.css || '';
+        d.htmlFileName = d.htmlFileName || makeFileName(d, q, 'html');
+        d.hasHtmlTemplate = true;
+      }
+      d.templateDeferred = false;
+    }
+    return d;
+  }
+
+  function estimateDocumentSize(doc) {
+    const d = doc || {};
+    const rows = Array.isArray(d.rows) ? d.rows.length : 0;
+    const notes = Array.isArray(d.notes) ? d.notes.join(' ').length : 0;
+    const base = String(d.title || d.type || '').length + String(d.projectName || '').length + notes + 320;
+    return Math.max(0, base + rows * 120);
+  }
+
+
+
+  function buildFastDocumentIndex(quote, options) {
+    const q = normalizeQuote(quote);
+    const opts = options || {};
+    const docs = [];
+    docs.push(makeDeferredDocument('customer-proposal', 'Коммерческое предложение клиенту', q));
+    docs.push(makeDeferredDocument('technical-sheet', 'Технический лист проекта', q));
+    docs.push(makeDeferredDocument('warehouse-all', 'Общий складской лист', q));
+    getLikelySectionKeys(q).forEach(key => {
+      docs.push(makeDeferredDocument(`warehouse-${key}`, getWarehouseTitle(key), q, { sectionKey: key }));
+    });
+    docs.push(makeDeferredDocument('reservation-plan', 'План резерва склада', q));
+    docs.push(makeDeferredDocument('stock-movement-plan', 'План движения склада: резерв', q, { action: 'reserve' }));
+    docs.push(makeDeferredDocument('warehouse-workflow', 'Складской workflow проекта', q));
+    docs.push(makeDeferredDocument('subrent-plan', 'План субаренды', q));
+    docs.push(makeDeferredDocument('calendar-draft', `FEG - ${q.project && q.project.name || 'Новый проект'}`, q));
+    if (opts.includeJson) {
+      docs.push(makeDeferredDocument('quote-json', 'JSON проекта', q, { extension: 'json', deferPayloadType: 'quote-json' }));
+      docs.push(makeDeferredDocument('export-pack-json', 'Export pack JSON', q, { extension: 'json', deferPayloadType: 'export-pack-json' }));
+      docs.push(makeDeferredDocument('backend-sync-payload-json', 'Backend sync payload JSON', q, { extension: 'json', deferPayloadType: 'backend-sync-payload-json' }));
+    }
+    const unique = [];
+    const seen = new Set();
+    docs.forEach(doc => {
+      const enriched = enrichDocument(doc, q, { lazyText: true, renderTemplates: false });
+      const key = enriched.id;
+      if (seen.has(key)) return;
+      seen.add(key);
+      unique.push(enriched);
+    });
+    return unique;
+  }
+
+  function makeDeferredDocument(type, title, quote, extra) {
+    const q = quote || {};
+    return {
+      type,
+      title,
+      extension: extra && extra.extension || (String(type).includes('json') ? 'json' : 'txt'),
+      projectName: q.project && q.project.name || '',
+      clientName: q.client && q.client.name || '',
+      venueName: q.venue && q.venue.name || '',
+      eventDate: q.venue && q.venue.date || '',
+      generatedAt: nowIso(),
+      deferBuild: !(extra && extra.deferPayloadType),
+      deferPayloadType: extra && extra.deferPayloadType || '',
+      _quote: q,
+      sectionKey: extra && extra.sectionKey || '',
+      action: extra && extra.action || ''
+    };
+  }
+
+  function getLikelySectionKeys(quote) {
+    const sections = quote && quote.sections || {};
+    const preferred = ['stage','truss','led','equipment','audio','light','services'];
+    return preferred.filter(key => {
+      const section = sections[key];
+      if (!section) return false;
+      if (section.enabled === false || section.selected === false) return false;
+      if (Array.isArray(section.items) && section.items.length) return true;
+      if (Array.isArray(section.bomRows) && section.bomRows.length) return true;
+      if (Array.isArray(section.rows) && section.rows.length) return true;
+      if (section.summary || section.result || section.configured || section.enabled) return true;
+      return false;
+    });
+  }
+
+  function getWarehouseTitle(sectionKey) {
+    return {
+      stage: 'Складской лист сцены',
+      truss: 'Складской лист ферм',
+      led: 'Складской лист LED',
+      equipment: 'Звук / свет / услуги',
+      audio: 'Складской лист звука',
+      light: 'Складской лист света',
+      services: 'Лист услуг'
+    }[sectionKey] || `Складской лист: ${sectionKey}`;
+  }
+
+  function buildFullDocumentByType(doc, quote) {
+    const builder = documentBuilder();
+    const q = normalizeQuote(quote || doc && doc._quote || getActiveQuote());
+    const type = String(doc && doc.type || 'document');
+    if (type === 'quote-json') return buildQuoteJsonDocument(q);
+    if (type === 'export-pack-json') return buildExportPackDocument(q);
+    if (type === 'backend-sync-payload-json') return buildBackendPayloadDocument(q);
+    if (!builder) return doc || {};
+    if (type === 'customer-proposal' && builder.buildCustomerProposal) return builder.buildCustomerProposal(q);
+    if (type === 'technical-sheet' && builder.buildTechnicalSheet) return builder.buildTechnicalSheet(q);
+    if (type === 'reservation-plan' && builder.buildReservationSheet) return builder.buildReservationSheet(q);
+    if (type === 'stock-movement-plan' && builder.buildStockMovementSheet) return builder.buildStockMovementSheet(q, doc && doc.action || 'reserve');
+    if (type === 'warehouse-workflow' && builder.buildWarehouseWorkflowSheet) return builder.buildWarehouseWorkflowSheet(q);
+    if (type === 'subrent-plan' && builder.buildSubrentSheet) return builder.buildSubrentSheet(q);
+    if (type === 'calendar-draft' && builder.buildCalendarDraft) return builder.buildCalendarDraft(q);
+    if (type === 'calendar-ics') return { ...buildCalendarDraft(q), type: 'calendar-ics', extension: 'ics', title: 'ICS календаря', icsContent: buildCalendarIcs(q) };
+    if (type.startsWith('warehouse-') && builder.buildWarehouseSheet) {
+      const key = type === 'warehouse-all' ? 'all' : type.replace(/^warehouse-/, '');
+      return builder.buildWarehouseSheet(q, key);
+    }
+    return doc || {};
+  }
 
   function buildTemplate(doc, quote) {
     const engine = templateEngine();
@@ -133,7 +289,7 @@
 
   function buildExportPack(quote) {
     const q = normalizeQuote(quote);
-    const docs = buildDocumentList(q, { includeJson: false });
+    const docs = buildDocumentList(q, { includeJson: false, renderTemplates: false });
     const textDocuments = {};
     docs.forEach(doc => { textDocuments[doc.id || doc.type] = doc.text || documentToText(doc); });
     return {
@@ -174,6 +330,11 @@
 
   function documentToText(doc) {
     if (!doc) return '';
+    if (doc.deferPayloadType) {
+      const payloadDoc = buildFullDocumentByType(doc, doc._quote || getActiveQuote());
+      doc.payload = payloadDoc.payload;
+      doc.deferPayloadType = '';
+    }
     if (doc.extension === 'json' || doc.payload) return JSON.stringify(doc.payload || doc, null, 2);
     if (doc.type === 'calendar-ics' && doc.icsContent) return doc.icsContent;
     if (doc.icsContent && doc.type === 'calendar-draft') return doc.icsContent;
@@ -240,7 +401,7 @@
 
   function buildZipManifest(quote) {
     const q = normalizeQuote(quote || getActiveQuote());
-    const docs = buildDocumentList(q);
+    const docs = buildDocumentList(q, { includeJson: true, lazyText: true, renderTemplates: false, fastIndex: true });
     return {
       type: 'feg-stage-pro-document-manifest',
       version: DOCUMENT_CENTER_VERSION,
@@ -262,13 +423,16 @@
       quote: normalizeQuote(options && options.quote || getActiveQuote()),
       filter: 'all',
       selectedId: '',
-      docs: []
+      docs: [],
+      includeJson: false,
+      previewMode: 'fast'
     };
     root._documentCenterState = state;
-    root.innerHTML = `<div class="v4-card v4-document-center"><div class="v4-inline-loading"><b>Готовлю центр документов…</b><span>Собираю КП, техлист, складские листы и HTML-шаблоны. На больших проектах это может занять несколько секунд.</span></div></div>`;
+    root.innerHTML = `<div class="v4-card v4-document-center"><div class="v4-inline-loading"><b>Готовлю центр документов…</b><span>Быстрый режим: список документов без тяжёлых JSON/export pack и HTML-шаблонов. Полные файлы собираются по кнопке.</span></div></div>`;
     const build = () => {
-      state.docs = buildDocumentList(state.quote);
+      state.docs = buildDocumentList(state.quote, { includeJson: state.includeJson, lazyText: true, renderTemplates: false, fastIndex: true });
       state.selectedId = state.docs[0] && state.docs[0].id || '';
+      if (state.selectedId) materializeDocument(state.docs[0], state.quote, { text: true, template: false });
       render(root, state);
       return root;
     };
@@ -278,9 +442,14 @@
   }
 
   function render(root, state) {
+    const isAdmin = currentRoleIsAdmin();
+    if (!isAdmin && state.includeJson) state.includeJson = false;
     const docs = filterDocs(state.docs, state.filter);
     const selected = state.docs.find(doc => doc.id === state.selectedId) || docs[0] || state.docs[0] || null;
-    if (selected) state.selectedId = selected.id;
+    if (selected) {
+      state.selectedId = selected.id;
+      materializeDocument(selected, state.quote, { text: true, template: state.previewMode === 'html' });
+    }
     const totals = buildTotals(state.docs);
     root.innerHTML = `
       <div class="v4-card v4-document-center" data-document-center-version="${DOCUMENT_CENTER_VERSION}">
@@ -288,13 +457,14 @@
           <div>
             <div class="v4-kicker">PDF Center & Documents Hub</div>
             <h3>Центр документов проекта</h3>
-            <p class="v4-muted">Все документы проекта в одном месте: КП, техлист, склад, резерв, субаренда, календарь, export pack и backend payload.</p>
+            <p class="v4-muted">Быстрый центр документов проекта: рабочие листы и клиентские документы доступны сразу. Служебные выгрузки видит только администратор.</p>
           </div>
           <div class="v4-doc-actions-top">
             <button type="button" class="btn-secondary" data-doc-action="refresh">Обновить</button>
+            ${isAdmin ? `<button type="button" class="btn-secondary" data-doc-action="toggle-json">${state.includeJson ? 'Скрыть JSON' : 'Показать JSON'}</button>
             <button type="button" class="btn-secondary" data-doc-action="download-manifest">Manifest JSON</button>
             <button type="button" class="btn-secondary" data-doc-action="download-html-pack">HTML pack</button>
-            <button type="button" class="btn-primary" data-doc-action="download-all">Скачать пакет</button>
+            <button type="button" class="btn-primary" data-doc-action="download-all">Скачать пакет</button>` : ''}
           </div>
         </div>
         <div class="v4-doc-stats">
@@ -305,7 +475,7 @@
           <span><b>${totals.html}</b><small>HTML-шаблонов</small></span>
         </div>
         <div class="v4-doc-filter-row">
-          ${['all','client','technical','warehouse','subrent','calendar','json'].map(group => `<button type="button" class="${state.filter === group ? 'active' : ''}" data-doc-filter="${group}">${group === 'all' ? 'Все' : getGroupLabel(group)}</button>`).join('')}
+          ${getVisibleFilterGroups(state).map(group => `<button type="button" class="${state.filter === group ? 'active' : ''}" data-doc-filter="${group}">${group === 'all' ? 'Все' : getGroupLabel(group)}</button>`).join('')}
         </div>
         <div class="v4-doc-layout">
           <div class="v4-doc-list" role="list">
@@ -339,14 +509,15 @@
         <div class="v4-doc-actions">
           <button type="button" class="btn-secondary" data-doc-action="copy" data-doc-id="${escapeHtml(doc.id)}">Копировать</button>
           ${doc.hasHtmlTemplate ? `<button type="button" class="btn-secondary" data-doc-action="copy-html" data-doc-id="${escapeHtml(doc.id)}">HTML</button>` : ''}
+          ${doc.templateDeferred ? `<button type="button" class="btn-secondary" data-doc-action="prepare-html" data-doc-id="${escapeHtml(doc.id)}">Подготовить HTML</button>` : ''}
           <button type="button" class="btn-secondary" data-doc-action="download" data-doc-id="${escapeHtml(doc.id)}">Скачать</button>
           ${doc.hasHtmlTemplate ? `<button type="button" class="btn-primary" data-doc-action="download-html" data-doc-id="${escapeHtml(doc.id)}">Скачать HTML</button>` : ''}
         </div>
       </div>
       ${doc.hasHtmlTemplate ? `<div class="v4-doc-template-preview"><style>${doc.templateCss || ''}</style>${doc.bodyHtml}</div>` : ''}
       <details class="v4-doc-raw-text" ${doc.hasHtmlTemplate ? '' : 'open'}>
-        <summary>Текстовая версия</summary>
-        <pre class="v4-doc-text">${escapeHtml(doc.text || '')}</pre>
+        <summary>Текстовая версия${isPreviewTrimmed(doc.text) ? ' · предпросмотр обрезан' : ''}</summary>
+        <pre class="v4-doc-text">${escapeHtml(previewText(doc.text || ''))}</pre>
       </details>`;
   }
 
@@ -376,10 +547,19 @@
           return;
         }
         const doc = state.docs.find(item => item.id === id);
-        if (action === 'copy') copyText(doc && doc.text || '');
-        if (action === 'copy-html') copyText(doc && doc.html || '');
-        if (action === 'download') downloadText(doc && doc.fileName || 'document.txt', doc && doc.text || '');
-        if (action === 'download-html') downloadHtml(doc && doc.htmlFileName || 'document.html', doc && doc.html || '');
+        if (!doc) return;
+        if (action === 'prepare-html') {
+          runBusy('Готовлю HTML-шаблон документа…', () => {
+            materializeDocument(doc, state.quote, { text: true, template: true });
+            state.previewMode = 'html';
+            render(root, state);
+          }, btn).catch(() => {});
+          return;
+        }
+        if (action === 'copy') copyText(materializeDocument(doc, state.quote, { text: true, template: false }).text || '');
+        if (action === 'copy-html') copyText(materializeDocument(doc, state.quote, { text: false, template: true }).html || '');
+        if (action === 'download') downloadText(doc.fileName || 'document.txt', materializeDocument(doc, state.quote, { text: true, template: false }).text || '');
+        if (action === 'download-html') downloadHtml(doc.htmlFileName || 'document.html', materializeDocument(doc, state.quote, { text: false, template: true }).html || '');
       });
     });
     root.querySelectorAll('[data-doc-action]').forEach(btn => {
@@ -388,8 +568,20 @@
         if (action === 'refresh') {
           runBusy('Обновляю документы проекта…', () => {
             state.quote = getActiveQuote();
-            state.docs = buildDocumentList(state.quote);
+            state.docs = buildDocumentList(state.quote, { includeJson: state.includeJson, lazyText: true, renderTemplates: false, fastIndex: true });
             state.selectedId = state.docs[0] && state.docs[0].id || '';
+            state.previewMode = 'fast';
+            render(root, state);
+          }, btn).catch(() => {});
+        }
+        if (action !== 'refresh' && !currentRoleIsAdmin()) return;
+        if (action === 'toggle-json') {
+          runBusy(state.includeJson ? 'Скрываю JSON-документы…' : 'Готовлю JSON-документы…', () => {
+            state.includeJson = !state.includeJson;
+            if (!state.includeJson && state.filter === 'json') state.filter = 'all';
+            state.docs = buildDocumentList(state.quote, { includeJson: state.includeJson, lazyText: true, renderTemplates: false, fastIndex: true });
+            state.selectedId = state.docs[0] && state.docs[0].id || '';
+            state.previewMode = 'fast';
             render(root, state);
           }, btn).catch(() => {});
         }
@@ -402,7 +594,7 @@
 
   function buildDocumentDownloadPack(quote) {
     const q = normalizeQuote(quote || getActiveQuote());
-    const docs = buildDocumentList(q);
+    const docs = buildDocumentList(q, { includeJson: true, renderTemplates: false });
     const files = {};
     docs.forEach(doc => { files[doc.fileName] = doc.text || ''; });
     files['manifest.json'] = JSON.stringify(buildZipManifest(q), null, 2);
@@ -418,7 +610,7 @@
 
   function buildHtmlDocumentPack(quote) {
     const q = normalizeQuote(quote || getActiveQuote());
-    const docs = buildDocumentList(q).filter(doc => doc.hasHtmlTemplate && doc.html);
+    const docs = buildDocumentList(q, { includeJson: false, renderTemplates: true }).filter(doc => doc.hasHtmlTemplate && doc.html);
     const files = {};
     docs.forEach(doc => { files[doc.htmlFileName] = doc.html; });
     return {
@@ -428,6 +620,26 @@
       files,
       manifest: docs.map(doc => ({ fileName: doc.htmlFileName, type: doc.type, title: doc.title, group: doc.group }))
     };
+  }
+
+
+  function getVisibleFilterGroups(state) {
+    const groups = ['all','client','technical','warehouse','subrent','calendar'];
+    if (state && state.includeJson) groups.push('json');
+    return groups;
+  }
+
+  function previewText(text) {
+    const value = String(text || '');
+    const limit = 24000;
+    if (value.length <= limit) return value;
+    return `${value.slice(0, limit)}
+
+… предпросмотр обрезан для скорости. Скачивание/копирование отдаёт полный документ.`;
+  }
+
+  function isPreviewTrimmed(text) {
+    return String(text || '').length > 24000;
   }
 
   function filterDocs(docs, filter) {
@@ -527,6 +739,7 @@
     DOCUMENT_CENTER_VERSION,
     getActiveQuote,
     buildDocumentList,
+    materializeDocument,
     buildExportPack,
     buildDocumentDownloadPack,
     buildHtmlDocumentPack,

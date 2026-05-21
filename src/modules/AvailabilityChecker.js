@@ -4,7 +4,7 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const AVAILABILITY_VERSION = '1.0.0';
+  const AVAILABILITY_VERSION = '1.2.0-quick-ideal-isolation';
 
   function db() { return ROOT.EquipmentDatabase || null; }
   function toText(value) { return String(value == null ? '' : value).trim(); }
@@ -12,6 +12,14 @@
   function nonNegative(value, fallback) { return Math.max(0, toNumber(value, fallback)); }
   function normalizeKey(value) {
     return toText(value).toLowerCase().replace(/[ё]/g, 'е').replace(/[^a-zа-я0-9]+/gi, ' ').replace(/\s+/g, ' ').trim();
+  }
+  function isQuickIdealSource(value) {
+    const src = toText(value).toLowerCase();
+    return src === 'quick_ideal' || src === 'quick ideal' || src === 'ideal' || src === 'quick';
+  }
+  function isQuickIdealRow(row) {
+    const src = row || {};
+    return isQuickIdealSource(src.sourceType || src.source_type) || !!(src.meta && src.meta.quickIdealCatalog);
   }
 
   function getInventory(items) {
@@ -34,7 +42,7 @@
       weightKg: nonNegative(src.weightKg == null ? src.weight : src.weightKg, 0),
       powerW: nonNegative(src.powerW, 0),
       startupPowerW: nonNegative(src.startupPowerW, 0),
-      sourceType: toText(src.sourceType || 'own') || 'own',
+      sourceType: toText(src.sourceType || src.source_type || 'own') || 'own',
       supplierId: toText(src.supplierId || src.supplier_id),
       supplierName: toText(src.supplierName || src.supplier_name),
       subrentPrice: nonNegative(src.subrentPrice || src.subrent_price || 0, 0),
@@ -92,10 +100,18 @@
   }
 
   function makeAggregateKey(row, matchedItem) {
-    if (matchedItem && matchedItem.id) return `item:${matchedItem.id}`;
+    const sourceType = normalizeKey(row.sourceType || row.source_type || 'own') || 'own';
+    const supplierName = normalizeKey(row.supplierName || row.supplier_name || '');
+    const supplierId = normalizeKey(row.supplierId || row.supplier_id || '');
+    const subrentPrice = normalizeKey(row.subrentPrice == null ? row.subrent_price : row.subrentPrice);
+    const clientPrice = normalizeKey(row.clientPrice == null ? row.client_price : row.clientPrice);
+    const sourcePart = sourceType === 'subrent' || sourceType === 'manual subrent'
+      ? `|source:${sourceType}|supplier:${supplierId || supplierName}|subrent:${subrentPrice}|client:${clientPrice}`
+      : `|source:${sourceType}`;
+    if (matchedItem && matchedItem.id) return `item:${matchedItem.id}${sourcePart}`;
     const code = normalizeKey(row.code || row.itemId || row.id);
-    if (code) return `code:${code}`;
-    return `name:${normalizeKey(row.name)}|${normalizeKey(row.unit)}|${normalizeKey(row.sectionKey)}`;
+    if (code) return `code:${code}${sourcePart}`;
+    return `name:${normalizeKey(row.name)}|${normalizeKey(row.unit)}|${normalizeKey(row.sectionKey)}${sourcePart}`;
   }
 
   function aggregateNeeds(rows, inventoryItems) {
@@ -104,7 +120,7 @@
     (Array.isArray(rows) ? rows : []).forEach(rawRow => {
       const row = normalizeNeedRow(rawRow);
       if (row.qty <= 0 && row.weightKg <= 0 && row.powerW <= 0) return;
-      const matchedItem = matchInventoryItem(row, inventory);
+      const matchedItem = isQuickIdealRow(row.raw || row) ? null : matchInventoryItem(row, inventory);
       const key = makeAggregateKey(row, matchedItem);
       const prev = map.get(key) || {
         ...row,
@@ -125,6 +141,12 @@
       if (!prev.itemId && row.itemId) prev.itemId = row.itemId;
       if (!prev.sectionKey && row.sectionKey) prev.sectionKey = row.sectionKey;
       if (!prev.sectionTitle && row.sectionTitle) prev.sectionTitle = row.sectionTitle;
+      if (!prev.sourceType && row.sourceType) prev.sourceType = row.sourceType;
+      if (!prev.supplierId && row.supplierId) prev.supplierId = row.supplierId;
+      if (!prev.supplierName && row.supplierName) prev.supplierName = row.supplierName;
+      if (!prev.subrentPrice && row.subrentPrice) prev.subrentPrice = row.subrentPrice;
+      if (!prev.clientPrice && row.clientPrice) prev.clientPrice = row.clientPrice;
+      if (!prev.margin && row.margin) prev.margin = row.margin;
       if (row.note) prev.note = prev.note ? `${prev.note}; ${row.note}` : row.note;
       prev.sourceRows.push(row);
       map.set(key, prev);
@@ -134,6 +156,27 @@
 
   function enrichNeedRow(row, inventoryItems) {
     const normalized = normalizeNeedRow(row);
+    if (isQuickIdealRow(row) || isQuickIdealRow(normalized.raw) || isQuickIdealSource(normalized.sourceType)) {
+      const requestedQty = nonNegative(normalized.qty, 0);
+      const note = normalized.note || 'Быстрый идеальный расчёт: склад, резервы и дефицит не проверяются.';
+      return {
+        ...normalized,
+        sourceType: 'quick_ideal',
+        requestedQty,
+        availableQty: null,
+        stockQty: null,
+        reservedQty: null,
+        deficitQty: 0,
+        subrentQty: 0,
+        ok: true,
+        inventoryStatus: 'quick_ideal',
+        inventoryItemId: '',
+        inventoryCode: '',
+        sourceTypeSuggestion: 'quick_ideal',
+        note,
+        matchedItem: null
+      };
+    }
     const inventory = getInventory(inventoryItems);
     const item = normalized.matchedItem || matchInventoryItem(normalized, inventory);
     const isSubrent = normalized.sourceType === 'subrent' || normalized.sourceType === 'manual_subrent';
@@ -216,6 +259,8 @@
   ROOT.AvailabilityChecker = {
     AVAILABILITY_VERSION,
     normalizeNeedRow,
+    isQuickIdealSource,
+    isQuickIdealRow,
     matchInventoryItem,
     aggregateNeeds,
     enrichNeedRow,

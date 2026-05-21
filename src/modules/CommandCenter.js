@@ -41,7 +41,8 @@
 
   function listProjectCommands(role) {
     if (!canSee('projects', role)) return [];
-    const rows = ROOT.QuoteProjectStorage && ROOT.QuoteProjectStorage.listProjects ? ROOT.QuoteProjectStorage.listProjects() : [];
+    const store = ROOT.QuoteProjectStorage;
+    const rows = store && store.listProjectIndex ? store.listProjectIndex() : (store && store.listProjects ? store.listProjects() : []);
     return rows.slice(0, 80).map(project => ({
       id: `project:${project.projectId || project.quoteId}`,
       group: 'project',

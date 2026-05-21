@@ -4,11 +4,13 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const QUOTE_ITEM_BUILDER_VERSION = '1.0.0';
+  const QUOTE_ITEM_BUILDER_VERSION = '1.0.1-project-crew-labor';
 
   function model() { return ROOT.QuoteModel || null; }
   function pickLists() { return ROOT.WarehousePickListBuilder || null; }
+  function sharedBomBridge() { return ROOT.V4SharedBomBridge || null; }
   function suppliers() { return ROOT.SupplierDirectory || null; }
+  function crewModule() { return ROOT.ProjectCrewAssignments || null; }
   function toText(value) { return String(value == null ? '' : value).trim(); }
   function toNumber(value, fallback) { const n = Number(value); return Number.isFinite(n) ? n : Number(fallback || 0); }
   function nonNegative(value, fallback) { return Math.max(0, toNumber(value, fallback)); }
@@ -21,7 +23,8 @@
     led: 'led',
     equipment: 'equipment',
     transport: 'transport',
-    services: 'services'
+    services: 'services',
+    crew: 'crew'
   });
 
   function normalizeQuote(input) {
@@ -113,8 +116,57 @@
       inventoryStatus: toText(src.inventoryStatus),
       inventory_status: toText(src.inventoryStatus),
       note: toText(src.note || (Array.isArray(src.notes) ? src.notes.join('; ') : src.notes)),
-      meta: { source: 'QuoteItemBuilder', raw: clone(src.raw || null) }
+      stageHeightM: nonNegative(src.stageHeightM == null ? src.stage_height_m : src.stageHeightM, 0),
+      stage_height_m: nonNegative(src.stageHeightM == null ? src.stage_height_m : src.stageHeightM, 0),
+      meters: nonNegative(src.meters, 0),
+      trussLengthM: nonNegative(src.trussLengthM == null ? src.truss_length_m : src.trussLengthM, 0),
+      truss_length_m: nonNegative(src.trussLengthM == null ? src.truss_length_m : src.trussLengthM, 0),
+      trussStraightCount: nonNegative(src.trussStraightCount == null ? src.truss_straight_count : src.trussStraightCount, 0),
+      truss_straight_count: nonNegative(src.trussStraightCount == null ? src.truss_straight_count : src.trussStraightCount, 0),
+      meta: { source: 'QuoteItemBuilder', stageHeightM: nonNegative(src.stageHeightM == null ? src.stage_height_m : src.stageHeightM, 0), meters: nonNegative(src.meters, 0), trussLengthM: nonNegative(src.trussLengthM == null ? src.truss_length_m : src.trussLengthM, 0), trussStraightCount: nonNegative(src.trussStraightCount == null ? src.truss_straight_count : src.trussStraightCount, 0), raw: clone(src.raw || null) }
     };
+  }
+
+  function normalizeCrewAssignments(quote) {
+    const q = quote || {};
+    const list = q.crewAssignments || q.projectCrew || q.team || [];
+    return crewModule() && crewModule().normalizeAssignments ? crewModule().normalizeAssignments(list) : (Array.isArray(list) ? list : []);
+  }
+
+  function crewRoleLabel(row) {
+    const src = crewModule() && crewModule().normalizeAssignment ? crewModule().normalizeAssignment(row || {}) : (row || {});
+    if (src.projectRoleLabel) return src.projectRoleLabel;
+    return crewModule() && crewModule().getCrewRoleLabel ? crewModule().getCrewRoleLabel(src.projectRole || src.role) : toText(src.projectRole || src.role || 'Роль');
+  }
+
+  function buildCrewQuoteItems(quote) {
+    const q = quote || {};
+    return normalizeCrewAssignments(q).map((row, index) => {
+      const src = crewModule() && crewModule().normalizeAssignment ? crewModule().normalizeAssignment(row || {}) : (row || {});
+      const hourly = src.payMode === 'hourly';
+      const hours = nonNegative(src.hours, 0);
+      const total = money(src.totalCost || (hourly ? nonNegative(src.hourlyRate, 0) * hours : src.fixedCost));
+      if (total <= 0) return null;
+      const qty = hourly ? hours : 1;
+      const unitPrice = hourly ? money(src.hourlyRate) : total;
+      const role = crewRoleLabel(src);
+      return normalizeQuoteItem({
+        id: src.id || `crew-${index + 1}`,
+        sectionKey: 'crew',
+        sectionTitle: 'Команда проекта',
+        code: `CREW-${index + 1}`,
+        name: `Работы: ${role}`,
+        qty: qty || 1,
+        requestedQty: qty || 1,
+        unit: hourly ? 'ч' : 'усл.',
+        sourceType: 'labor',
+        clientPrice: unitPrice,
+        rentalPrice: unitPrice,
+        subrentPrice: 0,
+        margin: 0,
+        note: hourly ? `${money(src.hourlyRate)} ₽/ч × ${hours} ч` : 'фиксированная стоимость'
+      }, { quoteId: q.id, sectionKey: 'crew', sectionTitle: 'Команда проекта', index: 1000 + index, suppliers: [] });
+    }).filter(Boolean);
   }
 
   function buildTransportQuoteItem(quote) {
@@ -141,9 +193,16 @@
     const q = normalizeQuote(quote);
     const opts = options || {};
     const supplierList = suppliers() && suppliers().getStoredSuppliersOrDemo ? suppliers().getStoredSuppliersOrDemo() : [];
-    const list = pickLists() && pickLists().buildPickLists ? pickLists().buildPickLists(q) : { all: { rows: [] } };
-    const rows = list && list.all && Array.isArray(list.all.rows) ? list.all.rows : [];
-    const items = rows.map((row, index) => normalizeQuoteItem(row, { quoteId: q.id, index: index + 1, suppliers: supplierList }));
+    let rows = [];
+    if (sharedBomBridge() && sharedBomBridge().collectQuoteBomRows) {
+      rows = sharedBomBridge().collectQuoteBomRows(q, { enrichAvailability: true });
+    }
+    if (!rows.length) {
+      const list = pickLists() && pickLists().buildPickLists ? pickLists().buildPickLists(q) : { all: { rows: [] } };
+      rows = list && list.all && Array.isArray(list.all.rows) ? list.all.rows : [];
+    }
+    const items = rows.map((row, index) => normalizeQuoteItem(row, { quoteId: q.id, sectionKey: row.sectionKey, sectionTitle: row.sectionTitle, index: index + 1, suppliers: supplierList }));
+    buildCrewQuoteItems(q).forEach(item => items.push(item));
     const transportItem = opts.includeTransport === false ? null : buildTransportQuoteItem(q);
     if (transportItem) items.push(transportItem);
     return {
@@ -181,6 +240,7 @@
     QUOTE_ITEM_BUILDER_VERSION,
     SECTION_KIND,
     normalizeQuoteItem,
+    buildCrewQuoteItems,
     buildTransportQuoteItem,
     buildQuoteItems,
     summarizeQuoteItems,

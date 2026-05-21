@@ -8,13 +8,24 @@
   function draftStorage() { return ROOT.QuoteDraftStorage || null; }
   function model() { return ROOT.QuoteModel || null; }
 
+  const PROJECT_RENDER_LIMIT = 80;
+
+  function listProjectRows(filters) {
+    const api = storage();
+    if (!api) return [];
+    if (api.listProjectIndex) return api.listProjectIndex(filters);
+    return api.listProjects ? api.listProjects(filters) : [];
+  }
+
   function renderProjects(target, options) {
     const root = typeof target === 'string' ? document.getElementById(target) : target;
     if (!root) return null;
     const opts = options || {};
     const state = getFilterState(root, opts);
-    const rows = storage() ? storage().listProjects(state) : [];
-    const allRows = storage() ? storage().listProjects() : [];
+    const projectRows = listProjectRows(state);
+    const rows = projectRows.slice(0, PROJECT_RENDER_LIMIT);
+    const hiddenRows = Math.max(0, projectRows.length - rows.length);
+    const allRows = listProjectRows();
     const counts = storage() ? storage().getStatusCounts() : { total: 0 };
     root.innerHTML = `
       <div class="v4-card" data-v4-projects>
@@ -35,6 +46,7 @@
         </div>
         ${renderActiveDraftNote()}
         ${renderProjectFilters(state, allRows.length, allRows)}
+        ${hiddenRows ? `<div class="v4-note" data-v4-project-render-limit>Показаны первые ${formatNumber(rows.length, 0)} из ${formatNumber(projectRows.length, 0)} проектов. Используй поиск/фильтры, чтобы сузить список.</div>` : ''}
         ${rows.length ? renderProjectTable(rows) : '<div class="v4-note">По текущему фильтру проектов нет. Сохрани активную смету или сбрось фильтр.</div>'}
         <div id="v4ImportRestoreMount" style="margin-top:14px"></div>
       </div>`;
@@ -45,7 +57,37 @@
   function renderActiveDraftNote() {
     const active = draftStorage() && draftStorage().loadActiveDraft ? draftStorage().loadActiveDraft() : null;
     if (!active) return '<div class="v4-note">Активный черновик сметы пока не создан.</div>';
-    return `<div class="v4-note"><b>Активный черновик:</b> ${escapeHtml(active.project && active.project.name || 'Без названия')} · ${escapeHtml(active.client && active.client.name || 'клиент не указан')} · ${escapeHtml(statusLabel(active.status))}</div>`;
+    return `<div class="v4-note"><b>Активный черновик:</b> ${escapeHtml(active.project && active.project.name || 'Без названия')} · ${escapeHtml(active.client && active.client.name || 'клиент не указан')} · ${escapeHtml(statusLabel(active.status))}${renderBomInline(active)}</div>`;
+  }
+
+  function getBomSummaryFromQuote(quote) {
+    if (ROOT.V4QuoteDraftHydrator && ROOT.V4QuoteDraftHydrator.summarizeMount) return ROOT.V4QuoteDraftHydrator.summarizeMount(quote && quote.v4Bom);
+    const mount = quote && quote.v4Bom || {};
+    const counts = mount.rowCounts || {};
+    const totals = mount.totals || {};
+    return { sharedBom: Number(counts.sharedBom || 0), quoteItems: Number(counts.quoteItems || 0), warehouse: Number(counts.warehouse || 0), weightKg: Number(totals.weightKg || 0), powerW: Number(totals.powerW || 0), ok: mount.checks ? Boolean(mount.checks.ok) : false, version: mount.version || '' };
+  }
+
+  function getBomSummary(row) {
+    return (row && row.v4BomSummary) || getBomSummaryFromQuote(row && row.quote || row);
+  }
+
+  function renderBomInline(quote) {
+    const summary = getBomSummaryFromQuote(quote);
+    if (!summary || !summary.sharedBom) return ' · <span class="v4-muted">BOM snapshot: пока пусто</span>';
+    return ` · <span class="v4-muted">BOM ${formatNumber(summary.sharedBom, 0)} строк · ${formatWeight(summary.weightKg)} · ${summary.ok ? 'ok' : 'проверь'}</span>`;
+  }
+
+  function renderProjectBomBadge(row) {
+    const summary = getBomSummary(row);
+    if (!summary || !summary.sharedBom) return '<span class="v4-muted">BOM snapshot: —</span>';
+    return `<span class="v4-muted">BOM ${formatNumber(summary.sharedBom, 0)} / QI ${formatNumber(summary.quoteItems || 0, 0)} / склад ${formatNumber(summary.warehouse || 0, 0)} · ${formatWeight(summary.weightKg)} · ${summary.ok ? 'ok' : 'проверь'}</span>`;
+  }
+
+  function renderProjectBomSnapshot(row) {
+    const summary = getBomSummary(row);
+    if (!summary || !summary.sharedBom) return '<div class="v4-note">V4 BOM snapshot пока не сохранён. Открой проект в мастере и сохрани черновик — снимок будет восстановлен автоматически.</div>';
+    return `<div class="v4-note"><b>V4 BOM snapshot:</b> shared ${formatNumber(summary.sharedBom, 0)}, quote_items ${formatNumber(summary.quoteItems || 0, 0)}, склад ${formatNumber(summary.warehouse || 0, 0)}, вес ${formatWeight(summary.weightKg)}, мощность ${formatPower(summary.powerW)} · ${summary.ok ? 'готов' : 'есть предупреждения'} · версия ${escapeHtml(summary.version || '—')}</div>`;
   }
 
 
@@ -95,36 +137,80 @@
 
   function renderProjectTable(rows) {
     const tableRows = rows.map(row => {
-      const client = ROOT.ClientProjectLinks && ROOT.ClientProjectLinks.findClientForProject ? ROOT.ClientProjectLinks.findClientForProject(row) : null;
-      const clientSnapshot = ROOT.ClientProjectLinks && ROOT.ClientProjectLinks.getProjectClientSnapshot ? ROOT.ClientProjectLinks.getProjectClientSnapshot(row) : { name: row.clientName || '', id: '' };
+      const clientSnapshot = ROOT.ClientProjectLinks && ROOT.ClientProjectLinks.getProjectClientSnapshot ? ROOT.ClientProjectLinks.getProjectClientSnapshot(row) : { name: row.clientName || '', id: row.clientId || '' };
       const timeline = ROOT.ProjectTimelineView || null;
       const summary = timeline && timeline.summarizeRecord ? timeline.summarizeRecord(row) : null;
       const lastEvent = summary && summary.lastEvent;
-      const sync = ROOT.QuoteServerSyncQueue && ROOT.QuoteServerSyncQueue.getProjectSyncStatus ? ROOT.QuoteServerSyncQueue.getProjectSyncStatus(row) : null;
-      const syncBadge = ROOT.QuoteServerSyncQueue && ROOT.QuoteServerSyncQueue.renderStatusBadge ? ROOT.QuoteServerSyncQueue.renderStatusBadge(sync) : '';
+      const health = timeline && timeline.renderHealthBadge ? timeline.renderHealthBadge(row) : '';
+      const syncBadge = renderStoredSyncBadge(row);
       return `
-      <tr data-v4-project-row="${escapeAttr(row.projectId)}">
-        <td><b>${escapeHtml(row.projectName)}</b><br><span class="v4-muted">${escapeHtml(row.venueName || row.venueAddress || '')}</span>${timeline && timeline.renderHealthBadge ? `<br>${timeline.renderHealthBadge(row)}` : ''}${syncBadge ? `<br>${syncBadge}` : ''}</td>
-        <td><b>${escapeHtml(clientSnapshot.name || row.clientName || 'клиент не указан')}</b><br><span class="v4-muted">${escapeHtml(client ? client.id : (clientSnapshot.id || 'нет карточки CRM'))}</span><br><small>${escapeHtml(clientSnapshot.phone || clientSnapshot.email || '')}</small></td>
-        <td>${renderStatusSelect(row)}</td>
-        <td>${escapeHtml(row.eventDate || '—')}<br><span class="v4-muted">${escapeHtml(formatDateTime(row.updatedAt))}</span>${renderTimelineHint(row)}</td>
-        <td><b>${formatMoney(row.totals && row.totals.total)}</b><br><span class="v4-muted">транспорт ${formatMoney(row.totals && row.totals.transport)}</span></td>
-        <td>${formatWeight(row.totals && row.totals.weightKg)}<br><span class="v4-muted">${formatPower(row.totals && row.totals.powerW)}</span></td>
-        <td>${lastEvent ? `<b>${escapeHtml(lastEvent.label)}</b><br><span class="v4-muted">${escapeHtml(formatDateTime(lastEvent.at))}</span>` : '<span class="v4-muted">—</span>'}</td>
-        <td><div class="v4-actions" style="margin-top:0"><button type="button" class="btn-secondary" data-v4-open-project="${escapeAttr(row.projectId)}">Открыть</button><button type="button" class="btn-secondary" data-v4-export-project="${escapeAttr(row.projectId)}">Export</button><button type="button" class="btn-secondary" data-v4-audit-project="${escapeAttr(row.projectId)}">Audit</button><button type="button" class="btn-secondary" data-v4-export-project-client="${escapeAttr(row.projectId)}">Клиент JSON</button><button type="button" class="btn-secondary" data-v4-duplicate-project="${escapeAttr(row.projectId)}">Копия</button><button type="button" class="btn-secondary" data-v4-delete-project="${escapeAttr(row.projectId)}">Удалить</button></div></td>
+      <tr data-v4-project-row="${escapeAttr(row.projectId)}" class="v4-project-main-row">
+        <td class="v4-project-title-cell">
+          <b>${escapeHtml(row.projectName)}</b>
+          <small>${escapeHtml(row.venueName || row.venueAddress || 'площадка не указана')}</small>
+          <div class="v4-project-row-badges">${health}${syncBadge}</div>
+        </td>
+        <td class="v4-project-client-cell">
+          <b>${escapeHtml(clientSnapshot.name || row.clientName || 'клиент не указан')}</b>
+          <small>${escapeHtml(clientSnapshot.phone || clientSnapshot.email || clientSnapshot.id || row.clientId || 'нет карточки CRM')}</small>
+        </td>
+        <td class="v4-project-status-cell">
+          ${renderStatusSelect(row)}
+          <small>Дата: ${escapeHtml(row.eventDate || '—')}</small>
+          <small>Обновлено: ${escapeHtml(formatDateTime(row.updatedAt))}</small>
+        </td>
+        <td class="v4-project-money-cell">
+          <b>${formatMoney(row.totals && row.totals.total)}</b>
+          <small>транспорт ${formatMoney(row.totals && row.totals.transport)}</small>
+        </td>
+        <td class="v4-project-tech-cell">
+          <b>${formatWeight(row.totals && row.totals.weightKg)}</b>
+          <small>${formatPower(row.totals && row.totals.powerW)}</small>
+          <small>${renderProjectBomBadge(row)}</small>
+        </td>
+        <td class="v4-project-event-cell">
+          ${lastEvent ? `<b>${escapeHtml(lastEvent.label)}</b><small>${escapeHtml(formatDateTime(lastEvent.at))}</small>` : '<span class="v4-muted">—</span>'}
+        </td>
+        <td class="v4-actions-cell v4-project-actions-cell">${renderProjectActionGroup(row)}</td>
       </tr>
-      <tr class="v4-project-details-row"><td colspan="8">${renderProjectDetails(row)}</td></tr>`;
+      <tr class="v4-project-details-row"><td colspan="7">${renderProjectDetails(row)}</td></tr>`;
     }).join('');
-    return `<div class="v4-table-wrap v4-table-wrap--projects"><table class="v4-table v4-table--projects"><thead><tr><th>Проект</th><th>Клиент</th><th>Статус</th><th>Дата</th><th>Итого</th><th>Вес / мощность</th><th>Последнее событие</th><th>Действия</th></tr></thead><tbody>${tableRows}</tbody></table></div>${renderProjectCards(rows)}`;
+    return `<div class="v4-table-wrap v4-table-wrap--projects"><table class="v4-table v4-table--projects"><thead><tr><th>Проект</th><th>Клиент</th><th>Статус / дата</th><th>Итого</th><th>Вес / BOM</th><th>Событие</th><th>Действия</th></tr></thead><tbody>${tableRows}</tbody></table></div>${renderProjectCards(rows)}`;
+  }
+
+  function renderProjectActionGroup(row) {
+    const id = escapeAttr(row.projectId);
+    return `<div class="v4-project-action-stack">
+      <div class="v4-project-action-primary">
+        <button type="button" class="btn-secondary" data-v4-open-project="${id}">Открыть</button>
+        <button type="button" class="btn-secondary" data-v4-export-project="${id}">Export</button>
+      </div>
+      <details class="v4-project-action-more">
+        <summary>Ещё</summary>
+        <div class="v4-actions">
+          <button type="button" class="btn-secondary" data-v4-audit-project="${id}">Audit</button>
+          <button type="button" class="btn-secondary" data-v4-export-project-client="${id}">Клиент JSON</button>
+          <button type="button" class="btn-secondary" data-v4-export-project-bom="${id}">BOM snapshot</button>
+          <button type="button" class="btn-secondary" data-v4-duplicate-project="${id}">Копия</button>
+          <button type="button" class="btn-secondary" data-v4-delete-project="${id}">Удалить</button>
+        </div>
+      </details>
+    </div>`;
   }
 
   function renderProjectDetails(row) {
     const timeline = ROOT.ProjectTimelineView || null;
     if (!timeline) return '<div class="v4-note">Timeline module is not loaded.</div>';
-    return `<div class="v4-project-details">
-      ${timeline.renderProjectSnapshot(row)}
-      <div class="v4-project-timeline-box"><div class="v4-kicker">timeline</div>${timeline.renderTimelineList(row, { limit: 4 })}</div>
-    </div>`;
+    return `<details class="v4-project-row-details" data-v4-project-index-details="${row && row.indexOnly ? 'true' : 'false'}">
+      <summary><span>Детали проекта</span><small>${escapeHtml(row.clientName || 'клиент')} · ${escapeHtml(row.venueName || row.venueAddress || 'площадка')} · ${renderProjectBomBadge(row).replace(/<[^>]+>/g, '')}</small></summary>
+      <div class="v4-project-details">
+        ${timeline.renderProjectSnapshot(row)}
+        <div class="v4-project-detail-side">
+          ${renderProjectBomSnapshot(row)}
+          <div class="v4-project-timeline-box"><div class="v4-kicker">timeline</div>${timeline.renderTimelineList(row, { limit: 4 })}</div>
+        </div>
+      </div>
+    </details>`;
   }
 
   function renderProjectCards(rows) {
@@ -132,8 +218,8 @@
     return `<div class="v4-project-card-list">${rows.map(row => {
       const summary = timeline && timeline.summarizeRecord ? timeline.summarizeRecord(row) : null;
       const health = timeline && timeline.renderHealthBadge ? timeline.renderHealthBadge(row) : '';
-      const sync = ROOT.QuoteServerSyncQueue && ROOT.QuoteServerSyncQueue.getProjectSyncStatus ? ROOT.QuoteServerSyncQueue.getProjectSyncStatus(row) : null;
-      const syncBadge = ROOT.QuoteServerSyncQueue && ROOT.QuoteServerSyncQueue.renderStatusBadge ? ROOT.QuoteServerSyncQueue.renderStatusBadge(sync) : '';
+      const syncBadge = renderStoredSyncBadge(row);
+      const bom = getBomSummary(row) || {};
       return `<article class="v4-project-card" data-v4-project-row="${escapeAttr(row.projectId)}">
         <div class="v4-project-card-top"><div><span class="v4-equipment-code">${escapeHtml(row.status || 'draft')}</span><h4>${escapeHtml(row.projectName)}</h4><p>${escapeHtml(row.clientName || 'клиент не указан')}</p>${syncBadge}</div>${health}</div>
         <div class="v4-equipment-card-grid">
@@ -141,9 +227,19 @@
           <div><span>Итого</span><b>${formatMoney(row.totals && row.totals.total)}</b></div>
           <div><span>Вес</span><b>${formatWeight(row.totals && row.totals.weightKg)}</b></div>
           <div><span>Мощность</span><b>${formatPower(row.totals && row.totals.powerW)}</b></div>
+          <div><span>BOM</span><b>${formatNumber(bom.sharedBom || 0, 0)} строк</b></div>
+          <div><span>Событие</span><b>${summary && summary.lastEvent ? escapeHtml(summary.lastEvent.label) : '—'}</b></div>
         </div>
-        <div class="v4-project-timeline-box">${timeline && timeline.renderTimelineList ? timeline.renderTimelineList(row, { limit: 3 }) : ''}</div>
-        <div class="v4-actions"><button type="button" class="btn-secondary" data-v4-open-project="${escapeAttr(row.projectId)}">Открыть</button><button type="button" class="btn-secondary" data-v4-export-project="${escapeAttr(row.projectId)}">Export</button><button type="button" class="btn-secondary" data-v4-audit-project="${escapeAttr(row.projectId)}">Audit</button></div>
+        <details class="v4-project-row-details">
+          <summary><span>Детали проекта</span><small>BOM ${formatNumber(bom.sharedBom || 0, 0)} · ${formatWeight(row.totals && row.totals.weightKg)}</small></summary>
+          <div class="v4-project-timeline-box">${timeline && timeline.renderTimelineList ? timeline.renderTimelineList(row, { limit: 3 }) : ''}</div>
+        </details>
+        <div class="v4-actions v4-project-card-actions">
+          <button type="button" class="btn-secondary" data-v4-open-project="${escapeAttr(row.projectId)}">Открыть</button>
+          <button type="button" class="btn-secondary" data-v4-export-project="${escapeAttr(row.projectId)}">Export</button>
+          <button type="button" class="btn-secondary" data-v4-audit-project="${escapeAttr(row.projectId)}">Audit</button>
+          <button type="button" class="btn-secondary" data-v4-export-project-bom="${escapeAttr(row.projectId)}">BOM snapshot</button>
+        </div>
       </article>`;
     }).join('')}</div>`;
   }
@@ -162,6 +258,16 @@
     return `<br><span class="v4-muted">статус: ${escapeHtml(formatDateTime(lastStatus.at))}</span>`;
   }
 
+  // Keep lightweight badges in the projects list; heavy QuoteServerSyncQueue.renderStatusBadge checks stay on explicit sync/export actions.
+  function renderStoredSyncBadge(row) {
+    const meta = row && (row.backendSync || row.quote && row.quote.backendSync) || {};
+    const status = String(meta.status || row && row.syncStatus || 'local_only');
+    if (!status || status === 'local_only') return '';
+    const label = status === 'synced' ? 'synced' : status === 'sync_error' ? 'sync error' : status;
+    const tone = status === 'synced' ? 'ok' : status === 'sync_error' ? 'bad' : 'muted';
+    return `<span class="v4-sync-badge v4-sync-badge--${escapeAttr(tone)}" data-v4-project-sync-lite="true">${escapeHtml(label)}</span>`;
+  }
+
   function bindProjects(root, opts) {
     const refresh = () => renderProjects(root, opts);
     const runBusy = (label, task, button) => {
@@ -175,17 +281,19 @@
     const statusFilter = root.querySelector('[data-v4-project-status-filter]');
     const clientFilter = root.querySelector('[data-v4-project-client-filter]');
     const resetFilter = root.querySelector('[data-v4-project-reset-filter]');
-    const updateFilters = () => {
+    let filterTimer = null;
+    const updateFilters = (delay) => {
       root._fegProjectFilters = {
         query: queryInput ? queryInput.value : '',
         status: statusFilter ? statusFilter.value : '',
         clientId: clientFilter ? clientFilter.value : ''
       };
-      refresh();
+      if (filterTimer) clearTimeout(filterTimer);
+      filterTimer = setTimeout(refresh, delay == null ? 0 : delay);
     };
-    if (queryInput) queryInput.addEventListener('input', updateFilters);
-    if (statusFilter) statusFilter.addEventListener('change', updateFilters);
-    if (clientFilter) clientFilter.addEventListener('change', updateFilters);
+    if (queryInput) queryInput.addEventListener('input', () => updateFilters(180));
+    if (statusFilter) statusFilter.addEventListener('change', () => updateFilters(0));
+    if (clientFilter) clientFilter.addEventListener('change', () => updateFilters(0));
     if (resetFilter) resetFilter.addEventListener('click', () => { root._fegProjectFilters = { query: '', status: '', clientId: '' }; refresh(); });
 
     root.querySelectorAll('[data-v4-project-status]').forEach(select => select.addEventListener('change', () => {
@@ -258,6 +366,21 @@
         toast('Клиентская связка проекта экспортирована');
       } catch (err) {
         toast(err && err.message ? err.message : 'Не удалось экспортировать клиентскую связку');
+      }
+    }));
+
+    root.querySelectorAll('[data-v4-export-project-bom]').forEach(btn => btn.addEventListener('click', () => {
+      try {
+        const record = storage().loadProject(btn.getAttribute('data-v4-export-project-bom'));
+        const quote = record && record.quote;
+        const text = ROOT.V4QuoteDraftHydrator && ROOT.V4QuoteDraftHydrator.exportHydratedSnapshotJson
+          ? ROOT.V4QuoteDraftHydrator.exportHydratedSnapshotJson(quote, { source: 'quote-projects-ui-export' })
+          : JSON.stringify(quote && quote.v4Bom || {}, null, 2);
+        downloadText(projectFilename(record, 'v4-bom-snapshot'), text);
+        copyText(text);
+        toast('BOM snapshot проекта экспортирован');
+      } catch (err) {
+        toast(err && err.message ? err.message : 'Не удалось экспортировать BOM snapshot');
       }
     }));
 

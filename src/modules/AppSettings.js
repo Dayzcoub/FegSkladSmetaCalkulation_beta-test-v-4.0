@@ -24,9 +24,10 @@
         }
     }
 
-    function saveAppTheme(theme) {
+    function saveAppTheme(theme, options) {
         const normalized = theme === 'light' ? 'light' : 'dark';
         try { storage().setItem('appTheme', normalized); } catch (err) {}
+        applyAppTheme(normalized, options);
         return normalized;
     }
 
@@ -36,9 +37,14 @@
         if (doc && doc.body && doc.body.classList) {
             doc.body.classList.toggle('theme-light', normalized === 'light');
             doc.body.classList.toggle('theme-dark', normalized === 'dark');
+            doc.body.setAttribute('data-app-theme', normalized);
+        }
+        if (doc && doc.documentElement) {
+            doc.documentElement.setAttribute('data-app-theme', normalized);
+            doc.documentElement.style.colorScheme = normalized === 'light' ? 'light' : 'dark';
         }
         const metaTheme = doc ? doc.querySelector('meta[name="theme-color"]') : null;
-        if (metaTheme) metaTheme.setAttribute('content', normalized === 'light' ? '#f3f0ea' : '#111820');
+        if (metaTheme) metaTheme.setAttribute('content', normalized === 'light' ? '#f4f6f4' : '#0f1011');
         return normalized;
     }
 
@@ -140,6 +146,14 @@
         closeModal
     };
 
+    function initTheme() {
+        applyAppTheme(loadAppTheme());
+    }
+
     global.FEGModules = global.FEGModules || {};
     global.FEGModules.AppSettings = api;
+    if (global.document) {
+        if (global.document.readyState === 'loading') global.document.addEventListener('DOMContentLoaded', initTheme, { once: true });
+        else initTheme();
+    }
 })(typeof window !== 'undefined' ? window : globalThis);

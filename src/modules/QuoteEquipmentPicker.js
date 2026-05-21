@@ -4,7 +4,7 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const PICKER_VERSION = '1.0.0';
+  const PICKER_VERSION = '1.2.1-auto-deficit-subrent-split';
 
   const CATEGORY_BY_SCOPE = Object.freeze({
     sound: Object.freeze(['sound_pa', 'consoles', 'monitoring', 'commutation']),
@@ -47,15 +47,33 @@
     return db().normalizeItems(inventoryItems || db().getStoredItemsOrDemo()).find(item => item.id === id) || null;
   }
 
+  function normalizeSourceType(value, fallback) {
+    const src = toText(value || fallback || 'own');
+    if (src === 'manual_subrent') return 'subrent';
+    if (src === 'stock' || src === 'inventory') return 'own';
+    return src || 'own';
+  }
+
   function normalizeOwnLine(line, inventoryItems) {
     const src = line || {};
     const item = findItem(src.itemId || src.id, inventoryItems);
     if (!item) return null;
     const qty = nonNegative(src.qty, 0);
-    const availableQty = nonNegative(item.availableQty, 0);
-    const deficitQty = Math.max(0, qty - availableQty);
+    const sourceType = normalizeSourceType(src.sourceType, 'own');
+    const isSubrent = sourceType === 'subrent';
+    const ownAvailableQty = nonNegative(item.availableQty, 0);
+    const availableQty = isSubrent ? qty : ownAvailableQty;
+    const deficitQty = isSubrent ? 0 : Math.max(0, qty - ownAvailableQty);
+    const subrentQty = isSubrent ? qty : nonNegative(src.subrentQty, 0);
+    const supplierName = toText(src.supplierName || item.supplierName);
+    const subrentPrice = nonNegative(src.subrentPrice === undefined ? src.subrent_price : src.subrentPrice, 0);
+    const rawClientPrice = nonNegative(src.clientPrice === undefined ? src.client_price : src.clientPrice, 0);
+    const clientPrice = isSubrent && !rawClientPrice ? subrentPrice : rawClientPrice;
+    const baseRentalPrice = nonNegative(src.rentalPrice === undefined ? item.rentalPrice : src.rentalPrice, item.rentalPrice);
+    const rentalPrice = isSubrent ? (clientPrice || subrentPrice || baseRentalPrice) : baseRentalPrice;
+    const lineIdSuffix = isSubrent ? `subrent-${supplierName || 'supplier'}-${subrentPrice || 0}-${clientPrice || 0}` : 'own';
     return {
-      id: `quote-eq-${item.id}`,
+      id: `quote-eq-${item.id}-${lineIdSuffix}`,
       itemId: item.id,
       code: item.code,
       name: item.name,
@@ -64,19 +82,24 @@
       type: item.type,
       unit: item.unit,
       qty,
-      sourceType: toText(src.sourceType || 'own') || 'own',
+      sourceType,
+      sourceSystem: 'equipment_database',
       supplierId: toText(src.supplierId || item.supplierId),
-      supplierName: toText(src.supplierName || item.supplierName),
-      subrentPrice: nonNegative(src.subrentPrice === undefined ? src.subrent_price : src.subrentPrice, 0),
-      clientPrice: nonNegative(src.clientPrice === undefined ? src.client_price : src.clientPrice, 0),
-      margin: nonNegative(src.margin, 0),
+      supplierName,
+      subrentPrice,
+      clientPrice,
+      margin: nonNegative(src.margin, 0) || (isSubrent ? Math.max(0, clientPrice - subrentPrice) : 0),
+      ownAvailableQty,
       availableQty,
       deficitQty,
+      subrentQty,
       ok: deficitQty <= 0,
       weightKg: nonNegative(src.weightKg === undefined ? item.weightKg : src.weightKg, item.weightKg),
       powerW: nonNegative(src.powerW === undefined ? item.powerW : src.powerW, item.powerW),
       startupPowerW: nonNegative(src.startupPowerW === undefined ? item.startupPowerW : src.startupPowerW, item.startupPowerW || 0),
-      rentalPrice: nonNegative(src.rentalPrice === undefined ? item.rentalPrice : src.rentalPrice, item.rentalPrice),
+      rentalPrice,
+      linkedSubrent: src.linkedSubrent === true || src.linkedSubrent === 'true',
+      originalRequestedQty: nonNegative(src.originalRequestedQty || src.original_requested_qty || src.totalRequestedQty || src.total_requested_qty, 0),
       note: toText(src.note || src.notes)
     };
   }
@@ -98,13 +121,15 @@
       unit: toText(src.unit || 'шт') || 'шт',
       qty,
       sourceType,
+      sourceSystem: 'manual',
       supplierId: toText(src.supplierId || src.supplier_id),
       supplierName: toText(src.supplierName || src.supplier_name),
       subrentPrice: nonNegative(src.subrentPrice || src.subrent_price || src.rentalPrice || src.price, 0),
-      clientPrice: nonNegative(src.clientPrice || src.client_price, 0),
-      margin: nonNegative(src.margin, 0),
+      clientPrice: nonNegative(src.clientPrice || src.client_price, 0) || (sourceType === 'subrent' ? nonNegative(src.subrentPrice || src.subrent_price || src.rentalPrice || src.price, 0) : 0),
+      margin: nonNegative(src.margin, 0) || (sourceType === 'subrent' ? Math.max(0, (nonNegative(src.clientPrice || src.client_price, 0) || nonNegative(src.subrentPrice || src.subrent_price || src.rentalPrice || src.price, 0)) - nonNegative(src.subrentPrice || src.subrent_price || src.rentalPrice || src.price, 0)) : 0),
       availableQty: sourceType === 'subrent' ? qty : 0,
       deficitQty: sourceType === 'subrent' ? 0 : qty,
+      subrentQty: sourceType === 'subrent' ? qty : 0,
       ok: sourceType === 'subrent',
       weightKg: nonNegative(src.weightKg, 0),
       powerW: nonNegative(src.powerW, 0),
@@ -162,6 +187,8 @@
       manualItems: lines.filter(row => row.sourceType !== 'own' || !row.itemId),
       bomRows: lines.map(row => ({
         id: row.id,
+        sectionKey: 'equipment',
+        sectionTitle: title,
         itemId: row.itemId,
         code: row.code,
         name: row.name,
@@ -171,6 +198,7 @@
         powerW: row.powerW * row.qty,
         startupPowerW: row.startupPowerW * row.qty,
         sourceType: row.sourceType,
+        sourceSystem: row.sourceSystem || '',
         supplierId: row.supplierId,
         supplierName: row.supplierName,
         subrentPrice: row.subrentPrice,
@@ -178,6 +206,9 @@
         margin: row.margin,
         availableQty: row.availableQty,
         deficitQty: row.deficitQty,
+        subrentQty: row.subrentQty || 0,
+        linkedSubrent: row.linkedSubrent === true,
+        originalRequestedQty: row.originalRequestedQty || 0,
         ok: row.ok,
         note: row.note
       })),
@@ -200,7 +231,7 @@
     const lines = Array.isArray(sec.items) ? sec.items : [];
     return {
       scope: scope || {},
-      items: lines.filter(line => line.itemId).map(line => ({ itemId: line.itemId, qty: line.qty, sourceType: line.sourceType, supplierId: line.supplierId, supplierName: line.supplierName, subrentPrice: line.subrentPrice, clientPrice: line.clientPrice, margin: line.margin })),
+      items: lines.filter(line => line.itemId).map(line => ({ itemId: line.itemId, qty: line.qty, requestedQty: line.requestedQty || line.qty, originalRequestedQty: line.originalRequestedQty || line.requestedQty || line.qty, sourceType: line.sourceType, supplierId: line.supplierId, supplierName: line.supplierName, subrentPrice: line.subrentPrice, clientPrice: line.clientPrice, margin: line.margin, linkedSubrent: line.linkedSubrent === true, note: line.note || '' })),
       manualItems: lines.filter(line => !line.itemId).map(line => clone(line))
     };
   }
@@ -214,6 +245,7 @@
     normalizeLines,
     buildEquipmentSection,
     getInputFromSection,
-    sumLines
+    sumLines,
+    normalizeSourceType
   };
 })();

@@ -19,44 +19,41 @@
     ensureEquipmentEditorStyles();
     const options = opts || {};
     const auth = ROOT.AuthProvider && ROOT.AuthProvider.getAuthState ? ROOT.AuthProvider.getAuthState() : { role: 'viewer' };
-    const canEdit = ROOT.RolePermissions && ROOT.RolePermissions.hasPermission ? ROOT.RolePermissions.hasPermission(auth.role, 'equipment:edit') : false;
-    const canSeePrices = ROOT.RolePermissions && ROOT.RolePermissions.hasPermission ? ROOT.RolePermissions.hasPermission(auth.role, 'prices:view') : false;
+    const role = auth.role || 'viewer';
+    const isAdmin = ROOT.RolePermissions && ROOT.RolePermissions.normalizeRole ? ROOT.RolePermissions.normalizeRole(role) === 'admin' : role === 'admin';
+    const canEdit = ROOT.RolePermissions && ROOT.RolePermissions.hasPermission ? ROOT.RolePermissions.hasPermission(role, 'equipment:edit') : false;
+    const canSeePrices = ROOT.RolePermissions && ROOT.RolePermissions.hasPermission ? ROOT.RolePermissions.hasPermission(role, 'prices:view') : false;
     const selectedCategory = options.category || '';
     const selectedType = options.type || '';
     const selectedIssue = options.issue || '';
     const query = options.query || '';
     const onlyActive = options.onlyActive !== false;
-    const allItems = db.getStoredItemsOrDemo();
-    const completionMatrix = db.buildManualCompletionMatrix ? db.buildManualCompletionMatrix(allItems, { includeRows: true, includeItems: false }) : null;
+    const rawItems = db.getStoredItemsOrDemo();
+    const allItems = ROOT.RolePermissions && ROOT.RolePermissions.filterEquipmentItemsForRole ? ROOT.RolePermissions.filterEquipmentItemsForRole(rawItems, role) : rawItems;
+    const completionMatrix = isAdmin && db.buildManualCompletionMatrix ? db.buildManualCompletionMatrix(allItems, { includeRows: true, includeItems: false }) : null;
     const sourceItems = selectedIssue && db.getManualCompletionFilteredItems ? db.getManualCompletionFilteredItems(selectedIssue, allItems) : allItems;
     const items = db.listItems({ items: sourceItems, category: selectedCategory, type: selectedType, query, onlyActive });
     const summary = db.summarize(allItems);
-    const categoryReport = db.buildCategoryReport ? db.buildCategoryReport(allItems) : null;
-    const typeReport = db.buildTypeReport ? db.buildTypeReport(allItems) : null;
-    const syncSchemaReport = db.buildSyncSchemaReport ? db.buildSyncSchemaReport(allItems) : null;
-    const syncPreviewReport = db.buildEquipmentSyncPreview ? db.buildEquipmentSyncPreview(allItems) : null;
-    const readinessReport = db.buildEquipmentReadinessReport ? db.buildEquipmentReadinessReport(allItems, { includeRows: false }) : null;
-    const categories = db.CATEGORY_TREE;
+    const categoryReport = isAdmin && db.buildCategoryReport ? db.buildCategoryReport(allItems) : null;
+    const typeReport = isAdmin && db.buildTypeReport ? db.buildTypeReport(allItems) : null;
+    const syncSchemaReport = isAdmin && db.buildSyncSchemaReport ? db.buildSyncSchemaReport(allItems) : null;
+    const syncPreviewReport = isAdmin && db.buildEquipmentSyncPreview ? db.buildEquipmentSyncPreview(allItems) : null;
+    const readinessReport = isAdmin && db.buildEquipmentReadinessReport ? db.buildEquipmentReadinessReport(allItems, { includeRows: false }) : null;
+    const allowedCategories = ROOT.RolePermissions && ROOT.RolePermissions.getRoleAllowedEquipmentCategories ? ROOT.RolePermissions.getRoleAllowedEquipmentCategories(role) : null;
+    const categories = allowedCategories === null ? db.CATEGORY_TREE : db.CATEGORY_TREE.filter(cat => allowedCategories.includes(cat.id));
     const types = Object.values(db.ITEM_TYPES || {});
 
     root.innerHTML = `
       <div class="v4-card" data-v4-equipment-panel>
         <div class="v4-card-head">
           <div>
-            <div class="v4-kicker">Equipment Database · local prototype</div>
+            <div class="v4-kicker">База оборудования</div>
             <h3>Единая база оборудования</h3>
-            <p class="v4-muted">Локальный справочник под будущий Supabase <code>equipment_items</code>: сцены, фермы, LED, свет, звук, услуги, коммутация и расходники.</p>
+            <p class="v4-muted">Единая рабочая база: сцены, фермы, LED, свет, звук, услуги, коммутация и расходники. Для профильных ролей отображаются только разрешённые разделы.</p>
           </div>
           <div class="v4-auth-actions">
-            ${canEdit ? '<button type="button" class="btn-primary" data-v4-equipment-open-new>+ Добавить позицию</button><button type="button" class="btn-secondary" data-v4-equipment-recode>Привести коды</button><button type="button" class="btn-secondary" data-v4-equipment-reset>Загрузить demo-базу</button>' : '<span class="v4-muted">Режим просмотра</span>'}
-            <button type="button" class="btn-secondary" data-v4-equipment-category-report>Категории JSON</button>
-            <button type="button" class="btn-secondary" data-v4-equipment-sync-schema>Sync schema JSON</button>
-            <button type="button" class="btn-secondary" data-v4-equipment-sync-preview>Sync preview JSON</button>
-            <button type="button" class="btn-secondary" data-v4-equipment-readiness>Readiness JSON</button>
-            <button type="button" class="btn-secondary" data-v4-equipment-completion>Completion JSON</button>
-            <button type="button" class="btn-secondary" data-v4-equipment-patch-export>Patch template</button>
-            ${canEdit ? '<button type="button" class="btn-secondary" data-v4-equipment-patch-import>Import patch</button><button type="button" class="btn-secondary" data-v4-equipment-safe-cleanup>Safe cleanup</button>' : ''}
-            <button type="button" class="btn-secondary" data-v4-equipment-export>JSON</button>
+            ${canEdit ? '<button type="button" class="btn-primary" data-v4-equipment-open-new>+ Добавить позицию</button>' : '<span class="v4-muted">Режим просмотра</span>'}
+            ${isAdmin ? '<button type="button" class="btn-secondary" data-v4-equipment-recode>Привести коды</button><button type="button" class="btn-secondary" data-v4-equipment-reset>Загрузить demo-базу</button><button type="button" class="btn-secondary" data-v4-equipment-category-report>Категории JSON</button><button type="button" class="btn-secondary" data-v4-equipment-sync-schema>Sync schema JSON</button><button type="button" class="btn-secondary" data-v4-equipment-sync-preview>Sync preview JSON</button><button type="button" class="btn-secondary" data-v4-equipment-readiness>Readiness JSON</button><button type="button" class="btn-secondary" data-v4-equipment-completion>Completion JSON</button><button type="button" class="btn-secondary" data-v4-equipment-patch-export>Patch template</button><button type="button" class="btn-secondary" data-v4-equipment-patch-import>Import patch</button><button type="button" class="btn-secondary" data-v4-equipment-safe-cleanup>Safe cleanup</button><button type="button" class="btn-secondary" data-v4-equipment-export>JSON</button>' : ''}
           </div>
         </div>
 
@@ -69,11 +66,13 @@
           <div class="v4-mini"><b>${canSeePrices ? formatMoney(summary.replacementCost) : 'скрыто'}</b><span>replacement cost</span></div>
         </div>
 
-        ${renderCategoryHealth(categoryReport)}
-        ${renderTypeHealth(typeReport, syncSchemaReport)}
-        ${renderSyncPreviewHealth(syncPreviewReport)}
-        ${renderReadinessHealth(readinessReport)}
-        ${renderManualCompletionHealth(completionMatrix, selectedIssue)}
+        <div class="v4-db-status-strip">
+          ${renderCategoryHealth(categoryReport)}
+          ${renderTypeHealth(typeReport, syncSchemaReport)}
+          ${renderSyncPreviewHealth(syncPreviewReport)}
+          ${renderReadinessHealth(readinessReport)}
+          ${renderManualCompletionHealth(completionMatrix, selectedIssue)}
+        </div>
 
         <div class="v4-equipment-tools">
           <label class="field" style="margin:0;min-width:0;">
@@ -113,37 +112,49 @@
         </div>
         ${renderManualCompletionFilters(completionMatrix, selectedIssue)}
 
-        ${canEdit ? '<div class="v4-hint-card">Позиции можно добавлять с нуля и редактировать через карточку. Код создаётся автоматически по категории: STG-001, TRS-001, LED-001 и т.д. Кнопка «Привести коды» выравнивает всю базу по единой серии и сохраняет старые коды в legacy-поле для совместимости.</div>' : ''}
+        ${canEdit ? '<div class="v4-hint-card">Позиции можно добавлять и редактировать через карточку. Профильные роли работают только со своими категориями базы.</div>' : ''}
 
         <div class="v4-table-wrap v4-table-wrap--equipment">
           <table class="v4-table v4-table--equipment">
             <thead><tr><th>Код</th><th>Позиция</th><th>Категория / тип</th><th>Склад</th><th>Вес / мощность</th>${canSeePrices ? '<th>Цена / замена</th>' : ''}<th>Источник</th>${canEdit ? '<th>Действия</th>' : ''}</tr></thead>
             <tbody>
-              ${items.map(item => renderRow(item, db, canSeePrices, canEdit)).join('') || `<tr><td colspan="${canSeePrices ? (canEdit ? 8 : 7) : (canEdit ? 7 : 6)}" class="v4-muted">Нет позиций по выбранному фильтру.</td></tr>`}
+              ${(items.slice(0, options._page ? options._page * 50 : 50)).map(item => renderRow(item, db, canSeePrices, canEdit)).join('') || `<tr><td colspan="${canSeePrices ? (canEdit ? 8 : 7) : (canEdit ? 7 : 6)}" class="v4-muted">Нет позиций по выбранному фильтру.</td></tr>`}
             </tbody>
           </table>
+          ${items.length > (options._page ? options._page * 50 : 50) ? `<div style="padding:10px 14px;border-top:1px solid var(--line)"><button type="button" class="btn-secondary" data-v4-equipment-load-more>Показать ещё ${Math.min(50, items.length - (options._page ? options._page * 50 : 50))} из ${items.length - (options._page ? options._page * 50 : 50)} оставшихся</button></div>` : ''}
         </div>
         <div class="v4-equipment-card-list">
-          ${items.map(item => renderCard(item, db, canSeePrices, canEdit)).join('') || '<div class="v4-equipment-card v4-muted">Нет позиций по выбранному фильтру.</div>'}
+          ${(items.slice(0, options._page ? options._page * 50 : 50)).map(item => renderCard(item, db, canSeePrices, canEdit)).join('') || '<div class="v4-equipment-card v4-muted">Нет позиций по выбранному фильтру.</div>'}
         </div>
         <div data-v4-equipment-output style="margin-top:12px;"></div>
       </div>`;
 
-    bindEquipmentEvents(root, db, canEdit);
+    bindEquipmentEvents(root, db, canEdit, isAdmin, role);
     return root;
   }
 
-  function bindEquipmentEvents(root, db, canEdit) {
+  function bindEquipmentEvents(root, db, canEdit, isAdmin, role) {
     root.querySelectorAll('[data-v4-equipment-cat]').forEach(btn => {
       btn.addEventListener('click', () => renderEquipmentDatabase(root, { ...readFilters(root), category: btn.getAttribute('data-v4-equipment-cat') || '' }));
     });
     ['query', 'category', 'type', 'issue', 'active'].forEach(name => {
       const el = root.querySelector(`[data-v4-equipment-${name}]`);
-      if (el) el.addEventListener(name === 'query' ? 'input' : 'change', debounce(() => renderEquipmentDatabase(root, readFilters(root)), 180));
+      if (el) el.addEventListener(name === 'query' ? 'input' : 'change', debounce(() => {
+        root.dataset.equipmentPage = '1'; // сбрасываем страницу при фильтрации
+        renderEquipmentDatabase(root, readFilters(root));
+      }, 180));
     });
     root.querySelectorAll('[data-v4-equipment-issue-filter]').forEach(btn => {
       btn.addEventListener('click', () => renderEquipmentDatabase(root, { ...readFilters(root), issue: btn.getAttribute('data-v4-equipment-issue-filter') || '' }));
     });
+    const loadMoreBtn = root.querySelector('[data-v4-equipment-load-more]');
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        const currentFilters = readFilters(root);
+        const currentPage = (currentFilters._page || 1);
+        renderEquipmentDatabase(root, { ...currentFilters, _page: currentPage + 1 });
+      });
+    }
     const reset = root.querySelector('[data-v4-equipment-reset]');
     if (reset) reset.addEventListener('click', () => {
       db.resetDemoItems();
@@ -152,7 +163,7 @@
     });
 
     const recode = root.querySelector('[data-v4-equipment-recode]');
-    if (recode && canEdit) recode.addEventListener('click', () => {
+    if (recode && isAdmin) recode.addEventListener('click', () => {
       if (!window.confirm || window.confirm('Привести все коды базы к серии по категориям? Старые коды сохранятся в legacy-поле.')) {
         db.recodeStoredItemsByCategory();
         toast('Коды базы приведены к единой серии');
@@ -172,9 +183,9 @@
     const patchExportBtn = root.querySelector('[data-v4-equipment-patch-export]');
     if (patchExportBtn) patchExportBtn.addEventListener('click', () => showPatchExport(root, db));
     const patchImportBtn = root.querySelector('[data-v4-equipment-patch-import]');
-    if (patchImportBtn && canEdit) patchImportBtn.addEventListener('click', () => showPatchImport(root, db));
+    if (patchImportBtn && isAdmin) patchImportBtn.addEventListener('click', () => showPatchImport(root, db));
     const safeCleanupBtn = root.querySelector('[data-v4-equipment-safe-cleanup]');
-    if (safeCleanupBtn && canEdit) safeCleanupBtn.addEventListener('click', () => applySafeCleanup(root, db));
+    if (safeCleanupBtn && isAdmin) safeCleanupBtn.addEventListener('click', () => applySafeCleanup(root, db));
     const exportBtn = root.querySelector('[data-v4-equipment-export]');
     if (exportBtn) exportBtn.addEventListener('click', () => showExport(root, db));
     const addBtn = root.querySelector('[data-v4-equipment-open-new]');
@@ -182,6 +193,10 @@
     root.querySelectorAll('[data-v4-equipment-edit]').forEach(btn => {
       btn.addEventListener('click', () => {
         const item = db.findItem(btn.getAttribute('data-v4-equipment-edit'));
+        if (ROOT.RolePermissions && ROOT.RolePermissions.canEditEquipmentItem && !ROOT.RolePermissions.canEditEquipmentItem(role, item)) {
+          toast('Редактирование этой категории недоступно для роли');
+          return;
+        }
         openEquipmentEditor(root, db, item);
       });
     });
@@ -298,20 +313,34 @@
   }
 
   function openEquipmentEditor(root, db, item) {
+    const auth = ROOT.AuthProvider && ROOT.AuthProvider.getAuthState ? ROOT.AuthProvider.getAuthState() : { role: 'viewer' };
+    const role = auth.role || 'viewer';
     const editing = !!item;
-    const current = db.normalizeItem(item || {
+    if (editing && ROOT.RolePermissions && ROOT.RolePermissions.canEditEquipmentItem && !ROOT.RolePermissions.canEditEquipmentItem(role, item)) {
+      toast('Эта роль может редактировать только свои категории базы');
+      return;
+    }
+    const allowedCategories = ROOT.RolePermissions && ROOT.RolePermissions.getRoleAllowedEquipmentCategories ? ROOT.RolePermissions.getRoleAllowedEquipmentCategories(role) : null;
+    const categories = allowedCategories === null ? db.CATEGORY_TREE : db.CATEGORY_TREE.filter(cat => allowedCategories.includes(cat.id));
+    if (!categories.length) {
+      toast('Для этой роли нет доступных категорий базы');
+      return;
+    }
+    const defaultCategory = categories[0] && categories[0].id || 'stage';
+    const baseItem = item || {
       id: db.makeId('eq'),
-      code: db.generateNextCode ? db.generateNextCode('stage') : '',
+      code: db.generateNextCode ? db.generateNextCode(defaultCategory) : '',
       name: '',
-      category: 'stage',
-      type: db.getDefaultTypeForCategory ? db.getDefaultTypeForCategory('stage') : 'manual',
+      category: defaultCategory,
+      type: db.getDefaultTypeForCategory ? db.getDefaultTypeForCategory(defaultCategory) : 'manual',
       unit: 'шт',
       stockQty: 1,
       reservedQty: 0,
       sourceType: 'own',
       isActive: true
-    });
-    const categories = db.CATEGORY_TREE;
+    };
+    const current = db.normalizeItem(Object.assign({}, baseItem, { category: baseItem.category || defaultCategory }));
+    if (!categories.some(cat => cat.id === current.category)) current.category = defaultCategory;
     const types = db.getTypeOptionsForCategory ? db.getTypeOptionsForCategory(current.category) : Object.values(db.ITEM_TYPES || {});
     const categoryPrefixHint = categories.map(cat => `${cat.name}: ${db.getCategoryCodePrefix ? db.getCategoryCodePrefix(cat.id) : cat.id}`).join(' · ');
     const codeBlock = `
@@ -330,9 +359,9 @@
       <div class="v4-equipment-editor" role="dialog" aria-modal="true" aria-label="${editing ? 'Редактирование позиции оборудования' : 'Добавление позиции оборудования'}">
         <div class="v4-equipment-editor-head">
           <div>
-            <div class="v4-kicker">Equipment item editor</div>
+            <div class="v4-kicker">База оборудования</div>
             <h3>${editing ? 'Редактировать позицию' : 'Добавить позицию'}</h3>
-            <p class="v4-muted">Изменения сохраняются локально в базе оборудования и попадут в будущий equipment_items payload.</p>
+            <p class="v4-muted">Изменения сохраняются в рабочей базе оборудования. Профильные роли могут редактировать только разрешённые категории.</p>
           </div>
           <button type="button" class="btn-secondary" data-v4-equipment-editor-close>Закрыть</button>
         </div>
@@ -349,7 +378,7 @@
             ${field('model', 'Модель', current.model, 'MUSE 218')}
             ${numberField('stockQty', 'Всего на складе', current.stockQty, '1', '1')}
             ${numberField('reservedQty', 'В резерве', current.reservedQty, '1', '0')}
-            ${numberField('weightKg', 'Вес за ед., кг', current.weightKg, '0.01', '0')}
+            ${numberField('weightKg', 'Вес за ед., кг', current.weightKg, '0.0001', '0')}
             ${numberField('powerW', 'Мощность за ед., Вт', current.powerW, '1', '0')}
             ${numberField('startupPowerW', 'Пусковая мощность, Вт', current.startupPowerW, '1', '0')}
             ${numberField('rentalPrice', 'Прокат за ед., ₽', current.rentalPrice, '1', '0')}
@@ -385,6 +414,10 @@
     if (deactivate) deactivate.addEventListener('click', () => {
       const data = collectEditorForm(form, current);
       data.isActive = false;
+      if (ROOT.RolePermissions && ROOT.RolePermissions.canEditEquipmentItem && !ROOT.RolePermissions.canEditEquipmentItem(role, data)) {
+        toast('Эта роль может редактировать только свои категории базы');
+        return;
+      }
       saveEditorItem(root, db, data, modal, 'Позиция отключена');
     });
     form.addEventListener('submit', event => {
@@ -394,6 +427,10 @@
       const errorEl = modal.querySelector('[data-v4-equipment-editor-error]');
       if (error) {
         if (errorEl) errorEl.textContent = error;
+        return;
+      }
+      if (ROOT.RolePermissions && ROOT.RolePermissions.canEditEquipmentItem && !ROOT.RolePermissions.canEditEquipmentItem(role, data)) {
+        if (errorEl) errorEl.textContent = 'Эта роль может редактировать только свои категории базы.';
         return;
       }
       saveEditorItem(root, db, data, modal, editing ? 'Позиция обновлена' : 'Позиция добавлена');
@@ -503,7 +540,8 @@
       category: root.querySelector('[data-v4-equipment-category]')?.value || '',
       type: root.querySelector('[data-v4-equipment-type]')?.value || '',
       issue: root.querySelector('[data-v4-equipment-issue]')?.value || '',
-      onlyActive: !!root.querySelector('[data-v4-equipment-active]')?.checked
+      onlyActive: !!root.querySelector('[data-v4-equipment-active]')?.checked,
+      _page: parseInt(root.dataset.equipmentPage || '1', 10) || 1,
     };
   }
 

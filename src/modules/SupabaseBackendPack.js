@@ -3,11 +3,13 @@
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
-  const BACKEND_PACK_VERSION = '3.13.1';
+  const BACKEND_PACK_VERSION = '3.15.0';
   const MIGRATION_FILE = 'supabase/migrations/202605120002_v4_backend_sync_hardening.sql';
   const QUOTE_MIGRATION_FILE = 'supabase/migrations/202605120003_quote_backend_sync_dry_run.sql';
   const QUOTE_DRY_RUN_FUNCTION = 'quote-sync-dry-run';
   const QUOTE_CONTROLLED_WRITE_FUNCTION = 'quote-controlled-write';
+  const AUTH_SESSION_DRY_RUN_FUNCTION = 'auth-session-dry-run';
+  const AUTH_CONTROLLED_ACTION_FUNCTION = 'auth-controlled-action';
   const DRY_RUN_FUNCTION = 'equipment-sync-dry-run';
   const CONTROLLED_WRITE_FUNCTION = 'equipment-controlled-write';
   const REMOTE_DRY_RUN_STORAGE_KEY = 'fegV4EquipmentRemoteDryRunReports';
@@ -36,7 +38,9 @@
       equipmentRemoteWriteFunction: toText(base.equipmentRemoteWriteFunction || CONTROLLED_WRITE_FUNCTION) || CONTROLLED_WRITE_FUNCTION,
       equipmentDryRunFunction: toText(base.equipmentDryRunFunction || DRY_RUN_FUNCTION) || DRY_RUN_FUNCTION,
       quoteDryRunFunction: toText(base.quoteDryRunFunction || QUOTE_DRY_RUN_FUNCTION) || QUOTE_DRY_RUN_FUNCTION,
-      quoteControlledWriteFunction: toText(base.quoteControlledWriteFunction || QUOTE_CONTROLLED_WRITE_FUNCTION) || QUOTE_CONTROLLED_WRITE_FUNCTION
+      quoteControlledWriteFunction: toText(base.quoteControlledWriteFunction || QUOTE_CONTROLLED_WRITE_FUNCTION) || QUOTE_CONTROLLED_WRITE_FUNCTION,
+      authSessionDryRunFunction: toText(base.authSessionDryRunFunction || AUTH_SESSION_DRY_RUN_FUNCTION) || AUTH_SESSION_DRY_RUN_FUNCTION,
+      authControlledActionFunction: toText(base.authControlledActionFunction || AUTH_CONTROLLED_ACTION_FUNCTION) || AUTH_CONTROLLED_ACTION_FUNCTION
     });
   }
 
@@ -53,7 +57,14 @@
       { key: 'v4_schema_draft', file: 'supabase/migrations/202605120001_v4_schema_draft.sql', purpose: 'v4 tables, base RLS and indexes', status: 'existing' },
       { key: 'v4_backend_sync_hardening', file: MIGRATION_FILE, purpose: 'local_id compatibility, backend_sync_runs ledger, equipment write helpers', status: 'existing' },
       { key: 'v4_quote_backend_sync_dry_run', file: QUOTE_MIGRATION_FILE, purpose: 'clients/quotes local_id compatibility and read-only dry-run helpers', status: 'existing' },
-      { key: 'v4_quote_controlled_write_runner', file: 'supabase/migrations/202605120004_quote_controlled_write_runner.sql', purpose: 'quote controlled write upsert keys and ledger compatibility', status: 'new' }
+      { key: 'v4_quote_controlled_write_runner', file: 'supabase/migrations/202605120004_quote_controlled_write_runner.sql', purpose: 'quote controlled write upsert keys and ledger compatibility', status: 'existing' },
+      { key: 'v4_auth_session_workspace_preflight', file: 'supabase/migrations/202605120005_auth_session_workspace_preflight.sql', purpose: 'auth session/workspace/invite read-only helpers and preflight indexes', status: 'existing' },
+      { key: 'v4_auth_runtime_bridge_templates', file: 'supabase/migrations/202605120006_auth_runtime_bridge_templates.sql', purpose: 'auth runtime bridge templates and read-only workspace/profile preflight', status: 'existing' },
+      { key: 'v4_auth_action_dry_run_audit', file: 'supabase/migrations/202605120007_auth_action_dry_run_audit.sql', purpose: 'auth action dry-run validation and audit helper, read-only', status: 'existing' },
+      { key: 'v4_auth_action_approval_execution', file: 'supabase/migrations/202605120008_auth_action_approval_execution.sql', purpose: 'auth action approval/checksum helper and controlled action skeleton metadata, read-only', status: 'existing' },
+      { key: 'v4_auth_action_post_verify_audit', file: 'supabase/migrations/202605120009_auth_action_post_verify_audit.sql', purpose: 'auth action post-action verification and safety audit helpers, read-only', status: 'existing' },
+      { key: 'v4_auth_action_capability_promotion_gate', file: 'supabase/migrations/202605120010_auth_action_capability_promotion_gate.sql', purpose: 'auth action capability matrix and promotion gate helper, read-only', status: 'existing' },
+      { key: 'v4_auth_action_adapter_sandbox', file: 'supabase/migrations/202605120011_auth_action_adapter_sandbox.sql', purpose: 'auth adapter sandbox/mutation contract preflight, read-only', status: 'new' }
     ];
   }
 
@@ -61,6 +72,8 @@
     const cfg = getRuntimeConfig(config);
     return [
       { key: 'backend_health', slug: 'backend-health', endpoint: endpointUrl(cfg, 'backend-health'), safety: 'read-only health' },
+      { key: 'auth_session_dry_run', slug: cfg.authSessionDryRunFunction, endpoint: endpointUrl(cfg, cfg.authSessionDryRunFunction), safety: 'test-key protected, auth/session/workspace/invite/action dry-run, no writes' },
+      { key: 'auth_controlled_action', slug: cfg.authControlledActionFunction, endpoint: endpointUrl(cfg, cfg.authControlledActionFunction), safety: 'test-key + approval checksum + phrase + env flag, sandbox-only in v3.14.6, adapter contract + promotion review + post-action verification/audit required, no auth mutations' },
       { key: 'equipment_dry_run', slug: cfg.equipmentDryRunFunction, endpoint: endpointUrl(cfg, cfg.equipmentDryRunFunction), safety: 'test-key protected, validates payload, no writes' },
       { key: 'equipment_controlled_write', slug: cfg.equipmentRemoteWriteFunction, endpoint: endpointUrl(cfg, cfg.equipmentRemoteWriteFunction), safety: 'test-key + phrase + dryRun=false + env flag + staged plan' },
       { key: 'quote_dry_run', slug: cfg.quoteDryRunFunction, endpoint: endpointUrl(cfg, cfg.quoteDryRunFunction), safety: 'test-key protected, clients/quotes diff, no writes, no stock movements' },

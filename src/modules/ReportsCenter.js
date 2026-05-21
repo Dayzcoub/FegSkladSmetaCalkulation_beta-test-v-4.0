@@ -25,7 +25,9 @@
 
   function getProjects(input) {
     if (Array.isArray(input)) return input.slice();
-    return ROOT.QuoteProjectStorage && ROOT.QuoteProjectStorage.listProjects ? ROOT.QuoteProjectStorage.listProjects() : [];
+    const store = ROOT.QuoteProjectStorage;
+    if (store && store.listProjectIndex) return store.listProjectIndex();
+    return store && store.listProjects ? store.listProjects() : [];
   }
 
   function categoryLabel(categoryId) {
@@ -79,8 +81,21 @@
 
   function getQuote(project) {
     if (!project) return null;
+    if (project.indexOnly) return project.quote || null;
     if (project.quote) return project.quote;
     return ROOT.QuoteModel && ROOT.QuoteModel.createQuoteDraft ? ROOT.QuoteModel.createQuoteDraft(project) : project;
+  }
+
+  function getProjectReadinessScore(project, quote) {
+    if (project && project.indexOnly) {
+      const errors = project.validation && Array.isArray(project.validation.errors) ? project.validation.errors.length : 0;
+      return errors ? 65 : 100;
+    }
+    if (quote && ROOT.ProjectReadinessChecklist && ROOT.ProjectReadinessChecklist.buildChecklist) {
+      const checklist = ROOT.ProjectReadinessChecklist.buildChecklist(quote);
+      return toNumber(checklist && checklist.score, 0);
+    }
+    return 0;
   }
 
   function buildProjectReport(projects) {
@@ -96,9 +111,9 @@
       const status = toText(project.status || (project.quote && project.quote.status) || 'draft') || 'draft';
       byStatus[status] = (byStatus[status] || 0) + 1;
       const quote = getQuote(project);
-      if (quote && ROOT.ProjectReadinessChecklist && ROOT.ProjectReadinessChecklist.buildChecklist) {
-        const checklist = ROOT.ProjectReadinessChecklist.buildChecklist(quote);
-        readinessSum += toNumber(checklist && checklist.score, 0);
+      const readinessScore = getProjectReadinessScore(project, quote);
+      if (readinessScore > 0) {
+        readinessSum += readinessScore;
         readinessCount += 1;
       }
       const totals = project.totals || (quote && quote.totals) || {};
@@ -124,10 +139,18 @@
     const projectRows = rows.map(project => {
       const quote = getQuote(project);
       let reservation = null;
-      try {
-        reservation = quote && ROOT.ReservationPlanner && ROOT.ReservationPlanner.buildReservationPlan ? ROOT.ReservationPlanner.buildReservationPlan(quote) : null;
-      } catch (_) { reservation = null; }
-      const rTotals = reservation && reservation.totals || {};
+      if (!(project && project.indexOnly)) {
+        try {
+          reservation = quote && ROOT.ReservationPlanner && ROOT.ReservationPlanner.buildReservationPlan ? ROOT.ReservationPlanner.buildReservationPlan(quote) : null;
+        } catch (_) { reservation = null; }
+      }
+      const bom = project && project.v4BomSummary || {};
+      const rTotals = reservation && reservation.totals || {
+        rows: toNumber(bom.warehouse || bom.sharedBom || bom.quoteItems, 0),
+        reservedQty: toNumber(project && project.totals && (project.totals.reservedQty || project.totals.warehouseReservedQty), 0),
+        deficitQty: toNumber(project && project.totals && (project.totals.deficitQty || project.totals.warehouseDeficitQty), 0),
+        subrentQty: toNumber(project && project.totals && (project.totals.subrentQty || project.totals.warehouseSubrentQty), 0)
+      };
       totals.reservationRows += toNumber(rTotals.rows, 0);
       totals.reservedQty += toNumber(rTotals.reservedQty, 0);
       totals.deficitQty += toNumber(rTotals.deficitQty, 0);
@@ -155,7 +178,7 @@
     const warehouse = buildWarehouseReport(opts.projects);
     let quality = null;
     try {
-      quality = ROOT.DataQualityCenter && ROOT.DataQualityCenter.buildQualityReport ? ROOT.DataQualityCenter.buildQualityReport({ equipmentItems: opts.equipmentItems, clients: opts.clients, projects: opts.projects }) : null;
+      quality = ROOT.DataQualityCenter && ROOT.DataQualityCenter.buildQualityReport ? ROOT.DataQualityCenter.buildQualityReport({ equipmentItems: opts.equipmentItems, clients: opts.clients, projects: opts.projects, deepAudit: false }) : null;
     } catch (_) { quality = null; }
     const healthInputs = [projects.readinessAverage || 0, clients.contactCoverage || 0, quality ? quality.score : 100];
     const healthScore = Math.round(healthInputs.reduce((sum, value) => sum + toNumber(value, 0), 0) / healthInputs.length);

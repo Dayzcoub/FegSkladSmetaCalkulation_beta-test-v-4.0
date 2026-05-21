@@ -3,7 +3,7 @@
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
-  const ROLES = Object.freeze(['admin', 'manager', 'technician', 'warehouse', 'viewer']);
+  const ROLES = Object.freeze(ROOT.RolePermissions && ROOT.RolePermissions.ROLE_LABELS ? Object.keys(ROOT.RolePermissions.ROLE_LABELS) : ['admin', 'director', 'tech_director', 'manager', 'technician', 'warehouse', 'viewer', 'sound', 'light', 'screens', 'truss_stage', 'invited_specialist']);
 
   function getAdminShell() { return ROOT.AdminShell || {}; }
   function getSettings() { return ROOT.WorkspaceSettings || {}; }

@@ -4,13 +4,14 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const QUOTE_BACKEND_SYNC_VERSION = '3.13.1';
+  const QUOTE_BACKEND_SYNC_VERSION = '3.13.2';
   const QUOTE_DRY_RUN_FUNCTION = 'quote-sync-dry-run';
   const QUOTE_CONTROLLED_WRITE_FUNCTION = 'quote-controlled-write';
   const QUOTE_DRY_RUN_STORAGE_KEY = 'fegV4QuoteRemoteDryRunReports';
   const QUOTE_WRITE_APPROVAL_STORAGE_KEY = 'fegV4QuoteWriteApprovalPackage';
   const QUOTE_CONTROLLED_WRITE_STORAGE_KEY = 'fegV4QuoteControlledWriteReports';
   const QUOTE_POST_WRITE_VERIFICATION_STORAGE_KEY = 'fegV4QuotePostWriteVerificationReports';
+  const QUOTE_SYNC_AUDIT_STORAGE_KEY = 'fegV4QuoteSyncAuditSnapshots';
 
   function adapter() { return ROOT.BackendSyncAdapter || null; }
   function projectStorage() { return ROOT.QuoteProjectStorage || null; }
@@ -612,8 +613,7 @@
     if (!store) return false;
     const rows = readControlledQuoteWriteReports(store);
     rows.unshift({ id: `quote-controlled-write-${Date.now().toString(36)}`, at: nowIso(), report: clone(report) });
-    try { store.setItem(QUOTE_CONTROLLED_WRITE_STORAGE_KEY,
-    QUOTE_POST_WRITE_VERIFICATION_STORAGE_KEY, safeJson(rows.slice(0, 20))); return true; }
+    try { store.setItem(QUOTE_CONTROLLED_WRITE_STORAGE_KEY, safeJson(rows.slice(0, 20))); return true; }
     catch (_) { return false; }
   }
 
@@ -799,6 +799,151 @@
     }
   }
 
+
+  function latestReportFromHistory(rows) {
+    const list = Array.isArray(rows) ? rows : [];
+    return (list[0] && list[0].report) || null;
+  }
+
+  function buildQuoteSyncRollbackHints(options) {
+    const opts = options || {};
+    const dryRunReports = readQuoteRemoteDryRunReports(opts.storage);
+    const writeReports = readControlledQuoteWriteReports(opts.storage);
+    const verifyReports = readQuotePostWriteVerificationReports(opts.storage);
+    const latestDryRun = opts.remoteReport || latestReportFromHistory(dryRunReports);
+    const latestWrite = opts.controlledWriteReport || latestReportFromHistory(writeReports);
+    const latestVerify = opts.postWriteVerificationReport || latestReportFromHistory(verifyReports);
+    const approval = opts.approval || readQuoteWriteApprovalPackage(opts.storage) || null;
+    const drySummary = summarizeQuoteRemoteDryRunReport(latestDryRun);
+    const writeSummary = summarizeQuoteControlledWriteReport(latestWrite);
+    const verifySummary = latestVerify ? summarizeQuotePostWriteVerificationReport(latestVerify) : summarizeQuotePostWriteVerificationReport(null);
+    const diff = (verifySummary && verifySummary.remote_diff) || (drySummary && drySummary.remote_diff) || null;
+    const counts = diff && diff.status_counts ? diff.status_counts : (verifySummary && verifySummary.status_counts) || (drySummary && drySummary.diff_counts) || {};
+    const insert = nestedOperationCount(counts, 'insert');
+    const update = nestedOperationCount(counts, 'update');
+    const unchanged = nestedOperationCount(counts, 'unchanged');
+    const remoteOnly = nestedOperationCount(counts, 'remote_only');
+    const operations = Array.isArray(diff && diff.operations_sample) ? diff.operations_sample : [];
+    const hints = [];
+    if (!latestWrite) hints.push({ severity: 'info', action: 'no_quote_write_to_rollback', label: 'Quote controlled write ещё не запускался — rollback не нужен.' });
+    if (latestWrite && !writeSummary.remote_write_executed) hints.push({ severity: 'warning', action: 'quote_write_not_executed', label: 'Последний quote controlled write не выполнил remote write; откат не требуется, но нужно проверить blockers отчёта.' });
+    if (latestVerify && verifySummary.verified) hints.push({ severity: 'ok', action: 'no_quote_rollback_needed', label: 'Quote post-write verification подтверждён: pending insert/update = 0.' });
+    if (insert > 0) hints.push({ severity: 'warning', action: 'rerun_quote_controlled_write_or_fix_missing_remote_rows', label: `После quote write всё ещё не хватает remote rows: ${insert}. Не удалять локальные проекты; сначала повторить dry-run и проверить workspace.` });
+    if (update > 0) hints.push({ severity: 'warning', action: 'reapply_approved_quote_payload_or_review_changed_fields', label: `После quote write есть pending updates: ${update}. Проверить changed_fields и повторить controlled write только с тем же approval/checksum.` });
+    if (remoteOnly > 0) hints.push({ severity: 'manual', action: 'manual_review_quote_remote_only_rows', label: `На сервере есть remote_only clients/quotes rows: ${remoteOnly}. Автоматически не удаляем: это могут быть другие клиенты/проекты workspace.` });
+    if (latestVerify && !verifySummary.verified && unchanged <= 0) hints.push({ severity: 'warning', action: 'verify_workspace_and_payload_checksum', label: 'Verification не нашёл unchanged rows. Проверить workspace slug, payload checksum и что write выполнялся в тот же workspace.' });
+    const remoteOnlySample = operations.filter(row => row && row.operation === 'remote_only').slice(0, 20);
+    const updateSample = operations.filter(row => row && row.operation === 'update').slice(0, 20);
+    const insertSample = operations.filter(row => row && row.operation === 'insert').slice(0, 20);
+    return {
+      type: 'feg-stage-pro-quote-sync-rollback-hints',
+      version: QUOTE_BACKEND_SYNC_VERSION,
+      generated_at: nowIso(),
+      status: latestVerify && verifySummary.verified ? 'quote_rollback_not_needed_verified' : hints.some(row => row.severity === 'manual' || row.severity === 'warning') ? 'quote_manual_review_required' : 'quote_no_remote_write_confirmed',
+      remote_write_executed: writeSummary.remote_write_executed,
+      post_write_verified: Boolean(latestVerify && verifySummary.verified),
+      payload_checksum: (approval && approval.payload_checksum) || (writeSummary && writeSummary.payload_checksum) || (drySummary && drySummary.payload_checksum) || '',
+      status_counts: clone(counts),
+      totals: { insert, update, unchanged, remote_only: remoteOnly },
+      hints,
+      samples: {
+        inserts: insertSample,
+        updates: updateSample,
+        remote_only: remoteOnlySample
+      },
+      safety: {
+        automatic_rollback: false,
+        automatic_delete: false,
+        stock_movements_changed: false,
+        reservations_changed: false,
+        direct_browser_upsert: false
+      },
+      next_step: latestVerify && verifySummary.verified ? 'Archive quote audit package with verification report.' : 'Run/read quote dry-run and post-write verification, then resolve warnings manually before cleanup.'
+    };
+  }
+
+  function buildQuoteSyncAuditTrail(options) {
+    const opts = options || {};
+    const cfg = getRuntimeConfig(opts.config || opts);
+    const dryRunReports = readQuoteRemoteDryRunReports(opts.storage);
+    const writeReports = readControlledQuoteWriteReports(opts.storage);
+    const verifyReports = readQuotePostWriteVerificationReports(opts.storage);
+    const latestDryRun = opts.remoteReport || latestReportFromHistory(dryRunReports);
+    const latestWrite = opts.controlledWriteReport || latestReportFromHistory(writeReports);
+    const latestVerify = opts.postWriteVerificationReport || latestReportFromHistory(verifyReports);
+    const approval = opts.approval || readQuoteWriteApprovalPackage(opts.storage) || null;
+    const approvalCheck = compareQuoteApprovalWithCurrentPayload(approval, Object.assign({}, opts, { config: cfg }));
+    const drySummary = summarizeQuoteRemoteDryRunReport(latestDryRun);
+    const writeSummary = summarizeQuoteControlledWriteReport(latestWrite);
+    const verifySummary = latestVerify ? summarizeQuotePostWriteVerificationReport(latestVerify) : null;
+    const rollbackHints = buildQuoteSyncRollbackHints(Object.assign({}, opts, { remoteReport: latestDryRun, controlledWriteReport: latestWrite, postWriteVerificationReport: latestVerify }));
+    const timeline = [
+      { step: 'quote_remote_dry_run', at: dryRunReports[0] && dryRunReports[0].at || '', status: drySummary.status || 'missing', ok: Boolean(latestDryRun && drySummary.ok), checksum: drySummary.payload_checksum || '' },
+      { step: 'quote_approval_package', at: approval && approval.generated_at || '', status: approvalCheck.status || 'missing', ok: approvalCheck.ok, checksum: approval && approval.payload_checksum || '' },
+      { step: 'quote_controlled_write', at: writeReports[0] && writeReports[0].at || '', status: writeSummary.status || 'missing', ok: writeSummary.ok, checksum: writeSummary.payload_checksum || '' },
+      { step: 'quote_post_write_verification', at: verifyReports[0] && verifyReports[0].at || '', status: verifySummary ? verifySummary.status : 'missing', ok: Boolean(verifySummary && verifySummary.verified), checksum: verifySummary && verifySummary.payload_checksum || '' }
+    ];
+    const blockers = [];
+    if (!latestDryRun) blockers.push('Quote remote dry-run report is missing');
+    if (!approvalCheck.ok) blockers.push('Quote approval package is missing or stale');
+    if (!writeSummary.remote_write_executed) blockers.push('Quote controlled write execution is not confirmed');
+    if (!verifySummary || !verifySummary.verified) blockers.push('Quote post-write verification is missing or not verified');
+    const warnings = [];
+    if (dryRunReports.length > 1) warnings.push(`Quote remote dry-run history has ${dryRunReports.length} reports; keep the approved one archived.`);
+    if (writeReports.length > 1) warnings.push(`Quote controlled write history has ${writeReports.length} reports; verify the latest successful write.`);
+    if (verifySummary && Array.isArray(verifySummary.warnings)) warnings.push(...verifySummary.warnings);
+    const status = blockers.length === 0 ? 'quote_sync_verified_and_audited' : writeSummary.remote_write_executed ? 'quote_write_executed_waiting_for_verified_audit' : latestDryRun ? 'quote_pre_write_audit_incomplete' : 'quote_audit_not_started';
+    return {
+      type: 'feg-stage-pro-quote-sync-audit-trail',
+      version: QUOTE_BACKEND_SYNC_VERSION,
+      generated_at: nowIso(),
+      status,
+      ok: blockers.length === 0,
+      workspace_slug: cfg.workspaceId,
+      timeline,
+      blockers: uniqueList(blockers),
+      warnings: uniqueList(warnings.concat(rollbackHints.hints.filter(row => row.severity === 'warning' || row.severity === 'manual').map(row => row.label))).slice(0, 120),
+      latest: {
+        remote_dry_run: drySummary,
+        approval_check: approvalCheck,
+        controlled_write: writeSummary,
+        post_write_verification: verifySummary,
+        rollback_hints: rollbackHints
+      },
+      history_counts: {
+        remote_dry_run: dryRunReports.length,
+        controlled_write: writeReports.length,
+        post_write_verification: verifyReports.length,
+        audit_snapshots: readQuoteSyncAuditSnapshots(opts.storage).length
+      },
+      safety: {
+        direct_browser_upsert: false,
+        automatic_rollback: false,
+        automatic_delete: false,
+        automatic_stock_movement: false,
+        automatic_reservation: false
+      }
+    };
+  }
+
+  function saveQuoteSyncAuditSnapshot(snapshot, storage) {
+    const store = getStorage(storage);
+    if (!store) return false;
+    try {
+      const rows = readQuoteSyncAuditSnapshots(store);
+      rows.unshift({ id: `quote-sync-audit-${Date.now().toString(36)}`, at: nowIso(), snapshot: clone(snapshot || buildQuoteSyncAuditTrail({ storage })) });
+      store.setItem(QUOTE_SYNC_AUDIT_STORAGE_KEY, safeJson(rows.slice(0, 20)));
+      return true;
+    } catch (_) { return false; }
+  }
+
+  function readQuoteSyncAuditSnapshots(storage) {
+    const store = getStorage(storage);
+    if (!store) return [];
+    try { const rows = JSON.parse(store.getItem(QUOTE_SYNC_AUDIT_STORAGE_KEY) || '[]'); return Array.isArray(rows) ? rows : []; }
+    catch (_) { return []; }
+  }
+
   function uniqueList(list) {
     return Array.from(new Set((Array.isArray(list) ? list : []).map(item => toText(item)).filter(Boolean)));
   }
@@ -832,6 +977,8 @@
       const latestWrite = state.writeReport || ((readControlledQuoteWriteReports(opts.storage)[0] || {}).report) || null;
       const latestVerify = state.verifyReport || ((readQuotePostWriteVerificationReports(opts.storage)[0] || {}).report) || null;
       const verifyReadiness = buildQuotePostWriteVerificationReadiness(Object.assign({}, opts, { testKey: state.testKey, controlledWriteReport: latestWrite }));
+      const auditReport = state.auditReport || buildQuoteSyncAuditTrail(Object.assign({}, opts, { remoteReport: latest, controlledWriteReport: latestWrite, postWriteVerificationReport: latestVerify }));
+      const rollbackHints = state.rollbackHints || buildQuoteSyncRollbackHints(Object.assign({}, opts, { remoteReport: latest, controlledWriteReport: latestWrite, postWriteVerificationReport: latestVerify }));
       root.innerHTML = `
         <div class="v4-card v4-quote-backend-sync-pack">
           <div class="v4-kicker">Backend / Sync · clients & quotes</div>
@@ -854,6 +1001,7 @@
             <div class="v4-sync-check ok"><span>✓</span><b>No browser upsert</b><small>Edge dry-run only</small></div>
             <div class="v4-sync-check ${writeReadiness.ready ? 'ok' : 'warn'}"><span>${writeReadiness.ready ? '✓' : '!'}</span><b>Quote write runner</b><small>${escapeHtml(writeReadiness.status)}</small></div>
             <div class="v4-sync-check ${verifyReadiness.ready ? 'ok' : 'warn'}"><span>${verifyReadiness.ready ? '✓' : '!'}</span><b>Quote post-write verify</b><small>${escapeHtml(verifyReadiness.status)}</small></div>
+            <div class="v4-sync-check ${auditReport.ok ? 'ok' : 'warn'}"><span>${auditReport.ok ? '✓' : '!'}</span><b>Quote sync audit</b><small>${escapeHtml(auditReport.status)}</small></div>
           </div>
           <div class="v4-doc-actions v4-sync-actions">
             <button type="button" class="btn-secondary" data-quote-backend="download-preview">Preview JSON</button>
@@ -869,8 +1017,12 @@
             <button type="button" class="btn-secondary" data-quote-backend="download-verify-readiness">Verify readiness JSON</button>
             <button type="button" class="btn-primary" data-quote-backend="run-post-write-verify" ${state.verifyBusy ? 'disabled' : ''}>Проверить quote после write</button>
             <button type="button" class="btn-secondary" data-quote-backend="download-verify-report" ${latestVerify ? '' : 'disabled'}>Скачать verify JSON</button>
+            <button type="button" class="btn-secondary" data-quote-backend="download-sync-audit">Скачать sync audit JSON</button>
+            <button type="button" class="btn-secondary" data-quote-backend="save-sync-audit">Сохранить audit snapshot</button>
+            <button type="button" class="btn-secondary" data-quote-backend="download-rollback-hints">Скачать rollback hints JSON</button>
           </div>
           ${readiness.blockers.length ? `<div class="v4-alert warn"><b>Blockers:</b><br>${readiness.blockers.map(escapeHtml).join('<br>')}</div>` : ''}
+          <div class="v4-sync-report ${auditReport.ok ? 'ok' : 'warn'}"><h4>Quote sync audit · ${escapeHtml(auditReport.status)}</h4><p class="v4-muted">snapshots: ${auditReport.history_counts && auditReport.history_counts.audit_snapshots || 0} · rollback: ${escapeHtml(rollbackHints.status || 'unknown')}</p><details class="v4-json-details"><summary>Audit JSON</summary><pre>${escapeHtml(safeJson(auditReport))}</pre></details></div>
           <div class="v4-sync-report ${approvalCheck.ok ? 'ok' : 'warn'}"><h4>Quote approval · ${escapeHtml(approvalCheck.status)}</h4><p class="v4-muted">Approved: ${approval && approval.approved ? 'true' : 'false'} · checksum: ${escapeHtml((approvalCheck.approved_checksum || '').slice(0, 16) || '—')}</p><details class="v4-json-details"><summary>Approval check JSON</summary><pre>${escapeHtml(safeJson(approvalCheck))}</pre></details></div>
           ${latestVerify ? `<div class="v4-sync-report ${latestVerify.verified ? 'ok' : 'warn'}"><h4>Latest quote post-write verify · ${escapeHtml(latestVerify.status || 'unknown')}</h4><p class="v4-muted">verified: ${latestVerify.verified === true}</p><details class="v4-json-details"><summary>Verification result JSON</summary><pre>${escapeHtml(safeJson(latestVerify))}</pre></details></div>` : ''}
           ${latestWrite ? `<div class="v4-sync-report ${latestWrite.ok ? 'ok' : 'warn'}"><h4>Latest quote controlled write · ${escapeHtml(latestWrite.status || 'unknown')}</h4><p class="v4-muted">remote_write_executed: ${latestWrite.remote_write_executed === true}</p><details class="v4-json-details"><summary>Controlled write result JSON</summary><pre>${escapeHtml(safeJson(latestWrite))}</pre></details></div>` : ''}
@@ -896,6 +1048,9 @@
       if (action === 'download-verify-readiness') return downloadFile('feg_quote_post_write_verification_readiness.json', safeJson(buildQuotePostWriteVerificationReadiness(Object.assign({}, opts, { testKey: state.testKey, controlledWriteReport: state.writeReport || latestControlledQuoteWriteReport(opts.storage) }))));
       if (action === 'run-post-write-verify') { state.verifyBusy = true; render(); state.verifyReport = await runQuotePostWriteVerification(Object.assign({}, opts, { testKey: state.testKey, controlledWriteReport: state.writeReport || latestControlledQuoteWriteReport(opts.storage) })); state.verifyBusy = false; render(); return; }
       if (action === 'download-verify-report') return downloadFile('feg_quote_post_write_verification.json', safeJson(state.verifyReport || ((readQuotePostWriteVerificationReports(opts.storage)[0] || {}).report) || {}));
+      if (action === 'download-sync-audit') return downloadFile('feg_quote_sync_audit.json', safeJson(buildQuoteSyncAuditTrail(Object.assign({}, opts, { remoteReport: state.report || null, controlledWriteReport: state.writeReport || null, postWriteVerificationReport: state.verifyReport || null }))));
+      if (action === 'save-sync-audit') { state.auditReport = buildQuoteSyncAuditTrail(Object.assign({}, opts, { remoteReport: state.report || null, controlledWriteReport: state.writeReport || null, postWriteVerificationReport: state.verifyReport || null })); saveQuoteSyncAuditSnapshot(state.auditReport, opts.storage); render(); return; }
+      if (action === 'download-rollback-hints') return downloadFile('feg_quote_sync_rollback_hints.json', safeJson(buildQuoteSyncRollbackHints(Object.assign({}, opts, { remoteReport: state.report || null, controlledWriteReport: state.writeReport || null, postWriteVerificationReport: state.verifyReport || null }))));
       if (action === 'run-dry-run') { state.busy = true; render(); state.report = await runQuoteEdgeDryRun(Object.assign({}, opts, { testKey: state.testKey })); state.busy = false; render(); }
     }
     render();
@@ -910,6 +1065,7 @@
     QUOTE_WRITE_APPROVAL_STORAGE_KEY,
     QUOTE_CONTROLLED_WRITE_STORAGE_KEY,
     QUOTE_POST_WRITE_VERIFICATION_STORAGE_KEY,
+    QUOTE_SYNC_AUDIT_STORAGE_KEY,
     stableStringify,
     checksum,
     quotePayloadChecksum,
@@ -942,6 +1098,10 @@
     summarizeQuotePostWriteVerificationReport,
     saveQuotePostWriteVerificationReport,
     readQuotePostWriteVerificationReports,
+    buildQuoteSyncAuditTrail,
+    buildQuoteSyncRollbackHints,
+    saveQuoteSyncAuditSnapshot,
+    readQuoteSyncAuditSnapshots,
     renderQuoteBackendSyncConsole
   };
 })();

@@ -4,7 +4,7 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const SUPPLIER_DIRECTORY_VERSION = '1.0.0';
+  const SUPPLIER_DIRECTORY_VERSION = '1.1.0-subrentors';
   const SUPPLIER_STORAGE_KEY = 'feg.v4.supplierDirectory.v1';
 
   function toText(value) { return String(value == null ? '' : value).trim(); }
@@ -18,17 +18,26 @@
 
   function normalizeSupplier(input) {
     const src = input || {};
-    const name = toText(src.name || src.supplierName || src.supplier_name || 'Поставщик');
-    const id = toText(src.id || src.supplierId || src.supplier_id) || `sup-${slug(name)}`;
+    const firstName = toText(src.firstName || src.first_name);
+    const lastName = toText(src.lastName || src.last_name);
+    const organizationName = toText(src.organizationName || src.organization_name || src.legalName || src.legal_name);
+    const name = toText(src.name || src.supplierName || src.supplier_name) || buildSupplierDisplayName({ firstName, lastName, organizationName, contactName: src.contactName || src.contact_name });
+    const id = toText(src.id || src.supplierId || src.supplier_id) || `sup-${slug(name)}-${Date.now().toString(36)}`;
     const categories = Array.isArray(src.categories) ? src.categories.map(toText).filter(Boolean) : [];
     return {
       id,
       workspaceId: toText(src.workspaceId || src.workspace_id || 'demo-workspace') || 'demo-workspace',
       name,
-      legalName: toText(src.legalName || src.legal_name),
+      firstName,
+      first_name: firstName,
+      lastName,
+      last_name: lastName,
+      organizationName,
+      organization_name: organizationName,
+      legalName: toText(src.legalName || src.legal_name || organizationName),
       type: toText(src.type || 'subrent') || 'subrent',
       categories,
-      contactName: toText(src.contactName || src.contact_name),
+      contactName: toText(src.contactName || src.contact_name || buildContactName({ firstName, lastName })),
       phone: toText(src.phone),
       email: toText(src.email),
       website: toText(src.website),
@@ -50,6 +59,18 @@
       seen.add(key);
       return true;
     }).sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+  }
+
+  function buildContactName(src) {
+    const firstName = toText(src.firstName || src.first_name);
+    const lastName = toText(src.lastName || src.last_name);
+    return [firstName, lastName].filter(Boolean).join(' ').trim();
+  }
+
+  function buildSupplierDisplayName(src) {
+    const organizationName = toText(src.organizationName || src.organization_name || src.legalName || src.legal_name);
+    const contactName = buildContactName(src) || toText(src.contactName || src.contact_name);
+    return organizationName || contactName || toText(src.name || src.supplierName || src.supplier_name) || 'Субарендатор';
   }
 
   function inferCategoryFromEquipment(item) {
@@ -143,6 +164,37 @@
     return saveSuppliers(list);
   }
 
+  function listSubrentors(options) {
+    const opts = Object.assign({}, options || {}, { type: 'subrent' });
+    return listSuppliers(opts).filter(row => row.type === 'subrent' || row.type === 'subrentor');
+  }
+
+  function formatSupplierLabel(supplier) {
+    const row = normalizeSupplier(supplier || {});
+    const contact = row.contactName && row.contactName !== row.name ? ` · ${row.contactName}` : '';
+    const phone = row.phone ? ` · ${row.phone}` : '';
+    return `${row.name}${contact}${phone}`.trim();
+  }
+
+  function upsertSubrentor(input, suppliers) {
+    const src = input || {};
+    const displayName = buildSupplierDisplayName(src);
+    return upsertSupplier(Object.assign({}, src, {
+      name: toText(src.name) || displayName,
+      legalName: toText(src.legalName || src.legal_name || src.organizationName || src.organization_name),
+      organizationName: toText(src.organizationName || src.organization_name || src.legalName || src.legal_name),
+      type: 'subrent',
+      categories: Array.isArray(src.categories) && src.categories.length ? src.categories : ['subrent', 'equipment'],
+      source: toText(src.source || 'subrentors-directory') || 'subrentors-directory'
+    }), suppliers);
+  }
+
+  function removeSupplier(identifier, suppliers) {
+    const needle = toText(identifier).toLowerCase();
+    const list = normalizeSuppliers(suppliers || getStoredSuppliersOrDemo()).filter(row => row.id.toLowerCase() !== needle && row.name.toLowerCase() !== needle);
+    return saveSuppliers(list);
+  }
+
   function exportSuppliers(suppliers) {
     return JSON.stringify(normalizeSuppliers(suppliers || getStoredSuppliersOrDemo()), null, 2);
   }
@@ -159,6 +211,10 @@
     listSuppliers,
     findSupplier,
     upsertSupplier,
+    upsertSubrentor,
+    listSubrentors,
+    formatSupplierLabel,
+    removeSupplier,
     exportSuppliers
   };
 })();

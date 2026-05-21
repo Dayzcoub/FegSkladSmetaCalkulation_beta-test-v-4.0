@@ -10,12 +10,18 @@
     const root = typeof target === 'string' ? document.getElementById(target) : target;
     if (!root || !settingsApi()) return null;
     const settings = settingsApi().loadSettings();
+    const appSettings = ROOT.AppSettings || null;
+    const appTheme = appSettings && appSettings.loadAppTheme ? appSettings.loadAppTheme() : 'dark';
     const user = currentUser() || {};
     root.innerHTML = `
       <section class="v4-card v4-wide-card" data-v4-settings-panel>
         <div class="v4-section-head">
           <div><div class="v4-kicker">Settings</div><h3>Настройки workspace</h3><p class="v4-muted">Локальный слой профиля, документов, календаря и dev-переключателей. Позже переедет в Supabase.</p></div>
           <div class="v4-actions"><button type="button" class="btn-secondary" data-v4-settings-export>JSON</button><button type="button" class="btn-secondary" data-v4-settings-reset>Сброс</button><button type="button" class="btn-primary" data-v4-settings-save>Сохранить</button></div>
+        </div>
+        <div class="v4-settings-grid v4-settings-grid-3">
+          <label>Тема интерфейса<select data-app-theme><option value="dark"${appTheme === 'dark' ? ' selected' : ''}>Темная</option><option value="light"${appTheme === 'light' ? ' selected' : ''}>Светлая</option></select></label>
+          <div class="v4-note v4-settings-wide">Темная тема зафиксирована как основной рабочий стиль. Светлая тема сохраняет структуру, акцент #2F4F4F и технические цветовые маркеры схем.</div>
         </div>
         <div class="v4-settings-grid">
           <label>Workspace ID<input data-setting="workspaceId" value="${escapeHtml(settings.workspaceId)}"></label>
@@ -47,6 +53,7 @@
       </section>`;
 
     root.querySelector('[data-v4-settings-save]').addEventListener('click', () => {
+      saveThemeFromPanel(root);
       const saved = settingsApi().saveSettings(readSettingsFromPanel(root, settings));
       notify('Настройки сохранены');
       renderSettingsPanel(root);
@@ -54,6 +61,7 @@
     });
     root.querySelector('[data-v4-settings-reset]').addEventListener('click', () => {
       settingsApi().resetSettings();
+      if (ROOT.AppSettings && ROOT.AppSettings.saveAppTheme) ROOT.AppSettings.saveAppTheme('dark');
       notify('Настройки сброшены');
       renderSettingsPanel(root);
     });
@@ -62,7 +70,19 @@
       out.hidden = false;
       out.textContent = settingsApi().exportSettings(readSettingsFromPanel(root, settings));
     });
+    const themeSelect = root.querySelector('[data-app-theme]');
+    if (themeSelect && appSettings && appSettings.saveAppTheme) {
+      themeSelect.addEventListener('change', () => {
+        appSettings.saveAppTheme(themeSelect.value === 'light' ? 'light' : 'dark');
+      });
+    }
     return root;
+  }
+
+  function saveThemeFromPanel(root) {
+    const select = root && root.querySelector ? root.querySelector('[data-app-theme]') : null;
+    if (!select || !ROOT.AppSettings || !ROOT.AppSettings.saveAppTheme) return 'dark';
+    return ROOT.AppSettings.saveAppTheme(select.value === 'light' ? 'light' : 'dark');
   }
 
   function readSettingsFromPanel(root, fallback) {

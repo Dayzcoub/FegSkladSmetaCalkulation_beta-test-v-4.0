@@ -34,6 +34,10 @@
       workspaceId: data.workspaceId || data.workspace || 'MAIN',
       workspaceName: data.workspaceName || data.workspaceId || data.workspace || 'MAIN',
       status: data.status || 'active',
+      projectAccess: Array.isArray(data.projectAccess) ? data.projectAccess : [],
+      permissionsAdd: Array.isArray(data.permissionsAdd) ? data.permissionsAdd : [],
+      permissionsRemove: Array.isArray(data.permissionsRemove) ? data.permissionsRemove : [],
+      passwordResetRequired: Boolean(data.passwordResetRequired),
       provider: provider || 'local',
       isDemo: false,
       signedInAt: new Date().toISOString()
@@ -66,10 +70,28 @@
     return profiles.find(profile => normalizeEmail(profile.email) === normalized) || null;
   }
 
-  function signInProfile(email, storage) {
+  function hasActiveProjectAccess(profile) {
+    if (!profile || profile.role !== 'invited_specialist') return true;
+    const rows = Array.isArray(profile.projectAccess) ? profile.projectAccess : [];
+    const now = new Date();
+    return rows.some(row => {
+      if (!row || row.status === 'disabled' || row.status === 'revoked') return false;
+      const from = row.validFrom ? new Date(`${String(row.validFrom).slice(0, 10)}T00:00:00`) : null;
+      const until = row.keyType === 'permanent' ? null : (row.validUntil ? new Date(`${String(row.validUntil).slice(0, 10)}T23:59:59`) : null);
+      if (from && from.getTime() > now.getTime()) return false;
+      if (until && until.getTime() < now.getTime()) return false;
+      return Boolean(row.projectId || row.projectName || row.inviteKey);
+    });
+  }
+
+  function signInProfile(email, password, storage) {
+    if (password && typeof password !== 'string') { storage = password; password = ''; }
     const profile = findProfileByEmail(email, storage);
     if (!profile) return { ok: false, reason: 'profile_not_found', user: null };
+    if (profile.passwordHash && ROOT.AdminShell && ROOT.AdminShell.verifyPassword && !ROOT.AdminShell.verifyPassword(password, profile.passwordHash)) return { ok: false, reason: 'invalid_password', user: null, profile };
+    if (profile.passwordResetRequired && profile.passwordHash && !String(password || '').trim()) return { ok: false, reason: 'password_required', user: null, profile };
     if (profile.status && profile.status !== 'active') return { ok: false, reason: 'profile_not_active', user: null, profile };
+    if (!hasActiveProjectAccess(profile)) return { ok: false, reason: 'project_access_expired', user: null, profile };
     const user = saveCurrentUser(profile, storage);
     return { ok: true, reason: 'signed_in', user, profile };
   }
@@ -86,6 +108,7 @@
       email,
       displayName: payload.displayName,
       companyName: payload.companyName || '',
+      password: payload.password || '',
       status: 'active'
     }, storage);
     if (!result || !result.ok) return { ok: false, reason: result && result.reason || 'invite_failed', user: null, invite: result && result.invite };
@@ -101,6 +124,19 @@
     if (!result || !result.ok) return { ok: false, reason: result && result.reason || 'bootstrap_failed', user: null, profile: result && result.profile };
     const user = saveCurrentUser(result.profile, opts.storage);
     return { ok: true, reason: 'first_admin_created', user, profile: result.profile };
+  }
+
+  function requestPasswordReset(email, storage) {
+    const admin = ROOT.AdminShell || {};
+    if (!admin.requestPasswordReset) return { ok: false, reason: 'admin_shell_missing', profile: null };
+    return admin.requestPasswordReset(email, storage);
+  }
+
+  function completePasswordReset(data, storage) {
+    const admin = ROOT.AdminShell || {};
+    if (!admin.completePasswordReset) return { ok: false, reason: 'admin_shell_missing', profile: null };
+    const payload = data || {};
+    return admin.completePasswordReset(payload.email, payload.resetToken || payload.token, payload.password || payload.newPassword, storage);
   }
 
   function exportAuthSnapshot(storage) {
@@ -120,7 +156,10 @@
     saveCurrentUser,
     signOut,
     findProfileByEmail,
+    hasActiveProjectAccess,
     signInProfile,
+    requestPasswordReset,
+    completePasswordReset,
     registerWithInvite,
     createFirstAdmin,
     exportAuthSnapshot

@@ -71,6 +71,39 @@
     return JSON.parse(JSON.stringify(value == null ? null : value));
   }
 
+  function hydrateQuoteForProject(quote, source, options) {
+    const opts = options || {};
+    if (!opts.forceRebuild && !opts.rebuildMissing && !opts.rebuildMissingBom && !opts.forceHydrateBom) {
+      return quoteModel().createQuoteDraft(quote || {});
+    }
+    if (ROOT.V4QuoteDraftHydrator && ROOT.V4QuoteDraftHydrator.hydrateDraft) {
+      try {
+        return ROOT.V4QuoteDraftHydrator.hydrateDraft(quote, Object.assign({ source: source || 'quote-project-storage', rebuildMissing: opts.rebuildMissing === true || opts.rebuildMissingBom === true }, opts));
+      } catch (err) {
+        try { if (console && console.warn) console.warn('[FEG] V4 project BOM hydrate skipped', err); } catch (_) {}
+      }
+    }
+    return quoteModel().createQuoteDraft(quote || {});
+  }
+
+  function summarizeProjectBom(quote) {
+    if (ROOT.V4QuoteDraftHydrator && ROOT.V4QuoteDraftHydrator.summarizeMount) {
+      return ROOT.V4QuoteDraftHydrator.summarizeMount(quote && quote.v4Bom);
+    }
+    const mount = quote && quote.v4Bom || {};
+    const counts = mount.rowCounts || {};
+    const totals = mount.totals || {};
+    return {
+      version: toText(mount.version || ''),
+      sharedBom: Math.max(0, Number(counts.sharedBom || 0)),
+      quoteItems: Math.max(0, Number(counts.quoteItems || 0)),
+      warehouse: Math.max(0, Number(counts.warehouse || 0)),
+      weightKg: Math.max(0, Number(totals.weightKg || 0)),
+      powerW: Math.max(0, Number(totals.powerW || 0)),
+      ok: mount.checks ? Boolean(mount.checks.ok) : false
+    };
+  }
+
   function getActorSnapshot() {
     try {
       const provider = ROOT.AuthProvider || ROOT.DemoAuthProvider;
@@ -101,8 +134,9 @@
   function normalizeProjectRecord(input) {
     const src = input || {};
     const model = quoteModel();
-    const quote = model.createQuoteDraft(src.quote || src);
+    const quote = hydrateQuoteForProject(model.createQuoteDraft(src.quote || src), 'quote-project-storage-normalize', { rebuildMissing:false });
     const summary = model.summarizeQuote(quote);
+    const v4BomSummary = summarizeProjectBom(quote);
     const projectId = toText(src.projectId || src.id) || makeProjectId();
     const savedAt = toText(src.savedAt) || new Date().toISOString();
     return {
@@ -125,11 +159,70 @@
       totals: clone(summary.totals || quote.totals || {}),
       validation: model.validateQuote ? clone(model.validateQuote(quote)) : { ok: true, errors: [] },
       syncStatus: toText(src.syncStatus || quote.syncStatus || src.backendSync && src.backendSync.status || quote.backendSync && quote.backendSync.status) || 'local_only',
+      v4BomSummary: clone(v4BomSummary),
+      v4BomReady: Boolean(v4BomSummary && v4BomSummary.sharedBom > 0),
       backendSync: clone(src.backendSync || quote.backendSync || {}),
       quote,
       createdAt: toText(src.createdAt) || quote.createdAt || savedAt,
       updatedAt: new Date().toISOString(),
       savedAt
+    };
+  }
+
+
+  function getQuoteSource(input) {
+    const src = input || {};
+    return src.quote && typeof src.quote === 'object' ? src.quote : src;
+  }
+
+  function getRawProjectKey(row) {
+    const ids = rawProjectIds(row);
+    return ids.projectId || ids.quoteId || '';
+  }
+
+  function createProjectIndexRecord(input) {
+    const src = input || {};
+    const quote = getQuoteSource(src) || {};
+    const client = quote.client || src.client || {};
+    const project = quote.project || src.project || {};
+    const venue = quote.venue || src.venue || {};
+    const projectId = toText(src.projectId || src.id || quote.projectId || quote.project_id || quote.id) || makeProjectId();
+    const quoteId = toText(src.quoteId || quote.id || src.id || '');
+    const totals = src.totals || quote.totals || {};
+    const v4BomSummary = src.v4BomSummary || summarizeProjectBom(quote);
+    const backendSync = src.backendSync || quote.backendSync || {};
+    const validation = src.validation || quote.validation || { ok: true, errors: [] };
+    const history = Array.isArray(quote.history) ? quote.history.slice(-8) : [];
+    const savedAt = toText(src.savedAt || quote.savedAt || src.updatedAt || quote.updatedAt || src.createdAt || quote.createdAt) || new Date().toISOString();
+    const updatedAt = toText(src.updatedAt || quote.updatedAt || savedAt) || savedAt;
+    return {
+      type: 'feg-stage-pro-quote-project-index',
+      storageVersion: PROJECT_STORAGE_VERSION,
+      projectId,
+      quoteId,
+      workspaceId: toText(src.workspaceId || quote.workspaceId),
+      ownerId: toText(src.ownerId || quote.ownerId),
+      status: toText(src.status || quote.status) || 'draft',
+      clientId: toText(src.clientId || client.id || client.clientId),
+      clientEmail: toText(src.clientEmail || client.email),
+      clientPhone: toText(src.clientPhone || client.phone || client.contactPhone),
+      clientName: toText(src.clientName || client.name || client.company) || 'клиент не указан',
+      projectName: toText(src.projectName || project.name) || 'Без названия',
+      venueName: toText(src.venueName || venue.name),
+      venueAddress: toText(src.venueAddress || venue.address),
+      eventDate: toText(src.eventDate || venue.date),
+      scope: clone(src.scope || quote.scope || {}),
+      totals: clone(totals || {}),
+      validation: clone(validation || { ok: true, errors: [] }),
+      syncStatus: toText(src.syncStatus || quote.syncStatus || backendSync.status) || 'local_only',
+      v4BomSummary: clone(v4BomSummary),
+      v4BomReady: Boolean(v4BomSummary && v4BomSummary.sharedBom > 0),
+      backendSync: clone(backendSync || {}),
+      quote: { id: quoteId, status: toText(src.status || quote.status) || 'draft', history },
+      createdAt: toText(src.createdAt || quote.createdAt || savedAt),
+      updatedAt,
+      savedAt,
+      indexOnly: true
     };
   }
 
@@ -148,32 +241,77 @@
     return normalized.slice();
   }
 
-  function listProjects(filters) {
+  function rawProjectIds(row) {
+    const src = row || {};
+    const quote = src.quote || src;
+    return {
+      projectId: toText(src.projectId || src.id),
+      quoteId: toText(src.quoteId || quote.id)
+    };
+  }
+
+  function sortAndDedupeProjects(list) {
+    const seen = new Set();
+    return (Array.isArray(list) ? list : [])
+      .filter(row => {
+        const ids = rawProjectIds(row);
+        const key = ids.projectId || ids.quoteId;
+        if (!key) return false;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .sort((a, b) => String(b && (b.updatedAt || b.savedAt) || '').localeCompare(String(a && (a.updatedAt || a.savedAt) || '')));
+  }
+
+  function applyProjectFilters(rows, filters) {
     const opts = filters || {};
-    let rows = normalizeList(readRawList());
-    if (opts.status) rows = rows.filter(row => row.status === opts.status);
+    let result = Array.isArray(rows) ? rows.slice() : [];
+    if (opts.status) result = result.filter(row => row.status === opts.status);
     if (opts.clientId) {
       const clientId = toText(opts.clientId).toLowerCase();
-      rows = rows.filter(row => [row.clientId, row.clientEmail, row.clientPhone, row.clientName].join(' ').toLowerCase().includes(clientId));
+      result = result.filter(row => [row.clientId, row.clientEmail, row.clientPhone, row.clientName].join(' ').toLowerCase().includes(clientId));
     }
     if (opts.query) {
       const q = toText(opts.query).toLowerCase();
-      rows = rows.filter(row => [row.clientId, row.clientEmail, row.clientPhone, row.clientName, row.projectName, row.venueName, row.venueAddress, row.eventDate]
+      result = result.filter(row => [row.clientId, row.clientEmail, row.clientPhone, row.clientName, row.projectName, row.venueName, row.venueAddress, row.eventDate]
         .join(' ')
         .toLowerCase()
         .includes(q));
     }
-    return rows;
+    return result;
+  }
+
+  function listProjectIndex(filters) {
+    const seen = new Set();
+    const rows = (Array.isArray(readRawList()) ? readRawList() : [])
+      .map(row => createProjectIndexRecord(row))
+      .filter(row => {
+        const key = row.projectId || row.quoteId;
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .sort((a, b) => String(b.updatedAt || b.savedAt || '').localeCompare(String(a.updatedAt || a.savedAt || '')));
+    return applyProjectFilters(rows, filters);
+  }
+
+  function listProjects(filters) {
+    return applyProjectFilters(normalizeList(readRawList()), filters);
   }
 
   function saveProject(input) {
-    const nextRecord = normalizeProjectRecord(input || {});
-    const rows = listProjects();
-    const index = rows.findIndex(row => row.projectId === nextRecord.projectId || row.quoteId === nextRecord.quoteId);
+    let nextRecord = normalizeProjectRecord(input || {});
+    const rows = readRawList();
+    const index = rows.findIndex(row => {
+      const ids = rawProjectIds(row);
+      return (nextRecord.projectId && ids.projectId === nextRecord.projectId) || (nextRecord.quoteId && ids.quoteId === nextRecord.quoteId);
+    });
     const isUpdate = index >= 0;
     if (isUpdate) {
-      nextRecord.projectId = rows[index].projectId;
-      nextRecord.createdAt = rows[index].createdAt;
+      const existing = createProjectIndexRecord(rows[index]);
+      nextRecord.projectId = existing.projectId;
+      nextRecord.createdAt = existing.createdAt;
     }
     nextRecord.quote = appendHistory(nextRecord.quote, makeHistoryEvent(isUpdate ? 'project_saved' : 'project_created', {
       projectId: nextRecord.projectId,
@@ -185,13 +323,13 @@
     const normalizedRecord = normalizeProjectRecord(nextRecord);
     if (isUpdate) rows[index] = normalizedRecord;
     else rows.unshift(normalizedRecord);
-    writeRawList(normalizeList(rows));
+    writeRawList(sortAndDedupeProjects(rows));
     setActiveProjectId(normalizedRecord.projectId);
     return normalizedRecord;
   }
 
   function saveQuoteAsProject(quote) {
-    return saveProject({ quote: quoteModel().createQuoteDraft(quote || {}) });
+    return saveProject({ quote: hydrateQuoteForProject(quoteModel().createQuoteDraft(quote || {}), 'quote-project-storage-save', { rebuildMissing:false }) });
   }
 
   function saveActiveDraftAsProject() {
@@ -203,23 +341,33 @@
 
   function loadProject(projectId) {
     const id = toText(projectId);
-    return listProjects().find(row => row.projectId === id || row.quoteId === id) || null;
+    const row = readRawList().find(item => {
+      const ids = rawProjectIds(item);
+      return ids.projectId === id || ids.quoteId === id;
+    });
+    return row ? normalizeProjectRecord(row) : null;
   }
 
   function deleteProject(projectId) {
     const id = toText(projectId);
-    const rows = listProjects().filter(row => row.projectId !== id && row.quoteId !== id);
+    const rows = readRawList().filter(row => {
+      const ids = rawProjectIds(row);
+      return ids.projectId !== id && ids.quoteId !== id;
+    });
     writeRawList(rows);
-    if (getActiveProjectId() === id) setActiveProjectId(rows[0] ? rows[0].projectId : '');
-    return rows;
+    if (getActiveProjectId() === id) {
+      const next = rows[0] ? createProjectIndexRecord(rows[0]) : null;
+      setActiveProjectId(next ? next.projectId : '');
+    }
+    return listProjectIndex();
   }
 
   function restoreProjectToDraft(projectId) {
     const record = loadProject(projectId);
     if (!record) throw new Error('Проект сметы не найден.');
-    const quote = quoteModel().createQuoteDraft(record.quote);
+    const quote = hydrateQuoteForProject(quoteModel().createQuoteDraft(record.quote), 'quote-project-storage-restore', { rebuildMissing:false });
     const storage = draftStorage();
-    if (storage && storage.saveDraft) storage.saveDraft(quote);
+    if (storage && storage.saveDraft) storage.saveDraft(quote, { source:'quote-project-storage-restore' });
     setActiveProjectId(record.projectId);
     return quote;
   }
@@ -227,23 +375,26 @@
   function duplicateProject(projectId) {
     const record = loadProject(projectId);
     if (!record) throw new Error('Проект сметы не найден.');
-    const quote = quoteModel().createQuoteDraft({
+    const quote = hydrateQuoteForProject(quoteModel().createQuoteDraft({
       ...record.quote,
       id: '',
       status: 'draft',
       project: { ...(record.quote.project || {}), name: `${record.projectName || 'Проект'} — копия` },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-    });
+    }), 'quote-project-storage-duplicate', { forceRebuild: false, rebuildMissing:false });
     return saveProject({ quote, projectId: makeProjectId() });
   }
 
   function updateProjectStatus(projectId, status, note) {
     const id = toText(projectId);
-    const rows = listProjects();
-    const index = rows.findIndex(row => row.projectId === id || row.quoteId === id);
+    const rows = readRawList().slice();
+    const index = rows.findIndex(row => {
+      const ids = rawProjectIds(row);
+      return ids.projectId === id || ids.quoteId === id;
+    });
     if (index < 0) throw new Error('Проект сметы не найден.');
-    const record = rows[index];
+    const record = normalizeProjectRecord(rows[index]);
     const previousStatus = record.status || record.quote && record.quote.status || 'draft';
     const normalized = quoteModel().createQuoteDraft({ status }).status;
     let quote = quoteModel().mergeQuotePatch(record.quote, { status: normalized });
@@ -259,21 +410,24 @@
       savedAt: new Date().toISOString()
     }));
     rows[index] = next;
-    writeRawList(normalizeList(rows));
+    writeRawList(sortAndDedupeProjects(rows));
     return next;
   }
 
   function updateProjectSyncMeta(projectId, patch) {
     const id = toText(projectId);
-    const rows = listProjects();
-    const index = rows.findIndex(row => row.projectId === id || row.quoteId === id);
+    const rows = readRawList().slice();
+    const index = rows.findIndex(row => {
+      const ids = rawProjectIds(row);
+      return ids.projectId === id || ids.quoteId === id;
+    });
     if (index < 0) throw new Error('Проект сметы не найден.');
-    const record = rows[index];
+    const record = normalizeProjectRecord(rows[index]);
     const meta = Object.assign({}, record.backendSync || record.quote && record.quote.backendSync || {}, patch || {}, { updatedAt: new Date().toISOString() });
-    const quote = quoteModel().createQuoteDraft(Object.assign({}, record.quote || {}, {
+    const quote = hydrateQuoteForProject(quoteModel().createQuoteDraft(Object.assign({}, record.quote || {}, {
       syncStatus: toText(meta.status || record.syncStatus || 'local_only'),
       backendSync: clone(meta)
-    }));
+    })), 'quote-project-storage-sync-meta', { rebuildMissing:false });
     const next = normalizeProjectRecord(Object.assign({}, record, {
       syncStatus: toText(meta.status || record.syncStatus || 'local_only'),
       backendSync: clone(meta),
@@ -281,7 +435,7 @@
       updatedAt: new Date().toISOString()
     }));
     rows[index] = next;
-    writeRawList(normalizeList(rows));
+    writeRawList(sortAndDedupeProjects(rows));
     return next;
   }
 
@@ -293,7 +447,7 @@
   }
 
   function getStatusCounts() {
-    return listProjects().reduce((acc, row) => {
+    return listProjectIndex().reduce((acc, row) => {
       acc[row.status] = (acc[row.status] || 0) + 1;
       acc.total += 1;
       return acc;
@@ -327,6 +481,10 @@
     ACTIVE_PROJECT_KEY,
     PROJECT_STORAGE_VERSION,
     normalizeProjectRecord,
+    hydrateQuoteForProject,
+    summarizeProjectBom,
+    createProjectIndexRecord,
+    listProjectIndex,
     listProjects,
     saveProject,
     saveQuoteAsProject,

@@ -4,10 +4,11 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const QUICK_TECH_VERSION = '1.0.0';
+  const QUICK_TECH_VERSION = '1.0.3-v4-led-freeform-report';
   const SECTION_TITLES = Object.freeze({
     stage: 'Сцена',
-    truss: 'Фермы'
+    truss: 'Фермы',
+    led: 'LED экран'
   });
 
   function nowIso() { return new Date().toISOString(); }
@@ -26,6 +27,16 @@
   function clone(value) { try { return JSON.parse(JSON.stringify(value == null ? null : value)); } catch (_) { return value; } }
 
   function normalizeBomRow(row, sectionKey, sectionTitle) {
+    if (ROOT.V4SharedBomBridge && ROOT.V4SharedBomBridge.normalizeBomRow) {
+      const normalized = ROOT.V4SharedBomBridge.normalizeBomRow(row || {}, { sectionKey, section:{ title:sectionTitle } });
+      return Object.assign({}, normalized, {
+        sectionKey,
+        sectionTitle,
+        weightKg: nonNegative(normalized.weightKg == null ? normalized.weight_kg : normalized.weightKg, 0),
+        powerW: nonNegative(normalized.powerW == null ? normalized.power_w : normalized.powerW, 0),
+        note: toText(normalized.note || normalized.notes)
+      });
+    }
     const src = row || {};
     const qty = nonNegative(src.qty == null ? src.count : src.qty, 0);
     const unitWeight = src.unitWeightKg == null ? null : nonNegative(src.unitWeightKg, 0);
@@ -53,21 +64,37 @@
   }
 
   function getStageSectionFromLive() {
-    const bridge = ROOT.QuoteLegacyBridge;
-    if (!bridge || typeof bridge.buildStageSectionFromLegacy !== 'function') return null;
-    try { return bridge.buildStageSectionFromLegacy({ rental: 0, sectionTotal: 0, install: 0 }); }
-    catch (_) { return null; }
+    return null;
   }
 
   function getTrussSectionFromLive() {
-    const bridge = ROOT.QuoteLegacyBridge;
-    if (!bridge || typeof bridge.buildTrussSectionFromLegacy !== 'function') return null;
-    try { return bridge.buildTrussSectionFromLegacy({ rental: 0, sectionTotal: 0, install: 0 }); }
-    catch (_) { return null; }
+    return null;
   }
 
   function getLiveSection(sectionKey) {
-    return sectionKey === 'truss' ? getTrussSectionFromLive() : getStageSectionFromLive();
+    if (sectionKey === 'truss') return getTrussSectionFromLive();
+    if (sectionKey === 'stage') return getStageSectionFromLive();
+    return null;
+  }
+
+  function getLedConstructionRows(section) {
+    const list = section && Array.isArray(section.constructions) ? section.constructions : (section && section.result && Array.isArray(section.result.constructions) ? section.result.constructions : []);
+    return list.map((part, index) => ({
+      n: index + 1,
+      name: toText(part.name, `LED конструкция ${index + 1}`),
+      type: toText(part.type, ''),
+      columns: nonNegative(part.columns, 0),
+      rows: nonNegative(part.rows, 0),
+      cabinetCount: nonNegative(part.cabinetCount, 0),
+      actualWidthM: nonNegative(part.actualWidthM, 0),
+      actualHeightM: nonNegative(part.actualHeightM, 0),
+      totalPixelsX: nonNegative(part.totalPixelsX, 0),
+      totalPixelsY: nonNegative(part.totalPixelsY, 0),
+      activePixels: nonNegative(part.activePixels, part.totalPixels || 0),
+      pixelDensityX: nonNegative(part.pixelDensityX, 0),
+      pixelDensityY: nonNegative(part.pixelDensityY, 0),
+      note: toText(part.note, '')
+    }));
   }
 
   function buildSectionTechnicalSheet(sectionKey, sectionInput, options) {
@@ -86,7 +113,7 @@
       status: section ? (section.status || 'configured') : 'empty',
       summary: section ? toText(section.summary, 'Расчёт без описания') : `Нет текущего расчёта: сначала соберите ${title.toLowerCase()} в калькуляторе.`,
       hasPrices: false,
-      source: section ? toText(section.source || section.bridgeVersion || 'quote-section') : 'empty',
+      source: section ? toText(section.source || section.bridgeVersion || section.bomBridge && section.bomBridge.bridgeVersion || 'quote-section') : 'empty',
       totals: {
         rows: bomRows.length,
         qty: bomRows.reduce((sum, row) => sum + nonNegative(row.qty, 0), 0),
@@ -99,6 +126,7 @@
         `${title}: быстрый техлист без клиентов, цен и КП.`,
         'Расчётные количества взяты из текущего результата без изменения формул.'
       ],
+      constructionRows: key === 'led' ? getLedConstructionRows(section) : [],
       rawSection: options && options.includeRaw ? clone(section) : undefined
     };
   }
@@ -123,6 +151,7 @@
         note: row.note
       })),
       totals: tech.totals,
+      constructionRows: tech.constructionRows || [],
       generatedAt: tech.generatedAt,
       notes: [
         `${SECTION_TITLES[tech.sectionKey] || tech.sectionKey}: складской лист для сборки без цен.`,
@@ -148,6 +177,7 @@
     lines.push('');
     if (String(d.type || '').includes('warehouse')) appendWarehouseRows(lines, d);
     else appendTechnicalRows(lines, d);
+    appendConstructionRows(lines, d);
     if (Array.isArray(d.notes) && d.notes.length) {
       lines.push('');
       d.notes.forEach(note => lines.push(`Примечание: ${note}`));
@@ -155,6 +185,16 @@
     lines.push('');
     lines.push(`Сформировано: ${d.generatedAt || nowIso()}`);
     return lines.join('\n');
+  }
+
+  function appendConstructionRows(lines, doc) {
+    const rows = Array.isArray(doc && doc.constructionRows) ? doc.constructionRows : [];
+    if (!rows.length) return;
+    lines.push('');
+    lines.push('Отдельные LED-конструкции:');
+    rows.forEach(row => {
+      lines.push(`${row.n}. ${row.name || 'LED конструкция'} — ${count(row.columns)}×${count(row.rows)} каб., активных ${count(row.cabinetCount)} шт; ${Number(row.actualWidthM || 0).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}×${Number(row.actualHeightM || 0).toLocaleString('ru-RU', { maximumFractionDigits: 2 })} м; ${count(row.totalPixelsX)}×${count(row.totalPixelsY)} px; ${count(row.pixelDensityX)}×${count(row.pixelDensityY)} px/м${row.note ? ` (${row.note})` : ''}`);
+    });
   }
 
   function appendTechnicalRows(lines, doc) {

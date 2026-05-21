@@ -4,7 +4,7 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const DOCUMENT_BUILDER_VERSION = '1.4.0';
+  const DOCUMENT_BUILDER_VERSION = '1.4.1-project-crew-summary';
 
   function model() { return ROOT.QuoteModel || null; }
   function summaryBuilder() { return ROOT.QuoteSummaryBuilder || null; }
@@ -77,7 +77,8 @@
       transport: nonNegative(summary.totals && summary.totals.transport, 0),
       total: nonNegative(summary.totals && summary.totals.total, 0)
     };
-    doc.notes.push('КП скрывает складские детали и показывает только клиентские разделы, транспорт и итоговую стоимость.');
+    doc.crewRows = summary.crewRows || [];
+    doc.notes.push('КП скрывает складские детали и показывает клиентские разделы, работы команды, транспорт и итоговую стоимость.');
     return doc;
   }
 
@@ -92,6 +93,7 @@
       weightKg: nonNegative(row.weightKg, 0),
       powerW: nonNegative(row.powerW, 0),
       startupPowerW: nonNegative(row.startupPowerW, 0),
+      stageHeightM: nonNegative(row.stageHeightM, 0),
       bomCount: nonNegative(row.bomCount, 0)
     }));
     doc.totals = {
@@ -101,7 +103,24 @@
       deficitCount: Array.isArray(summary.warnings) ? summary.warnings.filter(row => row.type === 'deficit').length : 0
     };
     doc.transport = summary.transport || q.transport || {};
-    doc.notes.push('Техлист без цен: состав разделов, общий вес, рабочая и пусковая мощность.');
+    doc.crewRows = (summary.crewRows || []).map((row, index) => ({
+      n: index + 1,
+      role: toText(row.role),
+      name: toText(row.name),
+      email: toText(row.email),
+      payMode: toText(row.payMode),
+      hours: nonNegative(row.hours, 0),
+      totalCost: nonNegative(row.totalCost, 0),
+      isGuest: Boolean(row.isGuest),
+      keyType: toText(row.keyType),
+      accessFrom: toText(row.accessFrom),
+      accessTo: toText(row.accessTo),
+      inviteKey: toText(row.inviteKey),
+      note: toText(row.note)
+    }));
+    doc.totals.crewCount = doc.crewRows.length;
+    doc.totals.crewCost = doc.crewRows.reduce((sum, row) => sum + nonNegative(row.totalCost, 0), 0);
+    doc.notes.push('Техлист без клиентских цен оборудования: состав разделов, общий вес, мощность и назначенная команда проекта.');
     return doc;
   }
 
@@ -349,13 +368,24 @@
   function appendTechnicalRows(lines, doc) {
     lines.push('Технические параметры:');
     (doc.rows || []).forEach(row => {
-      lines.push(`- ${row.section}: ${row.summary || row.status}; вес ${weight(row.weightKg)}, мощность ${power(row.powerW)}, пуск ${power(row.startupPowerW)}, BOM ${count(row.bomCount)} поз.`);
+      const height = row.stageHeightM ? `, высота ${row.stageHeightM.toLocaleString('ru-RU', { maximumFractionDigits: 2 })} м` : '';
+      lines.push(`- ${row.section}: ${row.summary || row.status}${height}; вес ${weight(row.weightKg)}, мощность ${power(row.powerW)}, пуск ${power(row.startupPowerW)}, BOM ${count(row.bomCount)} поз.`);
     });
     lines.push('');
     lines.push(`Общий вес: ${weight(doc.totals && doc.totals.weightKg)}`);
     lines.push(`Рабочая мощность: ${power(doc.totals && doc.totals.powerW)}`);
     lines.push(`Пусковая мощность: ${power(doc.totals && doc.totals.startupPowerW)}`);
     lines.push(`Дефицитные позиции: ${count(doc.totals && doc.totals.deficitCount)}`);
+    if (doc.crewRows && doc.crewRows.length) {
+      lines.push('');
+      lines.push('Команда проекта:');
+      doc.crewRows.forEach(row => {
+        const access = row.isGuest ? `; доступ ${row.keyType === 'permanent' ? 'постоянный' : [row.accessFrom, row.accessTo].filter(Boolean).join('–') || 'не указан'}` : '';
+        const pay = row.payMode === 'hourly' ? `; ${count(row.hours, 1)} ч` : '';
+        lines.push(`- ${row.role || 'Роль'} — ${row.name || row.email || 'участник'}${pay}${access}${row.note ? ` (${row.note})` : ''}`);
+      });
+      lines.push(`Работ команды: ${count(doc.totals && doc.totals.crewCount)} чел.`);
+    }
   }
 
   function appendWarehouseRows(lines, doc) {

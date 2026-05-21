@@ -190,6 +190,7 @@
         const modules = Array.isArray(source.modules) ? source.modules : [];
         const moduleWidthM = Number(source.moduleWidthM) || MODULE_WIDTH_M;
         const moduleDepthM = Number(source.moduleDepthM) || MODULE_DEPTH_M;
+        const stageHeightM = Math.max(0, Number(source.stageHeightM || source.heightM || source.stageHeight || 0));
         const price = Number(source.price);
         const installCost = Math.max(0, Number(source.installCost) || 0);
         const transportCost = Math.max(0, Number(source.transportCost) || 0);
@@ -208,6 +209,8 @@
             widthMeters: bounds.width * moduleWidthM,
             depthMeters: bounds.depth * moduleDepthM,
             areaMeters: geometry.sheets * moduleWidthM * moduleDepthM,
+            stageHeightM,
+            heightM: stageHeightM,
             shapeText: buildShapeText(modules)
         };
     }
