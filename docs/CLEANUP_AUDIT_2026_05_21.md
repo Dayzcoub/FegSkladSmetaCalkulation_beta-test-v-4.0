@@ -30,6 +30,18 @@ Current architecture and local workflow were implicit in code and old notes.
 
 Action: added `ARCHITECTURE.md`, `DEVELOPMENT.md` and `DOCUMENTATION_POLICY.md`.
 
+### Durable rules from old V4 notes
+
+Old V4 release notes contain many repeated one-off task descriptions, but they also preserve real project rules.
+
+Action: added active rule documents:
+
+- `UI_SYSTEM.md` for UI, layout, theme and technical canvas rules.
+- `CONSTRUCTORS.md` for Stage, Truss and LED constructor rules.
+- `BACKEND_CONTRACT.md` for backend, sync, auth and controlled-write rules.
+
+This makes the next cleanup step safer: old release notes can be reviewed against active docs instead of being kept only because they may contain hidden decisions.
+
 ### Production demo/test data
 
 `index.html` loaded `src/modules/TestFixtures.js` directly before auth modules. `TestFixtures.js` contains demo users, invite keys and a large fixture catalog. Demo auth itself has an environment guard, but the fixture payload was still loaded by the production entry.
@@ -47,9 +59,9 @@ Action: added `.gitignore` for dependencies, build output, logs, local env files
 1. Review all `docs/V4_*` files and decide which are durable docs, which should be archived and which can be removed.
 2. Search indexed repository after GitHub code search is available; remove stale TODO/task comments from source files in focused batches.
 3. Add or update a release checklist if packaging continues from GitHub instead of local zip handoff.
-4. Consider a dedicated `docs/UI_SYSTEM.md` for current UI rules and anti-hack constraints.
-5. Consider a dedicated `docs/BACKEND_CONTRACT.md` for Supabase tables, sync queues and controlled write rules.
-6. Consider a dedicated `docs/SECURITY.md` for demo auth, production fixtures, invite keys, RLS, PWA cache and secrets.
+4. Consider a dedicated `docs/SECURITY.md` for demo auth, production fixtures, invite keys, RLS, PWA cache and secrets.
+5. Consider a dedicated `docs/RELEASE.md` for version bump, cache bump, build, PR and packaging procedure.
+6. Consider a dedicated changelog compaction pass because `CHANGELOG.md` contains repeated `# Changelog` sections from previous archive merges.
 
 ## Non-goals for this pass
 
