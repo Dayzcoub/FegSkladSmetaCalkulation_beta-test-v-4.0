@@ -7,7 +7,10 @@ This folder contains active project documentation and archived historical notes.
 - `ARCHITECTURE.md` — current runtime structure and module ownership.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
 - `DOCUMENTATION_POLICY.md` — what belongs in docs, changelog and code comments.
-- `CLEANUP_AUDIT_2026_05_21.md` — first cleanup pass notes and follow-up queue.
+- `UI_SYSTEM.md` — durable UI rules and technical canvas constraints.
+- `CONSTRUCTORS.md` — durable Stage, Truss and LED constructor rules.
+- `BACKEND_CONTRACT.md` — backend, sync, auth and controlled-write rules.
+- `CLEANUP_AUDIT_2026_05_21.md` — cleanup pass notes and follow-up queue.
 
 ## Historical notes
 
