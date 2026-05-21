@@ -1,0 +1,154 @@
+/* =============================================================================
+   FEG Stage PRO — Modals & Dialogs
+   .modal-backdrop, .v4-quick-modal, .pdf-modal, dialog
+   ============================================================================= */
+
+/* --- Backdrop --- */
+body.v4-only-body .modal-backdrop,
+body.v4-only-body .v4-quick-modal-backdrop,
+body.v4-only-body .v4-equipment-editor-backdrop {
+  background: rgba(0, 0, 0, 0.74);
+  backdrop-filter: none;
+  padding: 16px;
+}
+
+body.v4-only-body dialog::backdrop,
+body.v4-only-body .v4-truss-load-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.74);
+  backdrop-filter: none;
+}
+
+/* --- Модальные окна --- */
+body.v4-only-body .v4-equipment-editor,
+body.v4-only-body .modal,
+body.v4-only-body .dialog,
+body.v4-only-body .v4-modal,
+body.v4-only-body .v4-quick-modal,
+body.v4-only-body .pdf-modal,
+body.v4-only-body .weights-modal,
+body.v4-only-body .v4-truss-load-dialog,
+body.v4-only-body .v4-equipment-editor {
+  background: #101112;
+  border: 1px solid #2a2b30;
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.54);
+}
+
+/* --- Размер модалок --- */
+body.v4-only-body .v4-quick-modal,
+body.v4-only-body .pdf-modal,
+body.v4-only-body .weights-modal,
+body.v4-only-body .v4-truss-load-dialog,
+body.v4-only-body .v4-equipment-editor {
+  width: min(1120px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+}
+
+/* --- Скроллируемые тела модалок --- */
+body.v4-only-body .v4-quick-modal-body,
+body.v4-only-body .weights-modal-body,
+body.v4-only-body .v4-equipment-editor-body,
+body.v4-only-body .v4-truss-load-dialog-card {
+  overflow: auto;
+}
+
+/* --- v4-modal (generic full-screen modal) --- */
+body.v4-only-body .v4-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+body.v4-only-body .v4-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(3px);
+}
+
+body.v4-only-body .v4-modal__panel {
+  position: relative;
+  width: min(760px, 100%);
+  max-height: 92vh;
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* --- Quote client dialog --- */
+body.v4-only-body .v4-quote-client-dialog {
+  border: 0;
+  border-radius: 18px;
+  padding: 0;
+  background: transparent;
+  max-width: min(720px, calc(100vw - 24px));
+}
+
+body.v4-only-body .v4-quote-client-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(8px);
+}
+
+body.v4-only-body .v4-quote-client-modal-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  min-width: min(680px, calc(100vw - 24px));
+}
+
+/* --- Equipment editor backdrop --- */
+body.v4-only-body .v4-equipment-editor-backdrop {
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: none;
+}
+
+/* --- Light theme: модалки --- */
+body.v4-only-body.theme-light .v4-quick-modal,
+body.v4-only-body.theme-light .pdf-modal,
+body.v4-only-body.theme-light .weights-modal,
+body.v4-only-body.theme-light .v4-truss-load-dialog,
+body.v4-only-body.theme-light .v4-equipment-editor {
+  background: #ffffff;
+  color: var(--text);
+  border-color: var(--line);
+  box-shadow: 0 22px 64px rgba(24, 34, 34, 0.18);
+}
+
+body.v4-only-body.theme-light .modal-backdrop,
+body.v4-only-body.theme-light .v4-quick-modal-backdrop,
+body.v4-only-body.theme-light .v4-equipment-editor-backdrop,
+body.v4-only-body.theme-light dialog::backdrop,
+body.v4-only-body.theme-light .v4-truss-load-dialog::backdrop {
+  background: rgba(19, 28, 28, 0.34);
+}
+
+/* --- Mobile: модалки --- */
+@media (max-width: 720px) {
+  body.v4-only-body .v4-quick-modal-backdrop,
+  body.v4-only-body .modal-backdrop,
+  body.v4-only-body .v4-equipment-editor-backdrop {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  body.v4-only-body .v4-quick-modal,
+  body.v4-only-body .pdf-modal,
+  body.v4-only-body .weights-modal,
+  body.v4-only-body .v4-equipment-editor {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  body.v4-only-body .v4-quote-client-modal-card {
+    min-width: 0;
+  }
+}

@@ -1,0 +1,144 @@
+/* =============================================================================
+   PACK.IT — Base
+   body, типографика, скроллбары, code, selection
+   ============================================================================= */
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.v4-only-body {
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 400;
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Шрифт для форм-элементов */
+body.v4-only-body input,
+body.v4-only-body select,
+body.v4-only-body textarea,
+body.v4-only-body button {
+  font-family: var(--font);
+}
+
+/* Убираем italic из UI */
+body.v4-only-body .packit-shell,
+body.v4-only-body .packit-shell *,
+body.v4-only-body .v4-quick-modal,
+body.v4-only-body .v4-quick-modal *,
+body.v4-only-body dialog,
+body.v4-only-body dialog * {
+  font-style: normal;
+}
+
+/* --- Заголовки --- */
+body.v4-only-body h1,
+body.v4-only-body h2,
+body.v4-only-body h3,
+body.v4-only-body h4,
+body.v4-only-body h5,
+body.v4-only-body h6 {
+  color: var(--text-heading);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+}
+
+body.v4-only-body h1 { font-size: 22px; letter-spacing: -0.02em; }
+body.v4-only-body h2 { font-size: 18px; letter-spacing: -0.01em; }
+body.v4-only-body h3 { font-size: 15px; }
+body.v4-only-body h4 { font-size: 13px; font-weight: 600; }
+
+/* --- Kicker / label --- */
+body.v4-only-body .v4-kicker,
+body.v4-only-body .pk-kicker {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --- Muted text --- */
+body.v4-only-body .v4-muted,
+body.v4-only-body .pk-muted {
+  color: var(--muted);
+}
+
+body.v4-only-body b,
+body.v4-only-body strong {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+/* --- Selection --- */
+body.v4-only-body ::selection {
+  background: rgba(59, 130, 246, 0.35);
+  color: #fff;
+}
+
+/* --- Scrollbars --- */
+body.v4-only-body * {
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+  scrollbar-width: thin;
+}
+
+body.v4-only-body ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+body.v4-only-body ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body.v4-only-body ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+
+body.v4-only-body ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* --- Code / pre --- */
+body.v4-only-body pre,
+body.v4-only-body code,
+body.v4-only-body textarea[readonly] {
+  font-family: var(--font-mono);
+  background: #090d13;
+  border: 1px solid var(--line);
+  color: #94a3b8;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+}
+
+/* --- Details/summary --- */
+body.v4-only-body details summary {
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* --- checkbox / radio --- */
+body.v4-only-body input[type="checkbox"],
+body.v4-only-body input[type="radio"] {
+  accent-color: var(--blue);
+}
+
+/* --- PDF context reset --- */
+body.v4-only-body .client-pdf,
+body.v4-only-body .tech-pdf,
+body.v4-only-body #pdfContent,
+body.v4-only-body #pdfContent * {
+  font-size: initial;
+  line-height: initial;
+  box-shadow: initial;
+}

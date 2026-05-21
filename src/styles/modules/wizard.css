@@ -1,0 +1,422 @@
+/* =============================================================================
+   PACK.IT — Quote Wizard
+   ============================================================================= */
+
+/* ─── Заголовок страницы ─────────────────────────────────────────────────────── */
+
+body.v4-only-body .v4-card:has([data-quote-form]) {
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+body.v4-only-body .v4-card-head:has(+ .v4-quote-layout) {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+body.v4-only-body .v4-card-head:has(+ .v4-quote-layout) h3 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ─── Корневой layout — строго колонка ───────────────────────────────────────── */
+
+body.v4-only-body .v4-quote-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+/* ─── Overview — шаги + KPI strip ───────────────────────────────────────────── */
+
+body.v4-only-body .v4-quote-overview {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100%;
+}
+
+body.v4-only-body .v4-quote-overview-main {
+  width: 100%;
+  min-width: 0;
+}
+
+body.v4-only-body .v4-quote-overview-side {
+  width: 100%;
+  position: static !important;
+}
+
+/* ─── ШАГИ — 10 равных таблеток ─────────────────────────────────────────────── */
+
+body.v4-only-body .v4-steps {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 4px;
+  width: 100%;
+}
+
+body.v4-only-body .v4-steps::-webkit-scrollbar { display: none; }
+
+body.v4-only-body .v4-steps li {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+body.v4-only-body .v4-steps li button {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 5px 7px;
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+body.v4-only-body .v4-steps li button:hover {
+  border-color: var(--line-medium);
+  background: var(--surface-elevated);
+}
+
+body.v4-only-body .v4-steps li button span {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1;
+}
+
+body.v4-only-body .v4-steps li button b {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 100%;
+}
+
+body.v4-only-body .v4-steps li button small {
+  font-size: 10px;
+  color: var(--muted-2);
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 100%;
+}
+
+/* Готово */
+body.v4-only-body .v4-steps li.v4-step-ok button { border-color: var(--success-border); }
+body.v4-only-body .v4-steps li.v4-step-ok button span { color: var(--success); }
+body.v4-only-body .v4-steps li.v4-step-ok button small { color: var(--success); }
+
+/* Активный */
+body.v4-only-body .v4-steps li.v4-step-active button {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+body.v4-only-body .v4-steps li.v4-step-active button span { color: var(--accent); }
+body.v4-only-body .v4-steps li.v4-step-active button b { color: var(--text-strong); }
+body.v4-only-body .v4-steps li.v4-step-active button small { color: var(--accent); }
+
+/* Ошибка */
+body.v4-only-body .v4-steps li.v4-step-error button { border-color: var(--danger-border); background: var(--danger-bg); }
+body.v4-only-body .v4-steps li.v4-step-error button span { color: var(--danger); }
+
+/* ─── KPI STRIP — горизонтальная полоса статусов ────────────────────────────── */
+
+body.v4-only-body .v4-quote-overview-side .v4-summary-grid--compact {
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--panel-2);
+  flex-direction: unset;
+  width: 100%;
+}
+
+body.v4-only-body .v4-quote-overview-side .v4-mini {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 2px;
+  padding: 10px 14px;
+  border-right: 1px solid var(--line-soft);
+  border-radius: 0 !important;
+  background: none !important;
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
+}
+
+body.v4-only-body .v4-quote-overview-side .v4-mini:last-child { border-right: none; }
+
+body.v4-only-body .v4-quote-overview-side .v4-mini b {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  display: block;
+}
+
+body.v4-only-body .v4-quote-overview-side .v4-mini span {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  display: block;
+}
+
+/* ─── Скрываем блок "Секции" (renderBoundSectionSummary) ────────────────────── */
+
+body.v4-only-body .v4-quote-layout > .v4-note { display: none !important; }
+
+/* ─── ФОРМА ШАГА — на всю ширину ────────────────────────────────────────────── */
+
+body.v4-only-body .v4-quote-form {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ─── Step check card ────────────────────────────────────────────────────────── */
+
+body.v4-only-body .v4-step-check-card {
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+body.v4-only-body .v4-step-check-card.v4-step-help {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+body.v4-only-body .v4-step-check-card.v4-step-error {
+  border-color: var(--danger-border);
+  background: var(--danger-bg);
+}
+
+body.v4-only-body .v4-step-check-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+body.v4-only-body .v4-step-check-meta span {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+body.v4-only-body .v4-step-check-meta b {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* ─── Field grids ────────────────────────────────────────────────────────────── */
+
+body.v4-only-body .v4-quote-form .v4-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+body.v4-only-body .v4-quote-form .v4-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* ─── BOTTOM NAV ─────────────────────────────────────────────────────────────── */
+
+body.v4-only-body .v4-wizard-nav {
+  display: flex;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+  width: 100%;
+}
+
+body.v4-only-body .v4-wizard-nav-group {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+body.v4-only-body .v4-wizard-nav [data-quote-next] {
+  height: 38px;
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+body.v4-only-body .v4-wizard-nav [data-quote-next]:hover {
+  background: #ea6c0a;
+}
+
+/* ─── Scope grid ─────────────────────────────────────────────────────────────── */
+
+body.v4-only-body .v4-scope-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+body.v4-only-body .v4-scope-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
+}
+
+body.v4-only-body .v4-scope-item:hover { border-color: var(--blue-line); color: var(--text); }
+body.v4-only-body .v4-scope-item.active { border-color: var(--accent-line); background: var(--accent-soft); color: var(--text-strong); }
+
+/* ─── BOM cards ──────────────────────────────────────────────────────────────── */
+
+body.v4-only-body .v4-bom-sections { display: flex; flex-direction: column; gap: 4px; }
+
+body.v4-only-body .v4-bom-source-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+}
+
+body.v4-only-body .v4-bom-source-card b { font-size: 13px; color: var(--text-strong); font-weight: 600; }
+body.v4-only-body .v4-bom-source-card span { color: var(--muted); }
+body.v4-only-body .v4-bom-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+body.v4-only-body .v4-bom-checks  { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ─── Doc action cards ───────────────────────────────────────────────────────── */
+
+body.v4-only-body .v4-doc-action-groups { display: flex; flex-direction: column; gap: 12px; }
+body.v4-only-body .v4-doc-action-group  { display: flex; flex-direction: column; gap: 6px; }
+body.v4-only-body .v4-doc-action-title  {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+}
+body.v4-only-body .v4-doc-action-group--primary .v4-doc-action-title { color: var(--accent); }
+
+body.v4-only-body .v4-doc-action-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.1s, background 0.1s;
+  font-size: 13px;
+}
+
+body.v4-only-body .v4-doc-action-card:hover { border-color: var(--line-medium); background: var(--surface-elevated); }
+body.v4-only-body .v4-doc-action-card b { font-weight: 600; color: var(--text-strong); }
+body.v4-only-body .v4-doc-action-card p { font-size: 11px; color: var(--muted); margin: 0; }
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  body.v4-only-body .v4-quote-overview-side .v4-summary-grid--compact {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  body.v4-only-body .v4-steps { overflow-x: auto; }
+  body.v4-only-body .v4-steps li { flex: 0 0 80px; }
+  body.v4-only-body .v4-quote-overview-side .v4-summary-grid--compact {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+
+/* ─── Step состояния с чеклистом ────────────────────────────────────────────── */
+
+body.v4-only-body .v4-steps li.v4-step-warn button {
+  border-color: var(--warning-border) !important;
+  background: var(--warning-bg) !important;
+}
+body.v4-only-body .v4-steps li.v4-step-warn button span { color: var(--warning) !important; }
+body.v4-only-body .v4-steps li.v4-step-warn button b { color: var(--warning-text) !important; }
+body.v4-only-body .v4-steps li.v4-step-warn button small {
+  color: var(--warning) !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+}
+
+body.v4-only-body .v4-steps li.v4-step-error button {
+  border-color: var(--danger-border) !important;
+  background: var(--danger-bg) !important;
+}
+body.v4-only-body .v4-steps li.v4-step-error button span { color: var(--danger) !important; }
+body.v4-only-body .v4-steps li.v4-step-error button b { color: var(--danger-text) !important; }
+body.v4-only-body .v4-steps li.v4-step-error button small {
+  color: var(--danger) !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+}
+
+body.v4-only-body .v4-steps li.v4-step-ok button small {
+  color: var(--success) !important;
+  font-weight: 700 !important;
+}

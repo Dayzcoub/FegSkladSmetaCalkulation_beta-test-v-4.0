@@ -1,0 +1,38 @@
+/* =============================================================================
+   PACK.IT — main.css  |  Единая точка входа
+   ============================================================================= */
+
+@import './tokens.css';
+@import './reset.css';
+@import './base.css';
+
+/* Shell */
+@import './components/shell.css';
+
+/* Базовые компоненты */
+@import './components/layout.css';
+@import './components/buttons-forms.css';
+@import './components/tables-status.css';
+@import './components/modals.css';
+
+/* Модули */
+@import './modules/configurators.css';
+
+/* Технический canvas — ПОСЛЕ configurators */
+@import './technical/canvas.css';
+
+/* Функциональные модули */
+@import './modules/quick.css';
+@import './modules/summary-kpi.css';
+@import './modules/auth.css';
+@import './modules/wizard.css';
+@import './modules/wizard-steps.css';
+@import './modules/projects-warehouse.css';
+@import './modules/admin.css';
+@import './modules/dashboard.css';
+@import './modules/equipment.css';
+@import './modules/quote.css';
+@import './modules/truss.css';
+@import './modules/sync.css';
+@import './modules/reports.css';
+@import './modules/misc.css';

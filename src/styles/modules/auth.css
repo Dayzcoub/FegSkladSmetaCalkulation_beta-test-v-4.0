@@ -1,0 +1,170 @@
+/* =============================================================================
+   PACK.IT — Auth / Login Screen
+   ============================================================================= */
+
+body.v4-only-body .packit-auth-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 24px;
+}
+
+body.v4-only-body .packit-auth-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-2xl);
+  padding: 28px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Kicker */
+body.v4-only-body .packit-auth-card .v4-kicker,
+body.v4-only-body .packit-auth-card .access-onboarding-kicker {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+  display: block;
+}
+
+body.v4-only-body .packit-auth-card h2,
+body.v4-only-body .packit-auth-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+body.v4-only-body .packit-auth-card p,
+body.v4-only-body .packit-auth-card .v4-muted {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+/* Primary auth buttons grid */
+body.v4-only-body .v4-auth-actions,
+body.v4-only-body .access-onboarding-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+body.v4-only-body .v4-auth-actions button,
+body.v4-only-body .access-onboarding-actions button {
+  height: 36px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--line-medium);
+  background: var(--surface);
+  color: var(--text);
+  transition: background 0.1s, border-color 0.1s;
+}
+
+body.v4-only-body .v4-auth-actions button:hover,
+body.v4-only-body .access-onboarding-actions button:hover {
+  background: var(--surface-elevated);
+  border-color: var(--line-medium);
+}
+
+body.v4-only-body .v4-auth-actions .btn-primary,
+body.v4-only-body .access-onboarding-actions .btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Demo badge */
+body.v4-only-body .v4-demo-badge,
+body.v4-only-body .local-login-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+  margin-bottom: 8px;
+}
+
+body.v4-only-body .v4-demo-auth-panel {
+  border: 1px solid var(--warning-border);
+  background: var(--warning-bg);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  margin-top: 12px;
+}
+
+body.v4-only-body .v4-demo-auth-panel h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--warning-text);
+  margin-bottom: 8px;
+}
+
+body.v4-only-body .v4-demo-auth-panel p {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+/* Роли — сетка кнопок */
+body.v4-only-body .v4-demo-auth-panel .v4-role-hints,
+body.v4-only-body .v4-demo-roles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+body.v4-only-body .v4-demo-auth-panel .v4-role-hints button,
+body.v4-only-body .v4-demo-auth-panel button,
+body.v4-only-body .v4-demo-roles-grid button {
+  height: 32px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--line-medium);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 8px;
+}
+
+body.v4-only-body .v4-demo-auth-panel button:hover,
+body.v4-only-body .v4-demo-roles-grid button:hover {
+  background: var(--surface-elevated);
+  border-color: var(--accent-line);
+}
+
+/* Note */
+body.v4-only-body .v4-access-result,
+body.v4-only-body .v4-auth-note {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+}

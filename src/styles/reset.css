@@ -1,0 +1,43 @@
+/* =============================================================================
+   FEG Stage PRO — Reset
+   Минимальный reset. Никакого !important — каскад работает сам.
+   ============================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 2;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* Убираем стандартные list-стили только там где нужно */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}

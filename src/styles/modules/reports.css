@@ -1,0 +1,8 @@
+/* =============================================================================
+   PACK.IT — Reports stub  |  main styles in misc.css
+   ============================================================================= */
+
+/* Дополнительные стили отчётов сверх misc.css */
+
+body.v4-only-body .v4-table--reports td { font-size: 12px; }
+body.v4-only-body .v4-table--reports th { font-size: 10px; }

@@ -1,0 +1,244 @@
+/* =============================================================================
+   PACK.IT — Layout & Cards
+   v4-card, v4-hero, v4-mini, v4-wide-section и все legacy layout-классы
+   которые всё ещё используются в модулях
+   ============================================================================= */
+
+/* --- app-container (legacy wrapper, теперь под shell) --- */
+body.v4-only-body .app-container {
+  background: var(--bg);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  max-width: none;
+}
+
+body.v4-only-body #v4ShellPage {
+  max-width: none;
+  margin: 0;
+}
+
+/* --- Cards --- */
+body.v4-only-body .v4-card,
+body.v4-only-body .v4-hero,
+body.v4-only-body .v4-dashboard-panel,
+body.v4-only-body .v4-wide-section,
+body.v4-only-body .v4-active-step-card,
+body.v4-only-body .v4-quote-form,
+body.v4-only-body .v4-dashboard-group,
+body.v4-only-body .v4-section-card,
+body.v4-only-body .v4-settings-card,
+body.v4-only-body .v4-report-panel,
+body.v4-only-body .v4-sync-panel,
+body.v4-only-body .v4-warehouse-detail,
+body.v4-only-body .v4-doc-panel,
+body.v4-only-body .v4-project-details,
+body.v4-only-body .v4-admin-control-side,
+body.v4-only-body .v4-data-quality-stat,
+body.v4-only-body .v4-report-kpi,
+body.v4-only-body .v4-equipment-card,
+body.v4-only-body .v4-equipment-category-health,
+body.v4-only-body .v4-quote-doc-group,
+body.v4-only-body .v4-summary-card,
+body.v4-only-body .v4-readiness-item,
+body.v4-only-body .v4-sync-issues,
+body.v4-only-body .v4-json-details,
+body.v4-only-body .v4-led-constructor,
+body.v4-only-body .v4-visual-preview-panel,
+body.v4-only-body .client-area,
+body.v4-only-body .stage-editor-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+/* Карточки с паддингом */
+body.v4-only-body .v4-card,
+body.v4-only-body .v4-hero,
+body.v4-only-body .v4-dashboard-panel,
+body.v4-only-body .v4-wide-section,
+body.v4-only-body .v4-active-step-card,
+body.v4-only-body .v4-quote-form,
+body.v4-only-body .v4-dashboard-group,
+body.v4-only-body .v4-section-card,
+body.v4-only-body .v4-settings-card,
+body.v4-only-body .v4-report-panel,
+body.v4-only-body .v4-sync-panel,
+body.v4-only-body .v4-doc-panel,
+body.v4-only-body .v4-summary-card {
+  padding: 16px;
+}
+
+/* Вторичные карточки */
+body.v4-only-body .v4-mini,
+body.v4-only-body .v4-role-card,
+body.v4-only-body .v4-dashboard-card,
+body.v4-only-body .v4-dashboard-primary,
+body.v4-only-body .v4-dashboard-chip,
+body.v4-only-body .v4-warehouse-project,
+body.v4-only-body .v4-project-details {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+/* Активные карточки */
+body.v4-only-body .v4-dashboard-primary.active,
+body.v4-only-body .v4-dashboard-card.active,
+body.v4-only-body .v4-dashboard-chip.active,
+body.v4-only-body .v4-warehouse-project.active {
+  background: var(--blue-soft);
+  border-color: var(--blue-line);
+}
+
+/* Card head */
+body.v4-only-body .v4-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Action groups */
+body.v4-only-body .v4-actions,
+body.v4-only-body .action-group,
+body.v4-only-body .v4-template-actions,
+body.v4-only-body .v4-stage-mode-actions,
+body.v4-only-body .v4-stage-tool-buttons,
+body.v4-only-body .v4-structure-toolbar-actions,
+body.v4-only-body .v4-dashboard-chip-row,
+body.v4-only-body .v4-truss-edit-row,
+body.v4-only-body .v4-truss-mode-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Grid helpers */
+body.v4-only-body .v4-grid-3,
+body.v4-only-body .v4-settings-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 12px;
+}
+
+body.v4-only-body .v4-grid-2,
+body.v4-only-body .v4-settings-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 12px;
+}
+
+body.v4-only-body .v4-grid-span-2 { grid-column: span 2; }
+
+/* Buttons in old shell: override legacy huge radii */
+body.v4-only-body .v4-dashboard-primary,
+body.v4-only-body .v4-dashboard-chip,
+body.v4-only-body .v4-mini-button,
+body.v4-only-body .v4-warehouse-project,
+body.v4-only-body .v4-project-row-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+  min-height: 32px;
+}
+
+body.v4-only-body .v4-dashboard-primary:hover,
+body.v4-only-body .v4-dashboard-chip:hover,
+body.v4-only-body .v4-mini-button:hover,
+body.v4-only-body .v4-warehouse-project:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--line-medium);
+  color: var(--text-strong);
+}
+
+/* Обратная совместимость: старые btn-* классы */
+body.v4-only-body .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+body.v4-only-body .btn-primary:hover { background: #ea6c0a; border-color: #ea6c0a; }
+body.v4-only-body .btn-secondary { background: rgba(255,255,255,0.05); border-color: var(--line-medium); color: var(--text); }
+body.v4-only-body .btn-secondary:hover { background: rgba(255,255,255,0.09); }
+body.v4-only-body .btn-success { background: var(--success-bg); border-color: var(--success-border); color: var(--success-text); }
+body.v4-only-body .btn-danger  { background: var(--danger-bg);  border-color: var(--danger-border);  color: var(--danger-text); }
+body.v4-only-body .btn-compact { height: 26px; padding: 0 10px; font-size: 12px; }
+
+body.v4-only-body button[disabled] { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+/* Typo: kicker в старом коде */
+body.v4-only-body .v4-kicker {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+body.v4-only-body .v4-muted { color: var(--muted); }
+body.v4-only-body .v4-mini  { font-size: 12px; }
+body.v4-only-body .v4-empty { color: var(--muted); text-align: center; padding: 32px 16px; }
+
+/* Headings без border-left */
+body.v4-only-body h1, body.v4-only-body h2, body.v4-only-body h3,
+body.v4-only-body h4, body.v4-only-body h5, body.v4-only-body h6 {
+  border-left: none;
+  padding-left: 0;
+  margin-top: 0;
+}
+
+body.v4-only-body .v4-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* Inputs в старом коде */
+body.v4-only-body input,
+body.v4-only-body select,
+body.v4-only-body textarea {
+  background: var(--surface);
+  border: 1px solid var(--line-medium);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  height: 34px;
+  padding: 0 10px;
+  transition: border-color 0.12s;
+}
+
+body.v4-only-body textarea { height: auto; padding: 8px 10px; }
+
+body.v4-only-body input:focus,
+body.v4-only-body select:focus,
+body.v4-only-body textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px var(--blue-soft);
+  outline: none;
+}
+
+body.v4-only-body input::placeholder,
+body.v4-only-body textarea::placeholder { color: var(--muted-2); }
+body.v4-only-body select option { background: #1a2234; color: var(--text); }
+body.v4-only-body label { font-size: 12px; font-weight: 500; color: var(--muted); display: block; margin-bottom: 5px; }
+
+/* Mobile */
+@media (max-width: 720px) {
+  body.v4-only-body .v4-card,
+  body.v4-only-body .v4-hero { padding: 12px; }
+  body.v4-only-body .v4-grid-span-2 { grid-column: auto; }
+}

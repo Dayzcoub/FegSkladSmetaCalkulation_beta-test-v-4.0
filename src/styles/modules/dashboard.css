@@ -1,0 +1,149 @@
+/* =============================================================================
+   PACK.IT — Dashboard module
+   UserDashboard: панель навигации которая рендерится внутри раздела
+   В новом shell она скрыта — nav rail её заменяет.
+   Но модуль ещё вызывается некоторыми компонентами, поэтому стили нужны.
+   ============================================================================= */
+
+/* Основная nav-панель дашборда — скрываем, rail заменяет */
+body.v4-only-body .v4-dashboard-panel {
+  display: none;
+}
+
+/* Quick actions — тоже убираем дублирование с rail */
+body.v4-only-body .v4-dashboard-quick-actions {
+  display: none;
+}
+
+/* Если дашборд вызван явно — показываем как компактный список */
+body.v4-only-body [data-v4-dashboard-explicit] .v4-dashboard-panel {
+  display: block;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+/* Dashboard chips (в nav groups) — компактный вид */
+body.v4-only-body .v4-dashboard-group {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+body.v4-only-body .v4-dashboard-group-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+body.v4-only-body .v4-dashboard-group-title b {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+body.v4-only-body .v4-dashboard-group-title small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+body.v4-only-body .v4-dashboard-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+body.v4-only-body .v4-dashboard-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  height: 30px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+
+body.v4-only-body .v4-dashboard-chip:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--line-medium);
+  color: var(--text);
+}
+
+body.v4-only-body .v4-dashboard-chip.active {
+  background: var(--blue-soft);
+  border-color: var(--blue-line);
+  color: var(--blue-text);
+}
+
+/* Role card */
+body.v4-only-body .v4-role-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+body.v4-only-body .v4-role-card span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+body.v4-only-body .v4-role-card b   { font-size: 13px; color: var(--text-strong); }
+body.v4-only-body .v4-role-card small { font-size: 11px; color: var(--muted); }
+
+/* Role hints */
+body.v4-only-body .v4-role-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+body.v4-only-body .v4-role-hints span {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+}
+
+/* Hidden sections */
+body.v4-only-body .v4-dashboard-hidden {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--muted-2);
+}
+
+body.v4-only-body .v4-dashboard-hidden b { color: var(--muted); }
+body.v4-only-body .v4-dashboard-hidden div { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+body.v4-only-body .v4-dashboard-hidden span {
+  padding: 2px 6px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--line-soft);
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+/* Role details summary */
+body.v4-only-body .v4-dashboard-role-details {
+  margin-top: 12px;
+}
+
+body.v4-only-body .v4-dashboard-role-details summary {
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px 0;
+  list-style: none;
+}
+
+body.v4-only-body .v4-dashboard-role-details summary::-webkit-details-marker { display: none; }

@@ -1,0 +1,662 @@
+/* =============================================================================
+   FEG Stage PRO — Technical Canvas
+   Stage grid, LED grid, Truss canvas.
+   Эти стили НЕ перекрываются body.v4-only-body там где мешает — canvas
+   самостоятельный рендер-контекст.
+   ============================================================================= */
+
+/* --- Stage canvas wrap --- */
+body.v4-only-body .v4-stage-canvas-wrap,
+body.v4-only-body .v4-led-grid-wrap,
+body.v4-only-body .v4-visual-preview-canvas,
+body.v4-only-body .v4-truss-field {
+  background: #090a0b !important;
+  background-color: #090a0b !important;
+  border: 1px solid #242529;
+  border-radius: 8px;
+  scrollbar-gutter: stable both-edges;
+  overscroll-behavior: contain;
+}
+
+/* Truss field wrap — контейнер с overflow и фиксированной высотой */
+body.v4-only-body .v4-truss-field-wrap {
+  max-width: 100%;
+  height: min(62vh, 640px);
+  min-height: 360px;
+  overflow: auto;
+  border: 1px solid #242529;
+  border-radius: 12px;
+  background: #070a0f !important;
+  padding: 8px;
+}
+
+/* Stage canvas grid — min-width чтобы можно было скроллить */
+body.v4-only-body .v4-stage-polish .v4-visual-stage-grid {
+  min-width: max-content;
+  gap: 4px;
+  padding: 12px;
+}
+
+/* Stage cell размер — фиксированный */
+body.v4-only-body .v4-stage-polish .v4-stage-cell {
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+body.v4-only-body .v4-stage-canvas-wrap {
+  padding: 8px;
+  max-width: 100%;
+}
+
+/* --- Stage grid (v4-visual-stage-grid) --- */
+body.v4-only-body .v4-stage-polish .v4-visual-stage-grid,
+body.v4-only-body .v4-visual-stage-grid {
+  display: grid;
+  min-width: max-content;
+  background-color: #0a0b0c;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 24px 24px;
+  border-color: var(--line-soft);
+  border-radius: var(--radius-md);
+  gap: 4px;
+  padding: 12px;
+}
+
+/* --- Stage cells (v4-stage-cell) --- */
+body.v4-only-body .v4-stage-polish .v4-stage-cell,
+body.v4-only-body .v4-stage-cell {
+  background: #111315;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 4px;
+  color: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+body.v4-only-body .v4-stage-polish .v4-stage-cell:hover,
+body.v4-only-body .v4-stage-cell:hover {
+  background: #15191b;
+  border-color: var(--accent-line);
+  box-shadow: inset 0 0 0 1px rgba(80, 128, 128, 0.18);
+  transform: none;
+}
+
+body.v4-only-body .v4-stage-polish .v4-stage-cell.selected,
+body.v4-only-body .v4-stage-cell.selected,
+body.v4-only-body .stage-cell.active {
+  border-color: var(--accent-line);
+  background-image: url('./stage-deck-texture.png');
+  background-color: #1a1d1d;
+  background-size: cover;
+  background-position: center;
+  color: transparent;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.30), inset 0 0 0 1px rgba(255, 255, 255, 0.10);
+}
+
+body.v4-only-body .v4-stage-polish .v4-stage-cell.selected::before,
+body.v4-only-body .v4-stage-cell.selected::before,
+body.v4-only-body .stage-cell.active::after {
+  border-color: rgba(80, 128, 128, 0.62);
+  background: transparent;
+}
+
+body.v4-only-body .v4-stage-polish .v4-stage-cell.has-stair {
+  border-color: rgba(180, 196, 196, 0.62);
+  box-shadow: inset 0 0 0 1px rgba(180, 196, 196, 0.18);
+}
+
+/* --- Исходный stage-cell (index.html legacy, используется в grid-рендере) --- */
+.stage-grid-wrap {
+  width: 100%;
+  overflow: auto;
+  scrollbar-gutter: stable both-edges;
+  overscroll-behavior: contain;
+  contain: layout paint;
+  background: radial-gradient(circle at 30% 20%, rgba(199, 167, 122, 0.05), transparent 26%), #0c1217;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stage-grid {
+  --cell-size: 30px;
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols, 20), var(--cell-size));
+  grid-template-rows: repeat(var(--grid-rows, 20), var(--cell-size));
+  gap: 0;
+  width: max-content;
+  margin: 0 auto;
+  user-select: none;
+  touch-action: none;
+  contain: layout paint;
+}
+
+.stage-cell {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  display: block;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  min-width: var(--cell-size);
+  min-height: var(--cell-size);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.025);
+  cursor: crosshair;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  box-shadow: none;
+  transform: none;
+  transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.stage-cell:hover {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px rgba(242, 201, 76, 0.42), 0 0 0 1px rgba(242, 201, 76, 0.18);
+}
+
+.stage-grid .stage-cell:hover {
+  transform: none;
+}
+
+.stage-cell.active {
+  background-color: #1a1d1d;
+  background-image: url('./stage-deck-texture.png');
+  background-size: cover;
+  background-position: center;
+  border-color: rgba(199, 167, 122, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07), inset 0 -3px 5px rgba(0, 0, 0, 0.32), 0 0 10px rgba(199, 167, 122, 0.12);
+}
+
+.stage-cell.active::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(236, 210, 172, 0.22);
+}
+
+.stage-cell.origin {
+  outline: 2px dashed rgba(59, 130, 246, 0.35);
+  outline-offset: -4px;
+}
+
+.stage-cell.front-row::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 4px;
+  background: rgba(196, 160, 111, 0.75);
+}
+
+/* --- Stage controls layout --- */
+body.v4-only-body .v4-stage-controls-layout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
+body.v4-only-body .v4-stage-control-stack {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+body.v4-only-body .v4-stage-control-stack .v4-field,
+body.v4-only-body .v4-stage-control-stack .v4-stage-check,
+body.v4-only-body .v4-stage-control-stack .v4-stage-frame-auto-card {
+  margin: 0;
+}
+
+body.v4-only-body .v4-stage-secondary-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(280px, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  align-items: start;
+}
+
+body.v4-only-body .v4-stage-secondary-layout .v4-stage-tool-box,
+body.v4-only-body .v4-stage-secondary-layout .v4-stage-draw-help {
+  min-height: 100%;
+}
+
+/* Stage check widget */
+body.v4-only-body .v4-stage-check {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #111214;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+body.v4-only-body .v4-stage-check--edge {
+  min-height: 42px;
+}
+
+/* Tool box and draw help */
+body.v4-only-body .v4-stage-template-panel,
+body.v4-only-body .v4-stage-tool-box,
+body.v4-only-body .v4-stage-draw-help {
+  background: #111214;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+body.v4-only-body .v4-stage-draw-help {
+  background: #111214;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+body.v4-only-body .v4-stage-draw-help,
+body.v4-only-body .v4-stage-check,
+body.v4-only-body .v4-stage-frame-note,
+body.v4-only-body .v4-template-actions small {
+  color: var(--muted);
+}
+
+body.v4-only-body .v4-stage-tool-buttons button.active,
+body.v4-only-body .v4-stage-tool-buttons button[aria-pressed="true"] {
+  background: #192828;
+  border-color: var(--accent-line);
+  color: #f1f2f4;
+}
+
+/* Frame auto card */
+body.v4-only-body .v4-stage-frame-auto-card--compact {
+  padding: 8px 10px;
+  min-height: auto;
+  gap: 2px;
+}
+
+body.v4-only-body .v4-stage-frame-auto-card--compact b {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+body.v4-only-body .v4-stage-frame-auto-card--compact small {
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+/* Step check card */
+body.v4-only-body .v4-step-check-card {
+  display: grid;
+  gap: 6px;
+}
+
+body.v4-only-body .v4-step-check-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+body.v4-only-body .v4-step-check-meta span {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+body.v4-only-body .v4-step-check-meta b {
+  font-size: 13px;
+  line-height: 1.25;
+  text-align: right;
+}
+
+/* --- LED grid --- */
+body.v4-only-body .v4-led-grid {
+  display: grid;
+  min-width: max-content;
+  gap: 2px;
+}
+
+body.v4-only-body .v4-led-grid .v4-led-cell {
+  width: var(--led-cell-size, 28px);
+  height: var(--led-cell-size, 28px);
+  min-width: var(--led-cell-size, 28px);
+  min-height: var(--led-cell-size, 28px);
+  border-radius: 2px;
+  padding: 0;
+  border-color: rgba(255, 255, 255, 0.11);
+  background: #101113;
+  transform: none;
+  box-shadow: none;
+}
+
+body.v4-only-body .v4-led-grid .v4-led-cell:hover {
+  transform: none;
+  border-color: var(--accent-line);
+  background: #141518;
+}
+
+body.v4-only-body .v4-led-grid .v4-led-cell.filled {
+  border-color: var(--accent-line);
+  background-color: #151719;
+  background-image: url('./led-cabinet-texture.png');
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+body.v4-only-body .v4-led-grid .v4-led-cell.filled .v4-led-cell-texture {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.10), rgba(255, 255, 255, 0.035));
+  opacity: 0.42;
+}
+
+body.v4-only-body .v4-led-grid .v4-led-cell.filled[class*="color-"] {
+  border-color: rgba(var(--led-construction-rgb, 120, 183, 183), 0.95);
+  background-image:
+    linear-gradient(135deg, rgba(var(--led-construction-rgb, 120, 183, 183), 0.22), rgba(0, 0, 0, 0.04) 42%, rgba(var(--led-construction-rgb, 120, 183, 183), 0.12)),
+    url('./led-cabinet-texture.png');
+  box-shadow:
+    inset 0 0 0 2px rgba(var(--led-construction-rgb, 120, 183, 183), 0.88),
+    inset 0 -10px 18px rgba(0, 0, 0, 0.18);
+}
+
+body.v4-only-body .v4-led-grid .v4-led-cell.filled i {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: rgb(var(--led-construction-rgb, 120, 183, 183));
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.42), 0 0 7px rgba(var(--led-construction-rgb, 120, 183, 183), 0.56);
+  pointer-events: none;
+}
+
+body.v4-only-body .v4-led-grid .v4-led-cell.filled:hover {
+  background-image: url('./led-cabinet-texture.png');
+  background-size: cover;
+}
+
+body.v4-only-body .v4-led-grid .v4-led-cell.filled[class*="color-"]:hover {
+  background-image:
+    linear-gradient(135deg, rgba(var(--led-construction-rgb, 120, 183, 183), 0.26), rgba(0, 0, 0, 0.02) 42%, rgba(var(--led-construction-rgb, 120, 183, 183), 0.14)),
+    url('./led-cabinet-texture.png');
+}
+
+body.v4-only-body .v4-led-grid .v4-led-cell.active,
+body.v4-only-body .v4-led-grid .v4-led-cell.is-active,
+body.v4-only-body .v4-led-grid .v4-led-cell[data-active="true"] {
+  outline: 2px solid rgba(var(--led-construction-rgb, 120, 183, 183), 0.90);
+  outline-offset: 1px;
+  z-index: 1;
+}
+
+/* LED color vars */
+body.v4-only-body .v4-led-part-chip.color-main,
+body.v4-only-body .v4-led-grid .v4-led-cell.color-main { --led-construction-rgb: 120, 183, 183; }
+body.v4-only-body .v4-led-part-chip.color-side,
+body.v4-only-body .v4-led-grid .v4-led-cell.color-side { --led-construction-rgb: 126, 208, 147; }
+body.v4-only-body .v4-led-part-chip.color-side2,
+body.v4-only-body .v4-led-grid .v4-led-cell.color-side2 { --led-construction-rgb: 177, 139, 222; }
+body.v4-only-body .v4-led-part-chip.color-top,
+body.v4-only-body .v4-led-grid .v4-led-cell.color-top { --led-construction-rgb: 226, 165, 85; }
+body.v4-only-body .v4-led-part-chip.color-bottom,
+body.v4-only-body .v4-led-grid .v4-led-cell.color-bottom { --led-construction-rgb: 218, 119, 160; }
+body.v4-only-body .v4-led-part-chip.color-custom,
+body.v4-only-body .v4-led-grid .v4-led-cell.color-custom { --led-construction-rgb: 108, 205, 190; }
+
+/* LED part chip */
+body.v4-only-body .v4-led-part-chip {
+  background: #151719;
+  color: var(--text);
+  border-color: var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+body.v4-only-body .v4-led-part-chip span {
+  color: var(--muted);
+}
+
+body.v4-only-body .v4-led-part-chip[class*="color-"] {
+  border-left: 5px solid rgb(var(--led-construction-rgb, 120, 183, 183));
+}
+
+body.v4-only-body .v4-led-part-chip:hover,
+body.v4-only-body .v4-led-part-chip.active {
+  background: #172020;
+  border-color: rgba(var(--led-construction-rgb, 120, 183, 183), 0.64);
+  box-shadow: inset 0 0 0 1px rgba(var(--led-construction-rgb, 120, 183, 183), 0.34);
+}
+
+/* LED panel blocks */
+body.v4-only-body .v4-led-panel-block,
+body.v4-only-body .v4-led-canvas-panel,
+body.v4-only-body .v4-led-construction-report {
+  background: #111214;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+body.v4-only-body .v4-led-panel-block h4,
+body.v4-only-body .v4-led-canvas-panel h4,
+body.v4-only-body .v4-led-construction-report h4 {
+  color: var(--text-strong);
+}
+
+body.v4-only-body .v4-led-grid-head {
+  color: var(--text);
+}
+
+body.v4-only-body .v4-visual-led-placement-controls {
+  border-color: var(--line);
+  background: #111214;
+  border-radius: var(--radius-lg);
+}
+
+/* LED SVG preview */
+body.v4-only-body .v4-visual-preview-canvas .feg-led-screen,
+body.v4-only-body .v4-visual-preview-canvas .feg-led-top-screen,
+body.v4-only-body .v4-visual-preview-canvas .feg-led-iso-screen {
+  fill: #0f1c1c;
+  stroke: #6f9999;
+  opacity: 0.96;
+}
+
+body.v4-only-body .v4-visual-preview-canvas .feg-led-grid {
+  stroke: #92abab;
+  opacity: 0.34;
+}
+
+body.v4-only-body .v4-visual-preview-canvas .feg-led-label,
+body.v4-only-body .v4-visual-preview-canvas .feg-led-meta {
+  fill: #dce8e8;
+}
+
+/* --- Light theme: canvas --- */
+body.v4-only-body.theme-light .v4-stage-canvas-wrap,
+body.v4-only-body.theme-light .v4-led-grid-wrap,
+body.v4-only-body.theme-light .v4-visual-preview-canvas,
+body.v4-only-body.theme-light .v4-truss-field,
+body.v4-only-body.theme-light .v4-visual-stage-grid {
+  background: #eef2ef;
+  border-color: var(--line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+body.v4-only-body.theme-light .v4-stage-polish .v4-visual-stage-grid,
+body.v4-only-body.theme-light .v4-visual-stage-grid,
+body.v4-only-body.theme-light .v4-truss-field {
+  background-color: #eef2ef;
+  background-image:
+    linear-gradient(rgba(25, 39, 39, 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25, 39, 39, 0.10) 1px, transparent 1px);
+}
+
+body.v4-only-body.theme-light .v4-stage-polish .v4-stage-cell,
+body.v4-only-body.theme-light .v4-stage-cell {
+  background: #ffffff;
+  border-color: rgba(25, 39, 39, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+body.v4-only-body.theme-light .v4-stage-polish .v4-stage-cell:hover,
+body.v4-only-body.theme-light .v4-stage-cell:hover {
+  background: #edf6f3;
+  border-color: var(--accent-line);
+}
+
+body.v4-only-body.theme-light .v4-stage-polish .v4-stage-cell.selected,
+body.v4-only-body.theme-light .v4-stage-cell.selected,
+body.v4-only-body.theme-light .stage-cell.active {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.18)), url('./stage-deck-texture.png');
+  background-color: #dfe7e2;
+  border-color: var(--accent-line);
+  box-shadow: 0 3px 10px rgba(24, 34, 34, 0.12), inset 0 0 0 1px rgba(47, 79, 79, 0.16);
+}
+
+body.v4-only-body.theme-light .v4-led-grid .v4-led-cell {
+  background: #fafcfb;
+  border-color: rgba(25, 39, 39, 0.16);
+}
+
+body.v4-only-body.theme-light .v4-led-grid .v4-led-cell:hover {
+  background: #edf6f3;
+  border-color: var(--accent-line);
+}
+
+body.v4-only-body.theme-light .v4-led-grid .v4-led-cell.filled {
+  background-color: #e9efec;
+}
+
+body.v4-only-body.theme-light .v4-led-part-chip {
+  background: #ffffff;
+  color: var(--text);
+  border-color: var(--line);
+}
+
+body.v4-only-body.theme-light .v4-led-part-chip:hover,
+body.v4-only-body.theme-light .v4-led-part-chip.active {
+  background: #eef7f4;
+  border-color: rgba(var(--led-construction-rgb, 120, 183, 183), 0.70);
+}
+
+/* --- Responsive --- */
+@media (max-width: 920px) {
+  body.v4-only-body .v4-stage-controls-layout {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body .v4-stage-secondary-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  body.v4-only-body .v4-step-check-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  body.v4-only-body .v4-step-check-meta b {
+    text-align: left;
+  }
+}
+
+@media (max-width: 720px) {
+  body.v4-only-body .v4-stage-canvas-wrap,
+  body.v4-only-body .v4-truss-field {
+    min-height: 320px;
+  }
+}
+
+
+/* =============================================================================
+   STAGE CANVAS — принудительные переопределения
+   Добавлено последними чтобы гарантированно перекрыть всё включая
+   браузерный ButtonFace для <button> элементов-ячеек
+   ============================================================================= */
+
+body.v4-only-body .v4-stage-canvas-wrap {
+  background: #090a0b !important;
+  background-color: #090a0b !important;
+}
+
+body.v4-only-body .v4-stage-canvas-wrap .v4-visual-stage-grid {
+  display: grid !important;
+  background-color: #0a0b0c !important;
+  background-image:
+    linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px) !important;
+  min-width: max-content !important;
+  gap: 4px !important;
+  padding: 12px !important;
+}
+
+body.v4-only-body .v4-stage-canvas-wrap .v4-stage-cell {
+  background: #111315 !important;
+  background-color: #111315 !important;
+  border: 1px solid rgba(255,255,255,.11) !important;
+  border-radius: 4px !important;
+  color: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+body.v4-only-body .v4-stage-canvas-wrap .v4-stage-cell:hover {
+  background: #15191b !important;
+  background-color: #15191b !important;
+  border-color: rgba(249,115,22,.44) !important;
+}
+
+body.v4-only-body .v4-stage-canvas-wrap .v4-stage-cell.selected {
+  background-color: #1a1d1d !important;
+  border-color: rgba(249,115,22,.44) !important;
+  box-shadow: 0 3px 10px rgba(0,0,0,.30), inset 0 0 0 1px rgba(255,255,255,.10) !important;
+}
+
+body.v4-only-body .v4-stage-canvas-wrap .v4-stage-cell.has-stair {
+  border-color: rgba(180,196,196,.62) !important;
+}
+
+/* LED grid wrap — тёмный фон */
+body.v4-only-body .v4-led-grid-wrap {
+  background: #070a0f !important;
+  background-color: #070a0f !important;
+}
+
+body.v4-only-body .v4-led-grid-wrap .v4-led-grid {
+  display: grid !important;
+  min-width: max-content !important;
+  gap: 2px !important;
+}
+
+body.v4-only-body .v4-led-grid-wrap .v4-led-cell {
+  background: #101113 !important;
+  border-color: rgba(255,255,255,.11) !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}

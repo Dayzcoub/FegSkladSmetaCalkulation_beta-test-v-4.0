@@ -1,0 +1,118 @@
+/* =============================================================================
+   PACK.IT — Backend / Sync  |  clean rewrite
+   ============================================================================= */
+
+body.v4-only-body .v4-sync-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Lazy load panel */
+body.v4-only-body .v4-sync-launcher {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+body.v4-only-body .v4-sync-btns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+body.v4-only-body .v4-sync-btns button.active {
+  background: var(--blue-soft);
+  border-color: var(--blue-line);
+  color: var(--blue-text);
+}
+
+/* Active console */
+body.v4-only-body #v4SyncActiveMount {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Sync panel card */
+body.v4-only-body .v4-sync-panel {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Status score */
+body.v4-only-body .v4-sync-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+body.v4-only-body .v4-sync-score.ok   { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+body.v4-only-body .v4-sync-score.warn { background: var(--warning-bg); color: var(--warning-text); border: 1px solid var(--warning-border); }
+body.v4-only-body .v4-sync-score.bad  { background: var(--danger-bg);  color: var(--danger-text);  border: 1px solid var(--danger-border); }
+
+/* Checks list */
+body.v4-only-body .v4-sync-checks { display: flex; flex-direction: column; gap: 4px; }
+
+body.v4-only-body .v4-sync-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+}
+
+body.v4-only-body .v4-sync-check.ok   { border-color: var(--success-border); background: var(--success-bg); }
+body.v4-only-body .v4-sync-check.warn { border-color: var(--warning-border); background: var(--warning-bg); }
+body.v4-only-body .v4-sync-check.bad  { border-color: var(--danger-border);  background: var(--danger-bg); }
+
+/* Console output */
+body.v4-only-body .v4-sync-console {
+  background: #090d13;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #94a3b8;
+  max-height: 300px;
+  overflow: auto;
+}
+
+/* Supabase auth console */
+body.v4-only-body .v4-supabase-auth-console {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+body.v4-only-body .v4-sync-issues {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+body.v4-only-body .v4-sync-actions { display: flex; gap: 6px; flex-wrap: wrap; }

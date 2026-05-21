@@ -1,0 +1,593 @@
+/* =============================================================================
+   PACK.IT — Application Shell
+   Левый nav rail + top bar + content area + right panel
+   ============================================================================= */
+
+/* --- Корневой shell контейнер --- */
+body.v4-only-body .packit-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* =====================================================================
+   NAV RAIL — левая фиксированная навигация
+   ===================================================================== */
+
+body.v4-only-body .packit-nav {
+  width: var(--nav-width);
+  min-width: var(--nav-width);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* Логотип */
+body.v4-only-body .packit-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+body.v4-only-body .packit-nav-logo-mark {
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+
+body.v4-only-body .packit-nav-logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+body.v4-only-body .packit-nav-logo-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+body.v4-only-body .packit-nav-logo-sub {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+/* Меню — прокручиваемая часть */
+body.v4-only-body .packit-nav-menu {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 0;
+}
+
+/* Группа меню */
+body.v4-only-body .packit-nav-group {
+  padding: 0 8px;
+  margin-bottom: 4px;
+}
+
+body.v4-only-body .packit-nav-group-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  padding: 8px 8px 4px;
+}
+
+/* Пункт меню */
+body.v4-only-body .packit-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 8px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.3;
+  transition: background 0.1s, color 0.1s;
+  position: relative;
+}
+
+body.v4-only-body .packit-nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+body.v4-only-body .packit-nav-item.active {
+  background: var(--blue-soft);
+  color: var(--blue-text);
+  font-weight: 500;
+}
+
+body.v4-only-body .packit-nav-item.active .packit-nav-icon {
+  color: var(--blue);
+}
+
+body.v4-only-body .packit-nav-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--muted);
+  transition: color 0.1s;
+}
+
+body.v4-only-body .packit-nav-item:hover .packit-nav-icon {
+  color: var(--text);
+}
+
+body.v4-only-body .packit-nav-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.v4-only-body .packit-nav-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted-2);
+  flex-shrink: 0;
+}
+
+body.v4-only-body .packit-nav-item.active .packit-nav-badge {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+/* Разделитель группы */
+body.v4-only-body .packit-nav-sep {
+  height: 1px;
+  background: var(--line);
+  margin: 4px 16px;
+}
+
+/* Нижняя часть nav — user */
+body.v4-only-body .packit-nav-footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--line);
+  padding: 10px 8px;
+}
+
+body.v4-only-body .packit-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 8px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+body.v4-only-body .packit-nav-user:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.v4-only-body .packit-nav-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  border: 1px solid var(--blue-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+
+body.v4-only-body .packit-nav-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+body.v4-only-body .packit-nav-user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+body.v4-only-body .packit-nav-user-role {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+body.v4-only-body .packit-nav-logout {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+
+body.v4-only-body .packit-nav-logout:hover {
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger-text);
+}
+
+/* Demo banner */
+body.v4-only-body .packit-demo-banner {
+  margin: 8px;
+  padding: 6px 8px;
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  border-radius: var(--radius-md);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--warning-text);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* =====================================================================
+   MAIN AREA — правее nav rail
+   ===================================================================== */
+
+body.v4-only-body .packit-main {
+  margin-left: var(--nav-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+}
+
+/* =====================================================================
+   TOP BAR
+   ===================================================================== */
+
+body.v4-only-body .packit-topbar {
+  height: var(--topbar-height);
+  min-height: var(--topbar-height);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  gap: 16px;
+}
+
+body.v4-only-body .packit-topbar-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+body.v4-only-body .packit-topbar-breadcrumb {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+body.v4-only-body .packit-topbar-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.v4-only-body .packit-topbar-sep {
+  color: var(--muted-2);
+  font-size: 13px;
+}
+
+body.v4-only-body .packit-topbar-sub {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+body.v4-only-body .packit-topbar-workspace {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+body.v4-only-body .packit-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* =====================================================================
+   PAGE CONTENT
+   ===================================================================== */
+
+body.v4-only-body .packit-page {
+  flex: 1;
+  padding: 20px;
+  overflow: auto;
+}
+
+/* Page toolbar (filter bar под topbar) */
+body.v4-only-body .packit-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+body.v4-only-body .packit-toolbar-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+body.v4-only-body .packit-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* KPI strip */
+body.v4-only-body .packit-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+body.v4-only-body .packit-kpi-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+body.v4-only-body .packit-kpi-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+body.v4-only-body .packit-kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-strong);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+body.v4-only-body .packit-kpi-delta {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+body.v4-only-body .packit-kpi-delta.up { color: var(--success); }
+body.v4-only-body .packit-kpi-delta.down { color: var(--danger); }
+
+/* Content card */
+body.v4-only-body .packit-card,
+body.v4-only-body .v4-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+body.v4-only-body .packit-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+body.v4-only-body .packit-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* Content layout: main + right panel */
+body.v4-only-body .packit-content-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--right-panel);
+  gap: 16px;
+  align-items: start;
+}
+
+body.v4-only-body .packit-content-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+body.v4-only-body .packit-content-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: sticky;
+  top: calc(var(--topbar-height) + 20px);
+}
+
+/* Wide layout (no right panel) */
+body.v4-only-body .packit-content-wide {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Section */
+body.v4-only-body .packit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* =====================================================================
+   AUTH STATE (не вошли)
+   ===================================================================== */
+
+body.v4-only-body .packit-auth-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 24px;
+}
+
+body.v4-only-body .packit-auth-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-2xl);
+  padding: 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+
+@media (max-width: 1200px) {
+  body.v4-only-body .packit-content-layout {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body .packit-content-right {
+    position: static;
+  }
+}
+
+@media (max-width: 900px) {
+  body.v4-only-body .packit-nav {
+    width: var(--nav-collapsed);
+    min-width: var(--nav-collapsed);
+  }
+
+  body.v4-only-body .packit-main {
+    margin-left: var(--nav-collapsed);
+  }
+
+  body.v4-only-body .packit-nav-label,
+  body.v4-only-body .packit-nav-badge,
+  body.v4-only-body .packit-nav-group-title,
+  body.v4-only-body .packit-nav-logo-text,
+  body.v4-only-body .packit-nav-user-info {
+    display: none;
+  }
+
+  body.v4-only-body .packit-nav-logo {
+    justify-content: center;
+    padding: 14px 0;
+  }
+
+  body.v4-only-body .packit-nav-group {
+    padding: 0 6px;
+  }
+
+  body.v4-only-body .packit-nav-item {
+    justify-content: center;
+    padding: 8px 6px;
+  }
+
+  body.v4-only-body .packit-nav-user {
+    justify-content: center;
+    padding: 6px;
+  }
+
+  body.v4-only-body .packit-nav-logout {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  body.v4-only-body .packit-page {
+    padding: 12px;
+  }
+
+  body.v4-only-body .packit-kpi-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  body.v4-only-body .packit-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

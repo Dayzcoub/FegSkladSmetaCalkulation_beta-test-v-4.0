@@ -1,0 +1,359 @@
+/* =============================================================================
+   PACK.IT — Truss & Stage constructor modules
+   ============================================================================= */
+
+/* Layout */
+body.v4-only-body .v4-truss-layout {
+  display: grid;
+  grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
+  gap: 12px;
+}
+
+/* Library (левая панель) */
+body.v4-only-body .v4-truss-library {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  max-height: min(60vh, 640px);
+  overflow-y: auto;
+}
+
+body.v4-only-body .v4-truss-group {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+body.v4-only-body .v4-truss-group summary {
+  color: var(--text);
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  list-style: none;
+  gap: 8px;
+}
+
+body.v4-only-body .v4-truss-group summary::-webkit-details-marker { display: none; }
+body.v4-only-body .v4-truss-group summary b { color: var(--text); }
+body.v4-only-body .v4-truss-group summary em { font-style: normal; color: var(--muted); font-size: 11px; }
+
+body.v4-only-body .v4-truss-group-mark {
+  background: var(--panel-3);
+  color: var(--muted);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+body.v4-only-body .v4-truss-group-body {
+  padding: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+body.v4-only-body .v4-truss-group-body button,
+body.v4-only-body .v4-truss-library .block-object-group-body button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--text);
+  transition: background 0.1s, border-color 0.1s;
+}
+
+body.v4-only-body .v4-truss-group-body button:hover { background: var(--panel-3); border-color: var(--line-medium); }
+
+body.v4-only-body .v4-truss-group-body button.active,
+body.v4-only-body .v4-mode-btn.active {
+  background: var(--blue-soft);
+  border-color: var(--blue-line);
+  color: var(--blue-text);
+}
+
+/* Workspace */
+body.v4-only-body .v4-truss-workspace { min-width: 0; }
+
+/* Zoom panel */
+body.v4-only-body .v4-truss-zoom-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+body.v4-only-body .v4-truss-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+body.v4-only-body .v4-truss-zoom-controls input[type="range"] {
+  width: min(200px, 30vw);
+  accent-color: var(--accent);
+}
+
+body.v4-only-body .v4-truss-autofit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Field wrap */
+body.v4-only-body .v4-truss-field-wrap {
+  max-width: 100%;
+  height: min(60vh, 620px);
+  min-height: 340px;
+  overflow: auto;
+  border: 1px solid var(--line-medium);
+  border-radius: var(--radius-2xl);
+  background: #070a0f;
+  padding: 8px;
+}
+
+/* Template cards */
+body.v4-only-body .v4-truss-template-split {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(300px, 1.1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+body.v4-only-body .v4-truss-template-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+body.v4-only-body .v4-truss-template-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+body.v4-only-body .v4-truss-template-card-head b { font-size: 13px; line-height: 1.25; }
+body.v4-only-body .v4-truss-template-card-head span { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+body.v4-only-body .v4-truss-stool-grid {
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+}
+
+/* Edit row */
+body.v4-only-body .v4-truss-edit-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+/* Load dialog */
+body.v4-only-body .v4-truss-load-dialog-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: auto;
+}
+
+body.v4-only-body .v4-truss-load-header {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+}
+
+body.v4-only-body .v4-truss-load-panel { padding: 12px; }
+body.v4-only-body .v4-truss-load-toolbar { padding: 8px 12px; border-bottom: 1px solid var(--line); display: flex; gap: 8px; }
+
+body.v4-only-body .v4-truss-v3-load-summary,
+body.v4-only-body .v4-truss-v3-tables {
+  margin-top: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+body.v4-only-body .v4-truss-v3-load-summary.bad  .v4-truss-load-header { border-color: var(--danger-border); }
+body.v4-only-body .v4-truss-v3-load-summary.risk .v4-truss-load-header { border-color: var(--warning-border); }
+body.v4-only-body .v4-truss-v3-load-summary.ok   .v4-truss-load-header { border-color: var(--blue-line); }
+
+/* Mode pill */
+body.v4-only-body .v4-truss-mode-pill,
+body.v4-only-body .v4-stage-draw-pill {
+  background: var(--surface);
+  border: 1px solid var(--blue-line);
+  color: var(--blue-text);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Sidebar */
+body.v4-only-body .v4-truss-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Chips */
+body.v4-only-body .v4-truss-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+body.v4-only-body .v4-truss-chip-field { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+/* Stage specific */
+body.v4-only-body .v4-structure-editor {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+body.v4-only-body .v4-structure-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+body.v4-only-body .v4-structure-toolbar-actions { display: flex; gap: 6px; }
+body.v4-only-body .v4-structure-truss { padding: 12px; }
+
+/* Stage controls */
+body.v4-only-body .v4-stage-controls-layout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
+body.v4-only-body .v4-stage-control-stack { display: grid; gap: 10px; align-content: start; }
+
+body.v4-only-body .v4-stage-check {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+}
+
+body.v4-only-body .v4-stage-check--edge { min-height: 42px; }
+
+body.v4-only-body .v4-stage-template-panel,
+body.v4-only-body .v4-stage-tool-box,
+body.v4-only-body .v4-stage-draw-help,
+body.v4-only-body .v4-truss-edit-tools {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 10px 12px;
+}
+
+body.v4-only-body .v4-stage-draw-help,
+body.v4-only-body .v4-stage-check,
+body.v4-only-body .v4-stage-frame-note {
+  color: var(--muted);
+}
+
+body.v4-only-body .v4-stage-tool-buttons button.active,
+body.v4-only-body .v4-stage-tool-buttons button[aria-pressed="true"] {
+  background: var(--blue-soft);
+  border-color: var(--blue-line);
+  color: var(--blue-text);
+}
+
+body.v4-only-body .v4-stage-secondary-layout {
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) minmax(260px, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  align-items: start;
+}
+
+body.v4-only-body .v4-stage-frame-auto-card--compact { padding: 7px 9px; min-height: auto; gap: 2px; }
+body.v4-only-body .v4-stage-frame-auto-card--compact b { font-size: 13px; }
+body.v4-only-body .v4-stage-frame-auto-card--compact small { font-size: 10px; }
+
+body.v4-only-body .v4-step-check-card { display: grid; gap: 6px; }
+body.v4-only-body .v4-step-check-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+body.v4-only-body .v4-step-check-meta span { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700; }
+body.v4-only-body .v4-step-check-meta b { font-size: 13px; text-align: right; }
+
+/* BOM tables (truss specific) */
+body.v4-only-body .v4-structure-truss .block-calc-table,
+body.v4-only-body .v4-structure-truss .block-bom {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+body.v4-only-body .v4-structure-truss .block-calc-table th,
+body.v4-only-body .v4-structure-truss .block-bom th {
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 700;
+}
+
+body.v4-only-body .v4-structure-truss .block-total-row td {
+  background: var(--blue-soft);
+  color: var(--blue-text);
+  border-color: var(--blue-line);
+  font-weight: 800;
+}
+
+/* Load sections */
+body.v4-only-body .v4-structure-truss .block-load-section {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+body.v4-only-body .v4-structure-truss .block-muted-cell,
+body.v4-only-body .v4-structure-truss .block-load-note { color: var(--muted); }
+
+/* Responsive */
+@media (max-width: 920px) {
+  body.v4-only-body .v4-truss-layout,
+  body.v4-only-body .v4-truss-template-split,
+  body.v4-only-body .v4-truss-stool-grid { grid-template-columns: 1fr; }
+  body.v4-only-body .v4-stage-controls-layout { grid-template-columns: 1fr; }
+  body.v4-only-body .v4-stage-secondary-layout { grid-template-columns: 1fr; }
+}

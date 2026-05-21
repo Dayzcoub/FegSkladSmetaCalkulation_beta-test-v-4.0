@@ -1,0 +1,934 @@
+/* =============================================================================
+   PACK.IT — Wizard Steps Content
+   CSS для контента каждого шага сметчика
+   ============================================================================= */
+
+/* ─── Общие элементы шагов ───────────────────────────────────────────────────── */
+
+/* v4-note как hint под заголовком шага */
+body.v4-only-body .v4-quote-form > .v4-note:first-child,
+body.v4-only-body .v4-quote-form > .v4-note:first-of-type {
+  background: var(--info-bg);
+  border-color: var(--info-border);
+  color: var(--info-text);
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 4px;
+}
+
+/* Общий grid для полей форм */
+body.v4-only-body .v4-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  align-items: end;
+}
+
+body.v4-only-body .v4-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+body.v4-only-body .v4-field input,
+body.v4-only-body .v4-field select,
+body.v4-only-body .v4-field textarea {
+  margin-top: 0;
+}
+
+body.v4-only-body .v4-field--error input,
+body.v4-only-body .v4-field--error select {
+  border-color: var(--danger-border);
+}
+
+/* ─── ШАГИ 1-2: Клиент, Площадка ────────────────────────────────────────────── */
+
+/* Кнопка "+ новый клиент" выровнена по низу */
+body.v4-only-body .v4-client-add-button {
+  align-self: end;
+  margin-bottom: 0;
+}
+
+/* Client/project grid */
+body.v4-only-body .v4-client-project-grid {
+  grid-template-columns: 1.5fr 1fr 1.5fr;
+}
+
+/* ─── ШАГ 3: Состав сметы (scope) ───────────────────────────────────────────── */
+
+body.v4-only-body .v4-scope-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+
+body.v4-only-body .v4-scope-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 10px;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
+  position: relative;
+}
+
+body.v4-only-body .v4-scope-item:hover {
+  border-color: var(--blue-line);
+  color: var(--text);
+  background: var(--blue-soft);
+}
+
+body.v4-only-body .v4-scope-item.active,
+body.v4-only-body .v4-scope-item input:checked ~ * {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--text-strong);
+}
+
+/* Скрываем нативный checkbox внутри scope */
+body.v4-only-body .v4-scope-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+body.v4-only-body .v4-scope-item span {
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+/* Иконки scope — emoji крупно */
+body.v4-only-body .v4-scope-item::before {
+  font-size: 20px;
+  line-height: 1;
+}
+
+body.v4-only-body .v4-scope-grid-error .v4-scope-item {
+  border-color: var(--danger-border);
+  background: var(--danger-bg);
+}
+
+/* ─── ШАГИ 4-6: Сцена/Фермы/LED — конфигуратор ──────────────────────────────── */
+
+/* Контейнер BOM section после конфигуратора */
+body.v4-only-body .v4-bound-section-summary {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+body.v4-only-body .v4-bound-section-summary .v4-kicker { margin-bottom: 2px; }
+
+/* BOM source card */
+body.v4-only-body .v4-bom-source-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+}
+
+body.v4-only-body .v4-bom-source-card b { font-size: 13px; font-weight: 600; color: var(--text-strong); }
+body.v4-only-body .v4-bom-source-card span { color: var(--muted); }
+body.v4-only-body .v4-bom-checks { display: flex; gap: 6px; flex-wrap: wrap; }
+body.v4-only-body .v4-bom-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ─── ШАГ 7: Звук, свет, услуги (equipment) ─────────────────────────────────── */
+
+/* Sub-tabs Звук/Услуги */
+body.v4-only-body .v4-equipment-quote-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+body.v4-only-body .v4-equipment-quote-tabs button {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+
+body.v4-only-body .v4-equipment-quote-tabs button.active {
+  background: var(--blue-soft);
+  border-color: var(--blue-line);
+  color: var(--blue-text);
+  font-weight: 600;
+}
+
+/* Equipment mini stats (0 позиций / 0 кг / 0 кВт / 0 дефицитных) */
+body.v4-only-body .v4-equipment-quote-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--panel-2);
+  margin-bottom: 10px;
+}
+
+body.v4-only-body .v4-equipment-quote-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  border-right: 1px solid var(--line-soft);
+}
+
+body.v4-only-body .v4-equipment-quote-stats > div:last-child { border-right: none; }
+body.v4-only-body .v4-equipment-quote-stats b { font-size: 16px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.01em; }
+body.v4-only-body .v4-equipment-quote-stats span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+
+/* Category sections (Коммутация / Пульты / ...) */
+body.v4-only-body .v4-equipment-quote-section {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+body.v4-only-body .v4-equipment-quote-section-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+body.v4-only-body .v4-equipment-quote-section-head b { font-size: 13px; font-weight: 600; color: var(--text-strong); }
+body.v4-only-body .v4-equipment-quote-section-head span { font-size: 11px; color: var(--muted); }
+
+/* Equipment row (Номенклатура + кол-во + источник + подтвердить) */
+body.v4-only-body .v4-equipment-picker-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) 80px minmax(120px, 160px) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+body.v4-only-body .v4-equipment-picker-row:last-child { border-bottom: none; }
+
+/* ─── ШАГ 8: Транспорт ───────────────────────────────────────────────────────── */
+
+/* v4-mini в транспорте — inline результаты */
+body.v4-only-body .v4-grid-3 .v4-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  height: 100%;
+}
+
+body.v4-only-body .v4-grid-3 .v4-mini b {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+body.v4-only-body .v4-grid-3 .v4-mini span {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+/* Tariff editor */
+body.v4-only-body .v4-transport-tariff-editor {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+body.v4-only-body .v4-transport-tariff-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  align-items: end;
+}
+
+/* ─── ШАГ 9: Команда проекта ─────────────────────────────────────────────────── */
+
+body.v4-only-body .v4-project-crew-panel {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+body.v4-only-body .v4-project-crew-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+body.v4-only-body .v4-project-crew-row {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+body.v4-only-body .v4-project-crew-row:last-child { border-bottom: none; }
+
+body.v4-only-body .v4-project-crew-row--draft {
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-project-crew-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  align-items: end;
+}
+
+body.v4-only-body .v4-project-crew-access {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr 1fr 1.5fr auto auto auto;
+  gap: 8px;
+  align-items: end;
+  padding: 8px 10px;
+  background: var(--panel-3);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+}
+
+/* Checkbox "приглашённый спец" */
+body.v4-only-body .v4-project-crew-access .v4-stage-check {
+  height: 34px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+}
+
+body.v4-only-body .v4-project-crew-access .v4-stage-check input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  margin: 0;
+}
+
+/* ─── ШАГ 10: Сводка ────────────────────────────────────────────────────────── */
+
+/* Summary KPI strip */
+body.v4-only-body .v4-section-card .v4-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--panel-2);
+}
+
+body.v4-only-body .v4-section-card .v4-summary-grid .v4-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-right: 1px solid var(--line-soft);
+  border-radius: 0;
+  background: none;
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
+}
+
+body.v4-only-body .v4-section-card .v4-summary-grid .v4-mini:last-child { border-right: none; }
+body.v4-only-body .v4-section-card .v4-summary-grid .v4-mini b    { font-size: 15px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.01em; }
+body.v4-only-body .v4-section-card .v4-summary-grid .v4-mini span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+
+/* Readiness checklist */
+body.v4-only-body .v4-readiness-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+body.v4-only-body .v4-readiness-list {
+  display: flex;
+  flex-direction: column;
+}
+
+body.v4-only-body .v4-readiness-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 12px;
+  background: none;
+  border-radius: 0;
+}
+
+body.v4-only-body .v4-readiness-item:last-child { border-bottom: none; }
+body.v4-only-body .v4-readiness-item.warn { background: rgba(245,158,11,.04); }
+body.v4-only-body .v4-readiness-item.bad  { background: rgba(239,68,68,.04); }
+
+/* Status icon в checklist */
+body.v4-only-body .v4-readiness-item > span:first-child {
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+/* Score badge */
+body.v4-only-body .v4-readiness-score-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-readiness-score {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+body.v4-only-body .v4-readiness-summary {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Final doc actions */
+body.v4-only-body .v4-final-doc-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+body.v4-only-body .v4-doc-action-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.1s, background 0.1s;
+}
+
+body.v4-only-body .v4-doc-action-card:hover { border-color: var(--line-medium); background: var(--surface-elevated); }
+body.v4-only-body .v4-doc-action-card--primary { border-color: var(--accent-line); background: var(--accent-soft); }
+body.v4-only-body .v4-doc-action-card--primary:hover { background: rgba(249,115,22,.18); }
+
+body.v4-only-body .v4-doc-action-card b { font-size: 12px; font-weight: 600; color: var(--text-strong); display: block; }
+body.v4-only-body .v4-doc-action-card p { font-size: 11px; color: var(--muted); margin: 0; }
+
+/* Customer/Technical rows в summary */
+body.v4-only-body .v4-customer-estimate-rows,
+body.v4-only-body .v4-technical-summary-rows {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  body.v4-only-body .v4-grid-3             { grid-template-columns: repeat(2, 1fr); }
+  body.v4-only-body .v4-scope-grid         { grid-template-columns: repeat(2, 1fr); }
+  body.v4-only-body .v4-project-crew-grid  { grid-template-columns: repeat(2, 1fr); }
+  body.v4-only-body .v4-transport-tariff-grid { grid-template-columns: repeat(2, 1fr); }
+  body.v4-only-body .v4-final-doc-actions-grid { grid-template-columns: 1fr 1fr; }
+  body.v4-only-body .v4-section-card .v4-summary-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 600px) {
+  body.v4-only-body .v4-grid-3 { grid-template-columns: 1fr; }
+  body.v4-only-body .v4-scope-grid { grid-template-columns: repeat(2, 1fr); }
+  body.v4-only-body .v4-project-crew-access { grid-template-columns: 1fr 1fr; }
+  body.v4-only-body .v4-equipment-picker-row { grid-template-columns: 1fr auto; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ШАГ 3: Scope плитки — явные активные состояния
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+body.v4-only-body .v4-scope-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+}
+
+body.v4-only-body .v4-scope-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 8px;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
+  user-select: none;
+}
+
+/* Скрываем нативный чекбокс */
+body.v4-only-body .v4-scope-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Активная плитка — акцент, крупная рамка */
+body.v4-only-body .v4-scope-item:has(input:checked),
+body.v4-only-body .v4-scope-item.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+/* Галочка поверх активной плитки */
+body.v4-only-body .v4-scope-item:has(input:checked)::after {
+  content: '✓';
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+body.v4-only-body .v4-scope-item:hover {
+  border-color: var(--blue-line);
+  background: var(--blue-soft);
+  color: var(--text);
+}
+
+/* Транспорт — disabled стиль */
+body.v4-only-body .v4-scope-item-disabled,
+body.v4-only-body .v4-scope-item[data-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ШАГ 4/6: Субаренда — чекбокс + скрываемые поля
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+body.v4-only-body .v4-linked-subrent-override {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+body.v4-only-body .v4-linked-subrent-override.is-enabled {
+  border-color: var(--warning-border);
+  background: var(--warning-bg);
+}
+
+/* Чекбокс субаренды — как equipment-editor-check */
+body.v4-only-body [data-quote-stage-subrent-block] .v4-equipment-editor-check,
+body.v4-only-body [data-quote-truss-subrent-block] .v4-equipment-editor-check,
+body.v4-only-body [data-quote-led-subrent-block] .v4-equipment-editor-check {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--text) !important;
+  cursor: pointer !important;
+  padding: 6px 10px !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-md) !important;
+  width: fit-content !important;
+}
+
+body.v4-only-body .v4-linked-subrent-fields {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  margin-top: 2px;
+}
+
+/* Уплотняем поля субаренды */
+body.v4-only-body .v4-linked-subrent-fields .v4-field {
+  gap: 3px;
+}
+
+/* Инфо-строка внизу */
+body.v4-only-body .v4-linked-subrent-override .v4-note:last-child {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 6px 0 0;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--line-soft);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ШАГ 7: Equipment — убираем инфо и неактивные группы, уплотняем
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* Убираем пустые группы (0 выбрано, 0 доступно) */
+body.v4-only-body .v4-equipment-group--smart:not([open]) {
+  /* Оставляем только если есть позиции */
+}
+
+/* Группы с 0 базовых позиций — скрываем */
+body.v4-only-body details.v4-equipment-group--smart summary span:empty ~ * { display: none; }
+
+/* Stats полоса */
+body.v4-only-body .v4-equipment-basket--availability {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-md) !important;
+  overflow: hidden !important;
+  background: var(--panel-2) !important;
+  margin-bottom: 10px !important;
+}
+
+body.v4-only-body .v4-equipment-basket--availability .v4-mini {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  padding: 8px 12px !important;
+  border-right: 1px solid var(--line-soft) !important;
+  border-radius: 0 !important;
+  background: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+}
+
+body.v4-only-body .v4-equipment-basket--availability .v4-mini:last-child { border-right: none !important; }
+body.v4-only-body .v4-equipment-basket--availability .v4-mini b { font-size: 15px !important; font-weight: 700 !important; color: var(--text-strong) !important; }
+body.v4-only-body .v4-equipment-basket--availability .v4-mini span { font-size: 10px !important; color: var(--muted) !important; text-transform: uppercase !important; letter-spacing: 0.04em !important; font-weight: 600 !important; }
+
+body.v4-only-body .v4-equipment-basket--availability .v4-mini.is-ok b     { color: var(--success) !important; }
+body.v4-only-body .v4-equipment-basket--availability .v4-mini.is-deficit b { color: var(--danger) !important; }
+body.v4-only-body .v4-equipment-basket--availability .v4-mini.is-subrent b { color: var(--warning) !important; }
+body.v4-only-body .v4-equipment-basket--availability .v4-mini.is-manual b  { color: var(--info) !important; }
+body.v4-only-body .v4-equipment-basket--availability .v4-mini.is-muted { opacity: 0.45 !important; }
+
+/* summary grid дубликат под availability — скрываем */
+body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ШАГ 9: Команда проекта — карточки с разделением
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+body.v4-only-body .v4-project-crew-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Карточка одного участника */
+body.v4-only-body .v4-project-crew-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+body.v4-only-body .v4-project-crew-card--draft {
+  border-style: dashed;
+  border-color: var(--line-medium);
+  background: var(--surface);
+}
+
+/* Основная форма участника */
+body.v4-only-body .v4-project-crew-card .v4-project-crew-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+/* Секция ключа доступа */
+body.v4-only-body .v4-project-crew-access-wrap {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-project-crew-access {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr minmax(120px, 1.5fr) auto auto auto;
+  gap: 8px;
+  align-items: end;
+  padding: 10px 12px;
+  background: var(--panel-3);
+  border: 1px solid var(--warning-border);
+  border-radius: var(--radius-md);
+  margin-top: 4px;
+}
+
+/* Комментарий */
+body.v4-only-body .v4-project-crew-card > .v4-field {
+  padding: 10px 14px;
+  border-top: 1px solid var(--line-soft);
+}
+
+body.v4-only-body .v4-project-crew-card > .v4-field input {
+  margin-top: 4px;
+}
+
+/* Кнопка удалить — красная */
+body.v4-only-body [data-project-crew-delete] {
+  background: var(--danger-bg) !important;
+  border-color: var(--danger-border) !important;
+  color: var(--danger-text) !important;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ШАГ 10: Чеклист — компактные плитки
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+body.v4-only-body .v4-readiness-compact {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+body.v4-only-body .v4-readiness-compact-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-readiness-compact-score {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+body.v4-only-body .v4-readiness-compact-score b {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+body.v4-only-body .v4-readiness-compact-score span {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+body.v4-only-body .v4-readiness-compact-score.ok   { color: var(--success); }
+body.v4-only-body .v4-readiness-compact-score.warn { color: var(--warning); }
+body.v4-only-body .v4-readiness-compact-score.bad  { color: var(--danger); }
+
+body.v4-only-body .v4-readiness-compact-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+
+body.v4-only-body .v4-readiness-compact-meta .ok   { color: var(--success); font-weight: 600; }
+body.v4-only-body .v4-readiness-compact-meta .warn { color: var(--warning); font-weight: 600; }
+body.v4-only-body .v4-readiness-compact-meta .bad  { color: var(--danger);  font-weight: 600; }
+
+/* Сетка плиток */
+body.v4-only-body .v4-readiness-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1px;
+  background: var(--line-soft);
+}
+
+body.v4-only-body .v4-readiness-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  background: var(--panel-2);
+  cursor: default;
+  min-width: 0;
+}
+
+body.v4-only-body .v4-readiness-tile.ok   { background: var(--panel-2); }
+body.v4-only-body .v4-readiness-tile.warn { background: rgba(245,158,11,.06); }
+body.v4-only-body .v4-readiness-tile.bad  { background: rgba(239,68,68,.06); }
+
+body.v4-only-body .v4-readiness-tile-icon {
+  display: none; /* icon встроен в b через JS */
+}
+
+body.v4-only-body .v4-readiness-tile b {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.v4-only-body .v4-readiness-tile.ok   b { color: var(--success); }
+body.v4-only-body .v4-readiness-tile.warn b { color: var(--warning); }
+body.v4-only-body .v4-readiness-tile.bad  b { color: var(--danger); }
+
+body.v4-only-body .v4-readiness-tile small {
+  font-size: 10px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  body.v4-only-body .v4-readiness-tiles { grid-template-columns: repeat(2, 1fr); }
+  body.v4-only-body .v4-project-crew-card .v4-project-crew-grid { grid-template-columns: 1fr 1fr; }
+  body.v4-only-body .v4-project-crew-access { grid-template-columns: 1fr 1fr; }
+}
+
+/* ─── Субаренда — компактные поля ───────────────────────────────────────────── */
+
+body.v4-only-body .v4-subrent-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line-soft);
+  margin-top: 2px;
+}
+
+/* Ряд 1: 5 равных полей — размеры + цены */
+body.v4-only-body .v4-subrent-row-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  align-items: end;
+}
+
+/* Ряд 2: поставщик (flex:2) + кнопка + комментарий (flex:2) */
+body.v4-only-body .v4-subrent-row-supplier {
+  display: grid;
+  grid-template-columns: 2fr auto 2fr;
+  gap: 8px;
+  align-items: end;
+}
+
+/* Кнопка выравнивается по нижнему краю как поля с label */
+body.v4-only-body .v4-subrent-row-supplier {
+  align-items: center; /* центрируем по вертикали всю строку */
+}
+
+body.v4-only-body .v4-subrent-row-supplier .v4-field {
+  margin-top: 0;
+}
+
+body.v4-only-body .v4-subrent-row-supplier .v4-subrent-add-btn {
+  height: 34px;
+  white-space: nowrap;
+  min-width: 120px;
+  flex-shrink: 0;
+  margin-top: 17px; /* высота label: 12px font + 5px gap */
+}
+
+/* Инфо-строка внизу блока */
+body.v4-only-body .v4-linked-subrent-override .v4-note--compact {
+  font-size: 11px;
+  color: var(--muted-2);
+  padding: 6px 0 0;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--line-soft);
+  border-radius: 0;
+  margin-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  body.v4-only-body .v4-subrent-row-5 { grid-template-columns: repeat(3, 1fr); }
+  body.v4-only-body .v4-subrent-row-supplier { grid-template-columns: 1fr auto; }
+  body.v4-only-body .v4-subrent-row-supplier .v4-field:last-child { grid-column: 1 / -1; }
+}

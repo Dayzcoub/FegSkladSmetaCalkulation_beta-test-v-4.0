@@ -1,0 +1,101 @@
+/* =============================================================================
+   PACK.IT — Design Tokens
+   Единственный источник значений. Палитра по утверждённым мокапам.
+   ============================================================================= */
+
+:root {
+  /* --- Фоны --- */
+  --bg:               #0d1117;   /* страница */
+  --bg-2:             #0a0e13;   /* глубже фона */
+  --panel:            #111827;   /* nav rail, side panels */
+  --panel-2:          #1a2234;   /* карточки */
+  --panel-3:          #1e2a3d;   /* elevated карточки */
+  --surface:          #151d2b;   /* поверхность внутри карточек */
+  --surface-raised:   #1a2234;
+  --surface-elevated: #1e2a3d;
+
+  /* --- Границы --- */
+  --line:             rgba(255, 255, 255, 0.07);
+  --line-soft:        rgba(255, 255, 255, 0.04);
+  --line-medium:      rgba(255, 255, 255, 0.12);
+
+  /* --- Текст --- */
+  --text:             #e2e8f0;   /* основной */
+  --ink:              #e2e8f0;
+  --text-strong:      #f1f5f9;   /* заголовки */
+  --text-heading:     #f8fafc;
+  --muted:            #64748b;   /* вторичный */
+  --muted-2:          #475569;   /* третичный */
+
+  /* --- Акцент: оранжевый (Primary CTA) --- */
+  --accent:           #f97316;
+  --accent-dark:      #c2410c;
+  --accent-soft:      rgba(249, 115, 22, 0.12);
+  --accent-line:      rgba(249, 115, 22, 0.40);
+  --accent-text:      #fff7ed;
+
+  /* --- Акцент: синий (active states, links, info) --- */
+  --blue:             #3b82f6;
+  --blue-dark:        #1d4ed8;
+  --blue-soft:        rgba(59, 130, 246, 0.12);
+  --blue-line:        rgba(59, 130, 246, 0.35);
+  --blue-text:        #eff6ff;
+
+  /* --- Семантика --- */
+  --danger:           #ef4444;
+  --danger-soft:      rgba(239, 68, 68, 0.12);
+  --danger-border:    rgba(239, 68, 68, 0.30);
+  --danger-bg:        rgba(239, 68, 68, 0.08);
+  --danger-text:      #fecaca;
+
+  --warning:          #f59e0b;
+  --warning-soft:     rgba(245, 158, 11, 0.12);
+  --warning-border:   rgba(245, 158, 11, 0.30);
+  --warning-bg:       rgba(245, 158, 11, 0.08);
+  --warning-text:     #fde68a;
+
+  --success:          #22c55e;
+  --success-soft:     rgba(34, 197, 94, 0.12);
+  --success-border:   rgba(34, 197, 94, 0.30);
+  --success-bg:       rgba(34, 197, 94, 0.08);
+  --success-text:     #bbf7d0;
+
+  --info:             #60a5fa;
+  --info-soft:        rgba(96, 165, 250, 0.12);
+  --info-border:      rgba(96, 165, 250, 0.25);
+  --info-bg:          rgba(96, 165, 250, 0.08);
+  --info-text:        #dbeafe;
+
+  /* --- Радиусы --- */
+  --radius-xs:  3px;
+  --radius-sm:  4px;
+  --radius-md:  6px;
+  --radius-lg:  8px;
+  --radius-xl:  10px;
+  --radius-2xl: 12px;
+
+  /* --- Тени --- */
+  --shadow-soft: 0 20px 48px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.30);
+  --shadow-sm:   0 1px 4px rgba(0, 0, 0, 0.20);
+
+  /* --- Focus --- */
+  --focus-ring: 0 0 0 2px rgba(59, 130, 246, 0.45);
+
+  /* --- Типографика --- */
+  --font: Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* --- Shell размеры --- */
+  --nav-width:     220px;
+  --nav-collapsed: 56px;
+  --topbar-height: 48px;
+  --right-panel:   280px;
+
+  /* --- Специфика: canvas / сцена --- */
+  --wood-1:    #6e573f;
+  --wood-2:    #4a3529;
+  --wood-3:    #2b211c;
+  --wood-line: rgba(236, 210, 172, 0.42);
+}

@@ -1,0 +1,141 @@
+/* =============================================================================
+   PACK.IT — Tables & Status
+   ============================================================================= */
+
+/* --- Table wrap --- */
+body.v4-only-body .v4-table-wrap,
+body.v4-only-body .pk-table-wrap {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: auto;
+}
+
+/* --- Table --- */
+body.v4-only-body table,
+body.v4-only-body .v4-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+/* --- Header --- */
+body.v4-only-body th {
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+/* --- Cells --- */
+body.v4-only-body td {
+  padding: 10px 12px;
+  color: var(--text);
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: middle;
+}
+
+body.v4-only-body tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- Row hover --- */
+body.v4-only-body tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+/* --- Tabs --- */
+body.v4-only-body .pk-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 16px;
+}
+
+body.v4-only-body .pk-tab {
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.1s, border-color 0.1s;
+  white-space: nowrap;
+}
+
+body.v4-only-body .pk-tab:hover {
+  color: var(--text);
+}
+
+body.v4-only-body .pk-tab.active {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+}
+
+/* --- Badges --- */
+body.v4-only-body .pk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+body.v4-only-body .pk-badge-success { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+body.v4-only-body .pk-badge-warning { background: var(--warning-bg); color: var(--warning-text); border: 1px solid var(--warning-border); }
+body.v4-only-body .pk-badge-danger  { background: var(--danger-bg);  color: var(--danger-text);  border: 1px solid var(--danger-border); }
+body.v4-only-body .pk-badge-info    { background: var(--info-bg);    color: var(--info-text);    border: 1px solid var(--info-border); }
+body.v4-only-body .pk-badge-muted   { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--line); }
+
+/* --- Status text --- */
+body.v4-only-body .ok, body.v4-only-body .success { color: var(--success); }
+body.v4-only-body .warn, body.v4-only-body .warning { color: var(--warning); }
+body.v4-only-body .bad, body.v4-only-body .danger, body.v4-only-body .error { color: var(--danger); }
+body.v4-only-body .na { color: var(--muted-2); }
+body.v4-only-body .info { color: var(--info); }
+
+/* --- Status cards --- */
+body.v4-only-body .v4-readiness-item.ok  { border-color: var(--success-border); background: var(--success-bg); }
+body.v4-only-body .v4-readiness-item.warn { border-color: var(--warning-border); background: var(--warning-bg); }
+body.v4-only-body .v4-readiness-item.bad  { border-color: var(--danger-border);  background: var(--danger-bg); }
+
+/* --- Note / hint --- */
+body.v4-only-body .v4-note,
+body.v4-only-body .pk-note {
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* --- Code/JSON block --- */
+body.v4-only-body .v4-json-details summary {
+  color: var(--text);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+body.v4-only-body pre,
+body.v4-only-body code {
+  background: #090d13;
+  border: 1px solid var(--line);
+  color: #94a3b8;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  padding: 10px 12px;
+}
