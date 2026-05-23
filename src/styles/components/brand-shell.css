@@ -1,9 +1,20 @@
 body.v4-only-body .packit-nav-logo {
   display: flex;
   align-items: center;
-  gap: 7px;
   padding: 10px 10px 9px;
-  min-height: 48px;
+  min-height: 50px;
+}
+
+body.v4-only-body .packit-nav-logo--asset-lockup {
+  justify-content: flex-start;
+}
+
+body.v4-only-body .packit-nav-logo-lockup {
+  display: block;
+  width: 112px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 body.v4-only-body .packit-nav-logo-mark,
