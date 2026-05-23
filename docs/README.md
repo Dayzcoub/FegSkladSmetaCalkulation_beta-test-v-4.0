@@ -31,6 +31,12 @@ This folder contains active project documentation and archived historical notes.
 - `SECURITY.md` — secrets, frontend limits, file access, demo data, audit and backup security rules.
 - `INTEGRATIONS.md` — integration adapter principles for calendar, notifications, storage, email/SMS/push and future systems.
 
+### UI and assets
+
+- `PACKIT_UI_CONCEPT_AND_LAYOUT.md` — product UI concept, screen/workspace structure, layout contract and user-facing vs dev/admin UI rules.
+- `PACKIT_ASSET_SYSTEM.md` — asset system contract for logos, icons, hero graphics, constructor textures, empty states, naming, formats and QA.
+- `UI_SYSTEM.md` — durable UI rules and technical canvas constraints.
+
 ### Architecture and development
 
 - `PRODUCT_MODULES_ROADMAP.md` — staged product roadmap from Project core to 3D, chat, analytics and mobile polish.
@@ -54,7 +60,6 @@ This folder contains active project documentation and archived historical notes.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
 - `DOCUMENTATION_POLICY.md` — what belongs in docs, changelog and code comments.
 - `CHANGELOG_POLICY.md` — rules for keeping release history readable.
-- `UI_SYSTEM.md` — durable UI rules and technical canvas constraints.
 - `CONSTRUCTORS.md` — durable Stage, Truss and LED constructor rules.
 - `BACKEND_CONTRACT.md` — backend, sync, auth and controlled-write rules.
 - `CLEANUP_AUDIT_2026_05_21.md` — cleanup pass notes and follow-up queue.
