@@ -34,6 +34,7 @@ This folder contains active project documentation and archived historical notes.
 - `V5_FIRST_TECHNICAL_STEP.md` — safe first code step for domain schemas/snapshots.
 - `DEFINITION_OF_DONE.md` — flexible readiness rules that protect core flows without blocking new ideas.
 - `TESTING_STRATEGY.md` — practical testing levels and bounded aggregation/performance rules.
+- `ERROR_HANDLING_AND_RECOVERY.md` — recovery rules for failed saves, partial confirmations, imports, documents, integrations and backend sync.
 - `DEPLOYMENT_AND_SCALING.md` — portable installation, VPS deployment, backup/restore and scaling contract.
 - `ARCHITECTURE.md` — current runtime structure and module ownership.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
