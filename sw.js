@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_NAV_LOCKUP_ASSET_2026_05_23';
-const CACHE_NAME = 'packit-nav-lockup-asset-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-nav-lockup-asset-2026-05-23';
+const CACHE_VERSION = 'PACKIT_SAFE_LOGO_FALLBACK_2026_05_23';
+const CACHE_NAME = 'packit-safe-logo-fallback-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-safe-logo-fallback-2026-05-23';
 
 const CORE_ASSETS = [
   './',
