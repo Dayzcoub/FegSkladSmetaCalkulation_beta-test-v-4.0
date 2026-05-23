@@ -22,13 +22,24 @@
     if (!symbolSrc) return;
 
     scope.querySelectorAll('.packit-nav-logo').forEach(logo => {
-      if (!logo || logo.dataset.packitBrandReady === '1') return;
-      const mark = logo.querySelector('.packit-nav-logo-mark');
+      const mark = logo && logo.querySelector ? logo.querySelector('.packit-nav-logo-mark') : null;
       if (!mark) return;
 
       mark.classList.add('packit-nav-logo-mark--asset');
       mark.setAttribute('aria-hidden', 'true');
-      mark.innerHTML = `<img class="packit-nav-logo-symbol" src="${escapeAttr(symbolSrc)}" alt="" loading="eager">`;
+      mark.style.backgroundColor = 'transparent';
+      mark.style.backgroundImage = 'url(' + symbolSrc + ')';
+      mark.style.backgroundPosition = 'center';
+      mark.style.backgroundRepeat = 'no-repeat';
+      mark.style.backgroundSize = 'contain';
+      mark.style.color = 'transparent';
+      mark.style.overflow = 'hidden';
+      mark.style.padding = '3px';
+
+      const currentImg = mark.querySelector('img.packit-nav-logo-symbol');
+      if (!currentImg || currentImg.getAttribute('src') !== symbolSrc) {
+        mark.innerHTML = '<img class="packit-nav-logo-symbol" src="' + escapeAttr(symbolSrc) + '" alt="" loading="eager">';
+      }
       logo.dataset.packitBrandReady = '1';
     });
   }
@@ -51,9 +62,19 @@
     observer.observe(body, { childList: true, subtree: true });
   }
 
+  function startRetryPass() {
+    let count = 0;
+    const timer = GLOBAL.setInterval(() => {
+      count += 1;
+      applyShellBranding(GLOBAL.document);
+      if (count >= 20) GLOBAL.clearInterval(timer);
+    }, 250);
+  }
+
   function init() {
     applyShellBranding(GLOBAL.document);
     observeShell();
+    startRetryPass();
   }
 
   function escapeAttr(value) {
@@ -62,7 +83,7 @@
   }
 
   ROOT.PackitShellBranding = {
-    version: '1.0.0',
+    version: '1.0.1',
     applyShellBranding,
     init,
   };
