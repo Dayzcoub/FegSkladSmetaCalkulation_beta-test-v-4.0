@@ -36,6 +36,7 @@ This folder contains active project documentation and archived historical notes.
 - `TESTING_STRATEGY.md` — practical testing levels and bounded aggregation/performance rules.
 - `ERROR_HANDLING_AND_RECOVERY.md` — recovery rules for failed saves, partial confirmations, imports, documents, integrations and backend sync.
 - `OFFLINE_AND_PWA_CONTRACT.md` — offline/PWA rules, local queues, warehouse offline events and sync conflict handling.
+- `SINGLE_TENANT_DEPLOYMENT.md` — separate closed installation per company with company-specific config and customization rules.
 - `DEPLOYMENT_AND_SCALING.md` — portable installation, VPS deployment, backup/restore and scaling contract.
 - `ARCHITECTURE.md` — current runtime structure and module ownership.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
