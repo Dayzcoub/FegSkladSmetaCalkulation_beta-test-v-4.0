@@ -8,39 +8,28 @@
     return ROOT.PackitAssetManifest || null;
   }
 
-  function resolveSymbol() {
+  function resolveHorizontalLogo() {
     const assets = getAssets();
     if (!assets || !assets.resolve) return '';
-    return assets.resolve('brand.symbol', { theme: 'dark' }) || '';
+    return assets.resolve('brand.logo.horizontal', { theme: 'dark' }) || '';
   }
 
   function applyShellBranding(root) {
     const scope = root || GLOBAL.document;
     if (!scope || !scope.querySelectorAll) return;
 
-    const symbolSrc = resolveSymbol();
-    if (!symbolSrc) return;
+    const logoSrc = resolveHorizontalLogo();
+    if (!logoSrc) return;
 
     scope.querySelectorAll('.packit-nav-logo').forEach(logo => {
-      const mark = logo && logo.querySelector ? logo.querySelector('.packit-nav-logo-mark') : null;
-      if (!mark) return;
+      if (!logo) return;
+      const currentImg = logo.querySelector && logo.querySelector('img.packit-nav-logo-lockup');
+      if (logo.dataset.packitBrandLockup === logoSrc && currentImg) return;
 
-      mark.classList.add('packit-nav-logo-mark--asset');
-      mark.setAttribute('aria-hidden', 'true');
-      mark.style.backgroundColor = 'transparent';
-      mark.style.backgroundImage = 'url(' + symbolSrc + ')';
-      mark.style.backgroundPosition = 'center';
-      mark.style.backgroundRepeat = 'no-repeat';
-      mark.style.backgroundSize = 'contain';
-      mark.style.color = 'transparent';
-      mark.style.overflow = 'hidden';
-      mark.style.padding = '3px';
-
-      const currentImg = mark.querySelector('img.packit-nav-logo-symbol');
-      if (!currentImg || currentImg.getAttribute('src') !== symbolSrc) {
-        mark.innerHTML = '<img class="packit-nav-logo-symbol" src="' + escapeAttr(symbolSrc) + '" alt="" loading="eager">';
-      }
-      logo.dataset.packitBrandReady = '1';
+      logo.classList.add('packit-nav-logo--asset-lockup');
+      logo.setAttribute('aria-label', 'PACK.IT / ПАК.ИТ');
+      logo.innerHTML = '<img class="packit-nav-logo-lockup" src="' + escapeAttr(logoSrc) + '" alt="PACK.IT / ПАК.ИТ" loading="eager">';
+      logo.dataset.packitBrandLockup = logoSrc;
     });
   }
 
@@ -83,7 +72,7 @@
   }
 
   ROOT.PackitShellBranding = {
-    version: '1.0.1',
+    version: '1.1.0',
     applyShellBranding,
     init,
   };
