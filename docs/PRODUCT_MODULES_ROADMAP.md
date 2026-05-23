@@ -23,7 +23,7 @@ Backend / deployment
     ↓
 Offline / notifications
     ↓
-3D / chat / mobile polish / analytics
+3D / communication / Field Kit / mobile polish / analytics
 ```
 
 Нельзя строить сложные модули поверх хаотичной модели данных.
@@ -433,7 +433,57 @@ Growth:
 
 Не делать чат раньше задач, ролей и уведомлений.
 
-## Stage 13 — Analytics and reports
+## Stage 13 — Pack.it Field Kit / Field Communication
+
+Цель:
+
+- дать команде связь и координацию на площадке без интернета;
+- использовать локальную сеть проекта;
+- связать field communication с проектом, задачами, ролями, offline queue and sync;
+- уменьшить потребность в отдельных рациях/простых интеркомах на небольших и средних проектах.
+
+MVP:
+
+- project field mode;
+- local project access via QR/access key;
+- local project text chat;
+- role-based rooms;
+- project task list offline/LAN;
+- local event queue;
+- sync when internet returns;
+- basic field status page;
+- clear user-facing status without dev diagnostics.
+
+Voice MVP:
+
+- push-to-talk or voice notes;
+- role-based voice rooms;
+- local-only operation;
+- technical director announcement/broadcast mode;
+- fallback to text when voice unavailable;
+- visible voice status for users.
+
+Growth:
+
+- full WebRTC voice rooms;
+- local SFU/relay on mini PC;
+- emergency broadcast;
+- SIP/VoIP bridge;
+- radio/PA integration;
+- rugged field server image;
+- OpenWRT helper package;
+- one-click field kit setup;
+- Pack.it Field Box as optional hardware/software bundle.
+
+Нельзя:
+
+- копировать всю базу компании на field server;
+- смешивать cache разных projects/field sessions;
+- показывать обычным пользователям raw sync/voice/server diagnostics;
+- обещать полную замену safety-critical radio/intercom workflows without fallback;
+- делать field mode до базовых Project/Tasks/Access/Offline contracts.
+
+## Stage 14 — Analytics and reports
 
 Цель:
 
@@ -457,7 +507,7 @@ Growth:
 - client history;
 - license/admin telemetry, если согласовано.
 
-## Stage 14 — Mobile polish and native app direction
+## Stage 15 — Mobile polish and native app direction
 
 Цель:
 
@@ -471,7 +521,8 @@ MVP:
 - mobile tasks;
 - mobile warehouse issue/return;
 - QR/invite onboarding;
-- offline status.
+- offline status;
+- field mode entry/status.
 
 Growth:
 
@@ -479,7 +530,8 @@ Growth:
 - push reliability;
 - camera/file workflows;
 - barcode/QR scanner;
-- native share/export.
+- native share/export;
+- field voice UX polish.
 
 ## Что нельзя делать раньше времени
 
@@ -488,6 +540,7 @@ Growth:
 - полного 3D-конструктора;
 - общего SaaS multi-tenant;
 - чатов и пушей без задач;
+- Field Kit без Project/Tasks/Access/Offline foundation;
 - сложной аналитики без нормализованных данных;
 - кастомных шаблонов без document snapshot model;
 - offline warehouse без нормального warehouse workflow;
@@ -505,10 +558,12 @@ Growth:
 5. WarehouseNeed normalization
 6. document snapshot generation
 7. tasks from lifecycle
+8. dev/admin-only diagnostics visibility
+9. first VPS installation scripts/checklists
 ```
 
-Только после этого безопасно расширять 3D, offline warehouse, notifications, custom templates and chat.
+Только после этого безопасно расширять 3D, offline warehouse, notifications, custom templates, chat and Field Kit.
 
 ## Итоговый закон
 
-Pack.it развивается от ядра Project → Section → Resource → Warehouse → Documents → Tasks к расширениям: backend, deployment, offline, notifications, 3D, chat, analytics and mobile polish. Каждый новый модуль должен опираться на доменную модель и не обходить Project lifecycle, access control, warehouse workflow, document snapshots and audit rules.
+Pack.it развивается от ядра Project → Section → Resource → Warehouse → Documents → Tasks к расширениям: backend, deployment, offline, notifications, 3D, communication, Field Kit, analytics and mobile polish. Каждый новый модуль должен опираться на доменную модель и не обходить Project lifecycle, access control, warehouse workflow, document snapshots, offline rules and audit rules.
