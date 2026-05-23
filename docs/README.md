@@ -17,6 +17,7 @@ This folder contains active project documentation and archived historical notes.
 
 - `FLEXIBLE_QUOTE_SECTIONS.md` — flexible project-section model for tents, generators, decor, furniture, climate, FBS, manual constructions and future directions.
 - `FLEXIBLE_RESOURCE_DATABASE.md` — category-aware resource database model with shared fields and category-specific technical specs.
+- `DATA_QUALITY_RULES.md` — resource data quality status, required fields and automatic scenario restrictions.
 - `WAREHOUSE_WORKFLOW.md` — warehouse flow from need and availability to reservation, issue, return and closeout.
 
 ### Access, security and integrations
