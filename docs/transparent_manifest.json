@@ -1,0 +1,247 @@
+{
+  "brand": [
+    {
+      "name": "packit_logo_horizontal",
+      "light": "brand/light/packit_logo_horizontal.png",
+      "dark": "brand/dark/packit_logo_horizontal.png",
+      "size": [
+        1600,
+        533
+      ]
+    },
+    {
+      "name": "packit_symbol",
+      "light": "brand/light/packit_symbol.png",
+      "dark": "brand/dark/packit_symbol.png",
+      "size": [
+        817,
+        652
+      ]
+    },
+    {
+      "name": "packit_app_icon_light",
+      "light": "brand/light/packit_app_icon_light.png",
+      "dark": "brand/dark/packit_app_icon_light.png",
+      "size": [
+        947,
+        801
+      ]
+    },
+    {
+      "name": "packit_splash_dark",
+      "file": "brand/dark/packit_splash_dark.png",
+      "size": [
+        1672,
+        941
+      ]
+    }
+  ],
+  "empty_states": [
+    {
+      "name": "empty_no_projects_open_flight_case",
+      "light": "empty_states/light/empty_no_projects_open_flight_case.png",
+      "dark": "empty_states/dark/empty_no_projects_open_flight_case.png",
+      "size": [
+        864,
+        900
+      ]
+    },
+    {
+      "name": "empty_warehouse_empty_shelf",
+      "light": "empty_states/light/empty_warehouse_empty_shelf.png",
+      "dark": "empty_states/dark/empty_warehouse_empty_shelf.png",
+      "size": [
+        883,
+        900
+      ]
+    },
+    {
+      "name": "empty_no_documents_tech_folder",
+      "light": "empty_states/light/empty_no_documents_tech_folder.png",
+      "dark": "empty_states/dark/empty_no_documents_tech_folder.png",
+      "size": [
+        879,
+        900
+      ]
+    },
+    {
+      "name": "empty_no_notifications_bell",
+      "light": "empty_states/light/empty_no_notifications_bell.png",
+      "dark": "empty_states/dark/empty_no_notifications_bell.png",
+      "size": [
+        887,
+        900
+      ]
+    },
+    {
+      "name": "empty_search_not_found_magnifier",
+      "light": "empty_states/light/empty_search_not_found_magnifier.png",
+      "dark": "empty_states/dark/empty_search_not_found_magnifier.png",
+      "size": [
+        900,
+        871
+      ]
+    },
+    {
+      "name": "empty_no_reports_report_sheet",
+      "light": "empty_states/light/empty_no_reports_report_sheet.png",
+      "dark": "empty_states/dark/empty_no_reports_report_sheet.png",
+      "size": [
+        864,
+        900
+      ]
+    }
+  ],
+  "support_illustrations": [
+    {
+      "name": "support_equipment_case",
+      "light": "support_illustrations/light/support_equipment_case.png",
+      "dark": "support_illustrations/dark/support_equipment_case.png",
+      "size": [
+        362,
+        378
+      ]
+    },
+    {
+      "name": "support_checklist_complete",
+      "light": "support_illustrations/light/support_checklist_complete.png",
+      "dark": "support_illustrations/dark/support_checklist_complete.png",
+      "size": [
+        359,
+        352
+      ]
+    },
+    {
+      "name": "support_delivery_truck",
+      "light": "support_illustrations/light/support_delivery_truck.png",
+      "dark": "support_illustrations/dark/support_delivery_truck.png",
+      "size": [
+        362,
+        281
+      ]
+    },
+    {
+      "name": "support_document_file",
+      "light": "support_illustrations/light/support_document_file.png",
+      "dark": "support_illustrations/dark/support_document_file.png",
+      "size": [
+        362,
+        346
+      ]
+    },
+    {
+      "name": "support_pie_chart",
+      "light": "support_illustrations/light/support_pie_chart.png",
+      "dark": "support_illustrations/dark/support_pie_chart.png",
+      "size": [
+        534,
+        468
+      ]
+    },
+    {
+      "name": "support_security_shield",
+      "light": "support_illustrations/light/support_security_shield.png",
+      "dark": "support_illustrations/dark/support_security_shield.png",
+      "size": [
+        537,
+        482
+      ]
+    },
+    {
+      "name": "support_module_cubes",
+      "light": "support_illustrations/light/support_module_cubes.png",
+      "dark": "support_illustrations/dark/support_module_cubes.png",
+      "size": [
+        528,
+        454
+      ]
+    },
+    {
+      "name": "support_cloud_upload",
+      "light": "support_illustrations/light/support_cloud_upload.png",
+      "dark": "support_illustrations/dark/support_cloud_upload.png",
+      "size": [
+        566,
+        412
+      ]
+    },
+    {
+      "name": "support_route_map",
+      "light": "support_illustrations/light/support_route_map.png",
+      "dark": "support_illustrations/dark/support_route_map.png",
+      "size": [
+        355,
+        387
+      ]
+    },
+    {
+      "name": "support_file_upload_dropzone",
+      "light": "support_illustrations/light/support_file_upload_dropzone.png",
+      "dark": "support_illustrations/dark/support_file_upload_dropzone.png",
+      "size": [
+        362,
+        387
+      ]
+    },
+    {
+      "name": "support_filter",
+      "light": "support_illustrations/light/support_filter.png",
+      "dark": "support_illustrations/dark/support_filter.png",
+      "size": [
+        362,
+        386
+      ]
+    },
+    {
+      "name": "support_server_stack",
+      "light": "support_illustrations/light/support_server_stack.png",
+      "dark": "support_illustrations/dark/support_server_stack.png",
+      "size": [
+        352,
+        388
+      ]
+    },
+    {
+      "name": "support_user_add",
+      "light": "support_illustrations/light/support_user_add.png",
+      "dark": "support_illustrations/dark/support_user_add.png",
+      "size": [
+        334,
+        333
+      ]
+    },
+    {
+      "name": "support_calendar",
+      "light": "support_illustrations/light/support_calendar.png",
+      "dark": "support_illustrations/dark/support_calendar.png",
+      "size": [
+        328,
+        297
+      ]
+    },
+    {
+      "name": "support_folder",
+      "light": "support_illustrations/light/support_folder.png",
+      "dark": "support_illustrations/dark/support_folder.png",
+      "size": [
+        362,
+        383
+      ]
+    },
+    {
+      "name": "support_settings_gears",
+      "light": "support_illustrations/light/support_settings_gears.png",
+      "dark": "support_illustrations/dark/support_settings_gears.png",
+      "size": [
+        353,
+        383
+      ]
+    }
+  ],
+  "boards": [
+    "boards/empty_states_light_board.png",
+    "boards/empty_states_light_pack_board.png",
+    "boards/individual_assets_light_contact_sheet.png",
+    "boards/individual_assets_dark_contact_sheet.png"
+  ]
+}
