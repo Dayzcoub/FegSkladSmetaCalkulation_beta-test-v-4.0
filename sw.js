@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_SERVER_BRIDGE_2026_05_23';
-const CACHE_NAME = 'packit-equipment-server-bridge-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-equipment-server-bridge-2026-05-23';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_UI_CONTROLLER_2026_05_23';
+const CACHE_NAME = 'packit-equipment-ui-controller-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-equipment-ui-controller-2026-05-23';
 
 const CORE_ASSETS = [
   './',
@@ -23,6 +23,7 @@ const CORE_ASSETS = [
   './src/styles/modules/quote.css',
   './src/styles/modules/quote-equipment-layout.css',
   './src/styles/modules/quote-equipment-tighten.css',
+  './src/styles/modules/quote-equipment-server-pass.css',
   './src/modules/index.js',
   './src/modules/FormatUtils.js',
   './src/modules/DomUtils.js',
@@ -127,6 +128,7 @@ const CORE_ASSETS = [
   './src/modules/QuoteProjectsUI.js',
   './src/modules/V4ClientsPanel.js',
   './src/modules/QuoteWizard.js',
+  './src/modules/QuoteEquipmentUiController.js',
   './src/modules/V4DesignSystem.js',
   './src/modules/V4AppShell.js',
   './public/assets/packit/brand/dark/packit_symbol.png',
