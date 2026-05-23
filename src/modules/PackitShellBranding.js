@@ -8,17 +8,19 @@
     return ROOT.PackitAssetManifest || null;
   }
 
-  function resolveHorizontalLogo() {
+  function resolveNavLogo() {
     const assets = getAssets();
     if (!assets || !assets.resolve) return '';
-    return assets.resolve('brand.logo.horizontal', { theme: 'dark' }) || '';
+    return assets.resolve('brand.logo.navLockup', { theme: 'dark' })
+      || assets.resolve('brand.logo.horizontal', { theme: 'dark' })
+      || '';
   }
 
   function applyShellBranding(root) {
     const scope = root || GLOBAL.document;
     if (!scope || !scope.querySelectorAll) return;
 
-    const logoSrc = resolveHorizontalLogo();
+    const logoSrc = resolveNavLogo();
     if (!logoSrc) return;
 
     scope.querySelectorAll('.packit-nav-logo').forEach(logo => {
@@ -72,7 +74,7 @@
   }
 
   ROOT.PackitShellBranding = {
-    version: '1.1.0',
+    version: '1.2.0',
     applyShellBranding,
     init,
   };
