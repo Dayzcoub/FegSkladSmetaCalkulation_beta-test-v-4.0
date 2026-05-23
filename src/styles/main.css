@@ -34,6 +34,7 @@
 @import './modules/dashboard.css';
 @import './modules/equipment.css';
 @import './modules/quote.css';
+@import './modules/quote-equipment-layout.css';
 @import './modules/truss.css';
 @import './modules/sync.css';
 @import './modules/reports.css';
