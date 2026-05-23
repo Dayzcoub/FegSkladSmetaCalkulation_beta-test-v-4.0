@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'FEG_STAGE_PRO_3_17_50_DOCS_CLEANUP';
-const CACHE_NAME = 'feg-stage-pro-v3-17-50-docs-cleanup';
-const RUNTIME_CACHE = 'feg-stage-runtime-v3-17-50';
+const CACHE_VERSION = 'PACKIT_UI_BRAND_ADMIN_FIX_2026_05_23';
+const CACHE_NAME = 'packit-ui-brand-admin-fix-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-brand-admin-fix-2026-05-23';
 
 const CORE_ASSETS = [
   './',
@@ -8,6 +8,18 @@ const CORE_ASSETS = [
   './manifest.json',
   './feg_svg_calibration.json',
   './src/README.md',
+  './src/styles/main.css',
+  './src/styles/tokens.css',
+  './src/styles/reset.css',
+  './src/styles/base.css',
+  './src/styles/components/shell.css',
+  './src/styles/components/brand-shell.css',
+  './src/styles/components/layout.css',
+  './src/styles/components/primitives.css',
+  './src/styles/components/buttons-forms.css',
+  './src/styles/components/tables-status.css',
+  './src/styles/components/modals.css',
+  './src/styles/modules/admin.css',
   './src/modules/index.js',
   './src/modules/FormatUtils.js',
   './src/modules/DomUtils.js',
@@ -25,6 +37,8 @@ const CORE_ASSETS = [
   './src/modules/PriceWeightSettings.js',
   './src/modules/CalibrationManager.js',
   './src/modules/PdfGenerator.js',
+  './src/modules/PackitAssetManifest.js',
+  './src/modules/PackitShellBranding.js',
   './src/modules/TrussBlockConstructor.js',
   './src/modules/LoadChecker.js',
   './src/modules/RolePermissions.js',
@@ -111,6 +125,7 @@ const CORE_ASSETS = [
   './src/modules/QuoteWizard.js',
   './src/modules/V4DesignSystem.js',
   './src/modules/V4AppShell.js',
+  './assets/packit/brand/dark/packit_symbol.png',
   './stage-deck-texture.png',
   './led-cabinet-texture.png',
   './icon-180.png',
