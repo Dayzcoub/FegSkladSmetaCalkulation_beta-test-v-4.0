@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_CSS_SYNC_2026_05_23';
-const CACHE_NAME = 'packit-equipment-css-sync-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-equipment-css-sync-2026-05-23';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_SERVER_BRIDGE_2026_05_23';
+const CACHE_NAME = 'packit-equipment-server-bridge-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-equipment-server-bridge-2026-05-23';
 
 const CORE_ASSETS = [
   './',
@@ -62,6 +62,7 @@ const CORE_ASSETS = [
   './src/modules/CommunicationCenter.js',
   './src/modules/AccessOnboardingPanel.js',
   './src/modules/EquipmentDatabase.js',
+  './src/modules/EquipmentServerBridge.js',
   './src/modules/EquipmentDatabaseUI.js',
   './src/modules/LedCalculator.js',
   './src/modules/LedCalculatorUI.js',
