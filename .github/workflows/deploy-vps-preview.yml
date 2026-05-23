@@ -1,0 +1,71 @@
+name: Deploy Pack.it VPS Preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Git branch to deploy"
+        required: true
+        default: "main"
+      run_health_check:
+        description: "Run remote health check after deploy"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+concurrency:
+  group: packit-vps-preview-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to first VPS preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          test -n "${{ secrets.PACKIT_VPS_HOST }}" || { echo "PACKIT_VPS_HOST is missing"; exit 1; }
+          test -n "${{ secrets.PACKIT_VPS_USER }}" || { echo "PACKIT_VPS_USER is missing"; exit 1; }
+          test -n "${{ secrets.PACKIT_VPS_SSH_KEY }}" || { echo "PACKIT_VPS_SSH_KEY is missing"; exit 1; }
+
+      - name: Prepare SSH key
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          cat > ~/.ssh/packit_vps_key <<'EOF'
+          ${{ secrets.PACKIT_VPS_SSH_KEY }}
+          EOF
+          sed -i 's/^          //' ~/.ssh/packit_vps_key
+          chmod 600 ~/.ssh/packit_vps_key
+          ssh-keyscan -p "${{ secrets.PACKIT_VPS_PORT || '22' }}" "${{ secrets.PACKIT_VPS_HOST }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy selected branch
+        shell: bash
+        run: |
+          ssh \
+            -i ~/.ssh/packit_vps_key \
+            -p "${{ secrets.PACKIT_VPS_PORT || '22' }}" \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            "${{ secrets.PACKIT_VPS_USER }}@${{ secrets.PACKIT_VPS_HOST }}" \
+            "sudo /opt/packit/scripts/deploy/deploy-company-main-from-github.sh '${{ inputs.branch }}'"
+
+      - name: Health check
+        if: ${{ inputs.run_health_check == 'true' }}
+        shell: bash
+        run: |
+          ssh \
+            -i ~/.ssh/packit_vps_key \
+            -p "${{ secrets.PACKIT_VPS_PORT || '22' }}" \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            "${{ secrets.PACKIT_VPS_USER }}@${{ secrets.PACKIT_VPS_HOST }}" \
+            "sudo /opt/packit/scripts/health/check-company-main-preview.sh"
