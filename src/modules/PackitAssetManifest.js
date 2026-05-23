@@ -4,7 +4,7 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const BASE_PATH = 'public/assets/packit';
+  const BASE_PATH = GLOBAL.PACKIT_ASSET_BASE_PATH || 'assets/packit';
 
   const ASSETS = Object.freeze({
     brand: Object.freeze({
@@ -173,7 +173,7 @@
   }
 
   ROOT.PackitAssetManifest = {
-    version: '1.0.0',
+    version: '1.0.1',
     basePath: BASE_PATH,
     assets: ASSETS,
     resolve,
