@@ -32,6 +32,7 @@ This folder contains active project documentation and archived historical notes.
 
 - `PRODUCT_MODULES_ROADMAP.md` — staged product roadmap from Project core to 3D, chat, analytics and mobile polish.
 - `FIRST_REAL_COMPANY_DEPLOYMENT.md` — first real company VPS strategy while preparing a reusable Pack.it distribution.
+- `FIRST_VPS_IMPLEMENTATION_PLAN.md` — practical first VPS layout, env, release, backup, health checks and reusable install path.
 - `ARCHITECTURE_MIGRATION_V5.md` — staged migration roadmap from current prototype to typed domain architecture.
 - `V5_DOMAIN_MODEL.md` — first domain model vocabulary and entity fields for v5 migration.
 - `V5_FIRST_TECHNICAL_STEP.md` — safe first code step for domain schemas/snapshots.
