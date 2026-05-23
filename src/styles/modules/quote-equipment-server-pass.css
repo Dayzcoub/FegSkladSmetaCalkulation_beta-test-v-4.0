@@ -16,12 +16,16 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges {
 body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid {
   grid-column: 2;
   grid-row: 2;
+  position: sticky;
+  top: 10px;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
 body.v4-only-body [data-quote-equipment-panel] > .v4-note:nth-child(3) {
   grid-column: 2;
   grid-row: 3;
+  position: sticky;
+  top: 148px;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group,
@@ -35,13 +39,19 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group {
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group summary {
-  min-height: 54px;
+  min-height: 46px;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-list {
+  display: grid;
+  gap: 8px;
 }
 
 body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row {
-  grid-template-columns: minmax(320px, 1fr) 86px minmax(156px, 210px);
+  grid-template-columns: minmax(320px, 1fr) 86px minmax(156px, 220px);
   gap: 8px;
   align-items: end;
+  padding: 10px;
 }
 
 body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row .v4-equipment-row-control {
@@ -49,8 +59,49 @@ body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row .v4-equip
   grid-template-columns: auto minmax(180px, 1fr);
 }
 
+body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row .v4-equipment-row-control .btn-compact {
+  min-height: 30px;
+}
+
 body.v4-only-body [data-quote-equipment-panel] .v4-equipment-deficit-subrent {
   grid-column: 1 / -1;
+  margin-top: 2px;
+  padding: 10px;
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--warning, #f59e0b) 8%, var(--surface));
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-top,
+body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-prices {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 94px minmax(220px, 280px) auto;
+  gap: 8px;
+  align-items: end;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-prices {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 8px;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-title b {
+  display: block;
+  color: var(--warning, #f59e0b);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-title span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-equipment-subrentor-add {
+  min-height: 32px;
+  align-self: end;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-kicker,
@@ -66,6 +117,22 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-compact-list > .v
   margin: 0;
 }
 
+@media (max-width: 1440px) {
+  body.v4-only-body [data-quote-equipment-panel] {
+    grid-template-columns: minmax(0, 1fr) 240px;
+  }
+
+  body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-top,
+  body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-prices {
+    grid-template-columns: 1fr 90px minmax(180px, 240px);
+  }
+
+  body.v4-only-body [data-quote-equipment-panel] .v4-equipment-subrentor-add {
+    grid-column: 1 / -1;
+    width: fit-content;
+  }
+}
+
 @media (max-width: 1180px) {
   body.v4-only-body [data-quote-equipment-panel] {
     grid-template-columns: 1fr;
@@ -78,6 +145,12 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-compact-list > .v
   body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-compact-list {
     grid-column: 1;
     grid-row: auto;
+    position: static;
+  }
+
+  body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-top,
+  body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-prices {
+    grid-template-columns: 1fr;
   }
 }
 
