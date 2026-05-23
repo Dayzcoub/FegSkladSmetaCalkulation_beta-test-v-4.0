@@ -4,12 +4,32 @@ This folder contains active project documentation and archived historical notes.
 
 ## Active docs
 
+### Product and workflow
+
 - `APP_LOGIC.md` — core product logic: project-quote as the central entity, quick/quote modes, risk-based tech director checklist and confirmation flow.
 - `PROJECT_LIFECYCLE.md` — project statuses, readiness checks and actions from draft to closeout.
+- `ROLE_TASK_MATRIX.md` — role/task flow by project status.
+- `PROJECT_EVENTS_AND_AUDIT.md` — project events, system audit and immutable history rules.
+- `QUOTE_VERSIONING.md` — quote snapshots, confirmed versions and document versioning.
+- `DOCUMENTS_AND_VISIBILITY.md` — document types, visibility by role and snapshot/export rules.
+
+### Flexible project model
+
 - `FLEXIBLE_QUOTE_SECTIONS.md` — flexible project-section model for tents, generators, decor, furniture, climate, FBS, manual constructions and future directions.
 - `FLEXIBLE_RESOURCE_DATABASE.md` — category-aware resource database model with shared fields and category-specific technical specs.
+- `WAREHOUSE_WORKFLOW.md` — warehouse flow from need and availability to reservation, issue, return and closeout.
+
+### Access, security and integrations
+
 - `ACCESS_CONTROL.md` — access model with base profiles, system permissions, project assignments, access keys and audit log.
+- `SECURITY.md` — secrets, frontend limits, file access, demo data, audit and backup security rules.
+- `INTEGRATIONS.md` — integration adapter principles for calendar, notifications, storage, email/SMS/push and future systems.
+
+### Architecture and development
+
 - `ARCHITECTURE_MIGRATION_V5.md` — staged migration roadmap from current prototype to typed domain architecture.
+- `V5_DOMAIN_MODEL.md` — first domain model vocabulary and entity fields for v5 migration.
+- `V5_FIRST_TECHNICAL_STEP.md` — safe first code step for domain schemas/snapshots.
 - `DEPLOYMENT_AND_SCALING.md` — portable installation, VPS deployment, backup/restore and scaling contract.
 - `ARCHITECTURE.md` — current runtime structure and module ownership.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
