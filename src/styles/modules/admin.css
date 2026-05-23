@@ -18,6 +18,24 @@ body.v4-only-body .v4-admin-layout {
   align-items: start;
 }
 
+body.v4-only-body .v4-admin-control-center {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-card-head {
+  align-items: flex-start;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+body.v4-only-body .v4-admin-control-center .v4-card-head h3 {
+  margin: 3px 0 4px;
+  color: var(--text-strong);
+}
+
 /* Health score */
 body.v4-only-body .v4-admin-health-badge {
   display: inline-flex;
@@ -33,6 +51,79 @@ body.v4-only-body .v4-admin-health-badge.ok   { background: var(--success-bg); c
 body.v4-only-body .v4-admin-health-badge.warn { background: var(--warning-bg); color: var(--warning-text); border: 1px solid var(--warning-border); }
 body.v4-only-body .v4-admin-health-badge.bad  { background: var(--danger-bg);  color: var(--danger-text);  border: 1px solid var(--danger-border); }
 
+body.v4-only-body .v4-admin-health {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 14px 0 10px;
+}
+
+body.v4-only-body .v4-admin-health > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 66px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+body.v4-only-body .v4-admin-health > div b {
+  color: var(--text-strong);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+body.v4-only-body .v4-admin-health > div span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+body.v4-only-body .v4-admin-health.risk > div:first-child {
+  border-color: var(--warning-border);
+  background: var(--warning-bg);
+}
+
+body.v4-only-body .v4-admin-health.risk > div:first-child b,
+body.v4-only-body .v4-admin-health.risk > div:first-child span {
+  color: var(--warning-text);
+}
+
+body.v4-only-body .v4-admin-health.ok > div:first-child {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+body.v4-only-body .v4-admin-health.ok > div:first-child b,
+body.v4-only-body .v4-admin-health.ok > div:first-child span {
+  color: var(--success-text);
+}
+
+body.v4-only-body .v4-admin-health-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+body.v4-only-body .v4-admin-health-notes span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--warning-border);
+  border-radius: 999px;
+  background: var(--warning-bg);
+  color: var(--warning-text);
+  font-size: 11px;
+  font-weight: 700;
+}
+
 /* Stats row */
 body.v4-only-body .v4-admin-stats {
   display: flex;
@@ -46,6 +137,21 @@ body.v4-only-body .v4-admin-stats {
 body.v4-only-body .v4-admin-stats b { color: var(--text-strong); }
 
 /* ─── ROLES TABLE ────────────────────────────────────────────────────────────── */
+
+body.v4-only-body .v4-table-wrap--admin-roles {
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+body.v4-only-body .v4-table-wrap--admin-roles h4 {
+  margin: 0;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text-strong);
+  font-size: 13px;
+}
 
 body.v4-only-body .v4-table--admin-roles th,
 body.v4-only-body .v4-table--admin-roles td {
@@ -149,6 +255,9 @@ body.v4-only-body .v4-admin-workspace-card small { font-size: 11px; color: var(-
 
 /* Invite summary */
 body.v4-only-body .v4-admin-invite-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   font-size: 12px;
   color: var(--muted);
   padding: 8px 12px;
@@ -321,4 +430,9 @@ body.v4-only-body .v4-access-result {
   body.v4-only-body .v4-admin-layout { grid-template-columns: 1fr; }
   body.v4-only-body .v4-admin-user-form { grid-template-columns: 1fr 1fr; }
   body.v4-only-body .v4-admin-key-form { grid-template-columns: 1fr 1fr; }
+  body.v4-only-body .v4-admin-health { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+  body.v4-only-body .v4-admin-health { grid-template-columns: 1fr; }
 }
