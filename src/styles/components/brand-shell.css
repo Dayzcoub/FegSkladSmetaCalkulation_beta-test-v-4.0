@@ -1,12 +1,40 @@
-.packit-nav-logo-mark--asset {
-  background: transparent;
-  overflow: hidden;
-  padding: 3px;
+body.v4-only-body .packit-nav-logo {
+  gap: 8px;
+  padding: 14px 12px 12px;
+  min-height: 58px;
 }
 
-.packit-nav-logo-symbol {
+body.v4-only-body .packit-nav-logo-mark--asset {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border-radius: 7px;
+  overflow: hidden;
+  padding: 1px;
+}
+
+body.v4-only-body .packit-nav-logo-symbol {
   width: 100%;
   height: 100%;
   display: block;
   object-fit: contain;
+}
+
+body.v4-only-body .packit-nav-logo-text {
+  gap: 0;
+  transform: translateY(-1px);
+}
+
+body.v4-only-body .packit-nav-logo-name {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+body.v4-only-body .packit-nav-logo-sub {
+  margin-top: 1px;
+  font-size: 9px;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
 }
