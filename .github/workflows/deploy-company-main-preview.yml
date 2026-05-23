@@ -30,11 +30,19 @@ jobs:
           test -f public/assets/packit/brand/dark/packit_symbol.png
           test -f src/styles/modules/quote-equipment-layout.css
           test -f src/styles/modules/quote-equipment-tighten.css
+          test -f db/postgres/001_packit_core_schema.sql
+          test -f db/postgres/002_packit_seed_core.sql
+          test -f backend/package.json
+          test -f backend/src/server.mjs
+          test -f backend/systemd/packit-company-main-api.service.example
+          test -f backend/env/company-main-api.env.example
           grep -q "PackitShellBranding" index.html
           grep -q "quote-equipment-layout.css" src/styles/main.css
           grep -q "quote-equipment-tighten.css" src/styles/main.css
           grep -q "quote-equipment-layout.css" sw.js
           grep -q "quote-equipment-tighten.css" sw.js
+          node --check backend/src/server.mjs
+          node scripts/check-backend.mjs
 
       - name: Deploy over SSH through documented VPS scripts
         uses: appleboy/ssh-action@v1.0.3
@@ -71,6 +79,8 @@ jobs:
             cat /opt/packit/apps/company-main/current/packit-release.json 2>/dev/null || true
 
             echo "=== FILE CHECK ==="
+            ls -la /opt/packit/apps/company-main/current/db/postgres 2>/dev/null || true
+            ls -la /opt/packit/apps/company-main/current/backend/src/server.mjs 2>/dev/null || true
             ls -la /opt/packit/apps/company-main/current/src/styles/modules/quote-equipment-layout.css 2>/dev/null || true
             ls -la /opt/packit/apps/company-main/current/src/styles/modules/quote-equipment-tighten.css 2>/dev/null || true
             grep -n "quote-equipment" /opt/packit/apps/company-main/current/src/styles/main.css 2>/dev/null || true
