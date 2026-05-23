@@ -18,6 +18,7 @@ URL: http://45.148.118.121:8088/#app
 - текущий frontend запускается с сервера;
 - Amnezia VPN на 443 не трогали;
 - deploy/health/rollback контур подготовлен;
+- GitHub Actions manual deploy настроен и успешно прошёл зелёным;
 - интерфейс работает ровно в том состоянии, в котором разработка была остановлена.
 
 ## Что было сделано на VPS
@@ -25,6 +26,9 @@ URL: http://45.148.118.121:8088/#app
 - добавлен 1 GB swap;
 - создана структура `/opt/packit`;
 - создан системный пользователь `packit`;
+- создан deploy-пользователь `packit-deploy` для GitHub Actions;
+- настроен SSH key access для `packit-deploy`;
+- настроен limited sudo для deploy/health/rollback scripts;
 - создана структура `company-main`:
 
 ```text
@@ -43,6 +47,37 @@ URL: http://45.148.118.121:8088/#app
 - создан health-check script;
 - создан deploy script from GitHub main;
 - создан rollback script.
+
+## GitHub Actions deploy
+
+Добавлен manual workflow:
+
+```text
+.github/workflows/deploy-vps-preview.yml
+```
+
+Workflow использует repository secrets:
+
+```text
+PACKIT_VPS_HOST
+PACKIT_VPS_PORT
+PACKIT_VPS_USER
+PACKIT_VPS_SSH_KEY
+```
+
+Deploy flow:
+
+```text
+GitHub Actions
+    ↓ SSH as packit-deploy
+VPS
+    ↓ sudo limited command
+/opt/packit/scripts/deploy/deploy-company-main-from-github.sh main
+    ↓
+health-check
+```
+
+Первый запуск workflow прошёл зелёным.
 
 ## Что важно
 
@@ -78,4 +113,4 @@ URL: http://45.148.118.121:8088/#app
 
 ## Текущий закон
 
-Первый VPS live-preview считается успешным инфраструктурным шагом: Pack.it запускается на реальном сервере, есть release/current structure, health-check, deploy and rollback. Качество интерфейса и логики соответствует текущему незавершённому состоянию приложения и должно улучшаться отдельными итерациями разработки после этой контрольной точки.
+Первый VPS live-preview считается успешным инфраструктурным шагом: Pack.it запускается на реальном сервере, есть release/current structure, health-check, deploy, rollback and GitHub Actions manual deploy. Качество интерфейса и логики соответствует текущему незавершённому состоянию приложения и должно улучшаться отдельными итерациями разработки после этой контрольной точки.
