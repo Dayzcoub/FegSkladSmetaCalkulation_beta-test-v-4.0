@@ -30,26 +30,35 @@ jobs:
           test -f public/assets/packit/brand/dark/packit_symbol.png
           grep -q "PackitShellBranding" index.html
 
-      - name: Deploy over SSH
+      - name: Deploy over SSH through documented VPS scripts
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.PACKIT_VPS_HOST }}
           username: ${{ secrets.PACKIT_VPS_USER }}
           key: ${{ secrets.PACKIT_VPS_SSH_KEY }}
-          port: ${{ secrets.PACKIT_VPS_SSH_PORT || '22' }}
+          port: ${{ secrets.PACKIT_VPS_PORT || '22' }}
           script_stop: true
           command_timeout: 10m
           script: |
             set -euo pipefail
-            export PACKIT_REPO_FULL_NAME="${{ github.repository }}"
-            export PACKIT_DEPLOY_REF="${{ github.ref_name }}"
-            export PACKIT_DEPLOY_COMMIT="${{ github.sha }}"
-            export PACKIT_APP_ROOT="/opt/packit/apps/company-main"
-            export PACKIT_SERVICE_NAME="packit-company-main-preview.service"
-            export PACKIT_HEALTH_PORT="8088"
-            export PACKIT_DEPLOY_FILE_OWNER="packit:packit"
-            export PACKIT_KEEP_RELEASES="10"
 
-            curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/scripts/deploy-company-main-preview.sh" -o /tmp/packit-deploy-company-main-preview.sh
-            chmod +x /tmp/packit-deploy-company-main-preview.sh
-            /tmp/packit-deploy-company-main-preview.sh
+            echo "=== WHOAMI ==="
+            whoami
+            id
+
+            echo "=== DOCUMENTED DEPLOY SCRIPT ==="
+            test -x /opt/packit/scripts/deploy/deploy-company-main-from-github.sh
+            sudo -n /opt/packit/scripts/deploy/deploy-company-main-from-github.sh
+
+            echo "=== HEALTH CHECK ==="
+            sudo -n /opt/packit/scripts/health/check-company-main-preview.sh
+
+            echo "=== CURRENT RELEASE ==="
+            readlink -f /opt/packit/apps/company-main/current
+
+            echo "=== RELEASE INFO ==="
+            cat /opt/packit/apps/company-main/current/packit-installation/release-info.json 2>/dev/null || true
+            cat /opt/packit/apps/company-main/current/packit-release.json 2>/dev/null || true
+
+            echo "=== HTTP SW ==="
+            curl -fsS http://127.0.0.1:8088/sw.js | head -5
