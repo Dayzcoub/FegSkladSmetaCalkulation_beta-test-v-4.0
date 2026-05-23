@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_SAFE_LOGO_FALLBACK_2026_05_23';
-const CACHE_NAME = 'packit-safe-logo-fallback-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-safe-logo-fallback-2026-05-23';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_CSS_SYNC_2026_05_23';
+const CACHE_NAME = 'packit-equipment-css-sync-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-equipment-css-sync-2026-05-23';
 
 const CORE_ASSETS = [
   './',
@@ -20,6 +20,9 @@ const CORE_ASSETS = [
   './src/styles/components/tables-status.css',
   './src/styles/components/modals.css',
   './src/styles/modules/admin.css',
+  './src/styles/modules/quote.css',
+  './src/styles/modules/quote-equipment-layout.css',
+  './src/styles/modules/quote-equipment-tighten.css',
   './src/modules/index.js',
   './src/modules/FormatUtils.js',
   './src/modules/DomUtils.js',
