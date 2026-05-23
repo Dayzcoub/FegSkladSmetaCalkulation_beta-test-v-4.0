@@ -17,9 +17,11 @@ URL: http://45.148.118.121:8088/#app
 - приложение развёрнуто на реальном VPS;
 - текущий frontend запускается с сервера;
 - Amnezia VPN на 443 не трогали;
-- deploy/health/rollback контур подготовлен;
+- deploy/health/rollback контур подготовлен and verified;
+- auto-backup before deploy работает;
 - GitHub Actions manual deploy настроен и успешно прошёл зелёным;
 - GitHub Actions deploy-user trace проверен: SSH user `packit-deploy`, effective sudo user `root`;
+- rollback проверен: current release успешно откатился на предыдущий release and health-check passed;
 - интерфейс работает ровно в том состоянии, в котором разработка была остановлена.
 
 ## Что было сделано на VPS
@@ -29,7 +31,7 @@ URL: http://45.148.118.121:8088/#app
 - создан системный пользователь `packit`;
 - создан deploy-пользователь `packit-deploy` для GitHub Actions;
 - настроен SSH key access для `packit-deploy`;
-- настроен limited sudo для deploy/health/rollback scripts;
+- настроен limited sudo для deploy/health/rollback/backup scripts;
 - создана структура `company-main`:
 
 ```text
@@ -48,7 +50,9 @@ URL: http://45.148.118.121:8088/#app
 - создан health-check script;
 - создан deploy script from GitHub main;
 - создан rollback script;
-- deploy script now writes installation and release metadata into each release under `packit-installation/`.
+- создан backup script;
+- deploy script now writes installation and release metadata into each release under `packit-installation/`;
+- deploy script now runs backup before each deploy.
 
 ## GitHub Actions deploy
 
@@ -75,6 +79,10 @@ GitHub Actions
 VPS
     ↓ sudo limited command
 /opt/packit/scripts/deploy/deploy-company-main-from-github.sh main
+    ↓
+backup before deploy
+    ↓
+new release
     ↓
 health-check
 ```
@@ -119,6 +127,32 @@ Each release receives a read-only snapshot:
 /opt/packit/apps/company-main/current/packit-installation/release-info.json
 ```
 
+## Backup and rollback
+
+Backup archive location:
+
+```text
+/opt/packit/backups/company-main/*.tar.gz
+```
+
+Backup currently includes:
+
+- shared config;
+- shared env;
+- shared uploads/storage if present;
+- current release installation metadata;
+- service status;
+- service log tail;
+- backup metadata.
+
+Rollback script:
+
+```text
+/opt/packit/scripts/deploy/rollback-company-main.sh
+```
+
+Rollback has been tested: `current` was moved from the latest release to the previous release and `packit-company-main-preview.service` passed health-check.
+
 ## Что важно
 
 Текущий интерфейс работает так же, как работал на момент остановки разработки, со всеми уже известными незавершёнными местами и UI/логическими косяками.
@@ -153,4 +187,4 @@ Each release receives a read-only snapshot:
 
 ## Текущий закон
 
-Первый VPS live-preview считается успешным инфраструктурным шагом: Pack.it запускается на реальном сервере, есть release/current structure, health-check, deploy, rollback, installation identity, release metadata and GitHub Actions manual deploy. Качество интерфейса и логики соответствует текущему незавершённому состоянию приложения и должно улучшаться отдельными итерациями разработки после этой контрольной точки.
+Первый VPS live-preview считается успешным инфраструктурным шагом: Pack.it запускается на реальном сервере, есть release/current structure, health-check, deploy, rollback, backup, installation identity, release metadata and GitHub Actions manual deploy. Качество интерфейса и логики соответствует текущему незавершённому состоянию приложения и должно улучшаться отдельными итерациями разработки после этой контрольной точки.
