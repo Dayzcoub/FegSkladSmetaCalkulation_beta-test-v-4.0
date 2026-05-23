@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_UI_BRAND_ADMIN_RAW_PREVIEW_2026_05_23';
-const CACHE_NAME = 'packit-ui-brand-admin-raw-preview-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-brand-admin-raw-preview-2026-05-23';
+const CACHE_VERSION = 'PACKIT_NAV_LOGO_POLISH_2026_05_23';
+const CACHE_NAME = 'packit-nav-logo-polish-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-nav-logo-polish-2026-05-23';
 
 const CORE_ASSETS = [
   './',
