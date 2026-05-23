@@ -1,0 +1,25 @@
+[Unit]
+Description=PACK.IT company-main static preview gateway with API proxy
+After=network.target packit-company-main-api.service
+Wants=packit-company-main-api.service
+
+[Service]
+Type=simple
+User=packit
+Group=packit
+WorkingDirectory=/opt/packit/apps/company-main/current
+Environment=PACKIT_PREVIEW_PORT=8088
+Environment=PACKIT_PREVIEW_HOST=0.0.0.0
+Environment=PACKIT_STATIC_ROOT=/opt/packit/apps/company-main/current
+Environment=PACKIT_API_TARGET=http://127.0.0.1:8090
+ExecStart=/usr/bin/node /opt/packit/apps/company-main/current/backend/src/static-gateway.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/opt/packit
+
+[Install]
+WantedBy=multi-user.target
