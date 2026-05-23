@@ -11,6 +11,7 @@
 
 /* Базовые компоненты */
 @import './components/layout.css';
+@import './components/primitives.css';
 @import './components/buttons-forms.css';
 @import './components/tables-status.css';
 @import './components/modals.css';
