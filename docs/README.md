@@ -33,6 +33,7 @@ This folder contains active project documentation and archived historical notes.
 - `V5_DOMAIN_MODEL.md` — first domain model vocabulary and entity fields for v5 migration.
 - `V5_FIRST_TECHNICAL_STEP.md` — safe first code step for domain schemas/snapshots.
 - `DEFINITION_OF_DONE.md` — flexible readiness rules that protect core flows without blocking new ideas.
+- `TESTING_STRATEGY.md` — practical testing levels and bounded aggregation/performance rules.
 - `DEPLOYMENT_AND_SCALING.md` — portable installation, VPS deployment, backup/restore and scaling contract.
 - `ARCHITECTURE.md` — current runtime structure and module ownership.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
