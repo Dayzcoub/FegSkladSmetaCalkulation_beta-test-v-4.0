@@ -8,6 +8,7 @@ This folder contains active project documentation and archived historical notes.
 - `PROJECT_LIFECYCLE.md` — project statuses, readiness checks and actions from draft to closeout.
 - `FLEXIBLE_QUOTE_SECTIONS.md` — flexible project-section model for tents, generators, decor, furniture, climate, FBS, manual constructions and future directions.
 - `FLEXIBLE_RESOURCE_DATABASE.md` — category-aware resource database model with shared fields and category-specific technical specs.
+- `ARCHITECTURE_MIGRATION_V5.md` — staged migration roadmap from current prototype to typed domain architecture.
 - `ARCHITECTURE.md` — current runtime structure and module ownership.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
 - `DOCUMENTATION_POLICY.md` — what belongs in docs, changelog and code comments.
