@@ -148,6 +148,63 @@
     GLOBAL.document.querySelectorAll('[data-quote-equipment-panel]').forEach(updateSummary);
   }
 
+  function scheduleUpdate(panel) {
+    if (!panel) return;
+    updateSummary(panel);
+    GLOBAL.setTimeout(() => updateSummary(panel), 80);
+    GLOBAL.setTimeout(() => updateSummary(panel), 420);
+    GLOBAL.setTimeout(() => updateSummary(panel), 900);
+  }
+
+  function closeSearchMenus(exceptWrap) {
+    if (!GLOBAL.document) return;
+    GLOBAL.document.querySelectorAll('[data-packit-eq-menu]').forEach(menu => {
+      if (exceptWrap && exceptWrap.contains(menu)) return;
+      menu.hidden = true;
+    });
+  }
+
+  function clearSearchSelection(input) {
+    const wrap = input && input.closest ? input.closest('.packit-equipment-search-wrap') : null;
+    const menu = wrap && wrap.querySelector('[data-packit-eq-menu]');
+    if (menu) menu.hidden = true;
+  }
+
+  function bindSearchCloseEvents() {
+    if (!GLOBAL.document || GLOBAL.document.__packitEquipmentSearchCloseBound) return;
+    GLOBAL.document.__packitEquipmentSearchCloseBound = true;
+
+    GLOBAL.document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        closeSearchMenus();
+        const active = GLOBAL.document.activeElement;
+        if (active && active.matches && active.matches('[data-packit-eq-search]')) active.blur();
+      }
+    }, true);
+
+    GLOBAL.document.addEventListener('pointerdown', event => {
+      const wrap = event.target && event.target.closest ? event.target.closest('.packit-equipment-search-wrap') : null;
+      if (!wrap) closeSearchMenus();
+    }, true);
+
+    GLOBAL.document.addEventListener('focusin', event => {
+      const wrap = event.target && event.target.closest ? event.target.closest('.packit-equipment-search-wrap') : null;
+      if (!wrap) closeSearchMenus();
+    }, true);
+
+    GLOBAL.document.addEventListener('change', event => {
+      if (event.target && event.target.matches && event.target.matches('[data-packit-eq-category]')) {
+        closeSearchMenus();
+      }
+    }, true);
+
+    GLOBAL.document.addEventListener('blur', event => {
+      if (event.target && event.target.matches && event.target.matches('[data-packit-eq-search]')) {
+        GLOBAL.setTimeout(() => clearSearchSelection(event.target), 120);
+      }
+    }, true);
+  }
+
   function bindLiveEvents() {
     if (!GLOBAL.document || GLOBAL.document.__packitEquipmentSafeLiveFixBound) return;
     GLOBAL.document.__packitEquipmentSafeLiveFixBound = true;
@@ -156,24 +213,26 @@
       const panel = event.target.closest('[data-quote-equipment-panel]');
       if (!panel) return;
       if (event.target.matches('[data-packit-row-qty], [data-packit-subrent-supplier], [data-packit-subrent-price], [data-packit-client-price]')) {
-        updateSummary(panel);
+        scheduleUpdate(panel);
       }
     };
     GLOBAL.document.addEventListener('input', handler, true);
     GLOBAL.document.addEventListener('change', handler, true);
     GLOBAL.document.addEventListener('click', event => {
       const panel = event.target && event.target.closest ? event.target.closest('[data-quote-equipment-panel]') : null;
-      if (panel) GLOBAL.setTimeout(() => updateSummary(panel), 0);
+      if (panel) GLOBAL.setTimeout(() => scheduleUpdate(panel), 0);
     }, true);
   }
 
   function init() {
     bindLiveEvents();
+    bindSearchCloseEvents();
     updateAll();
     GLOBAL.setTimeout(updateAll, 300);
+    GLOBAL.setTimeout(updateAll, 900);
   }
 
-  ROOT.QuoteEquipmentLiveStateFix = { version: '1.1.0-safe', init, updateSummary, cleanupManualDuplicates };
+  ROOT.QuoteEquipmentLiveStateFix = { version: '1.2.0-safe-dropdown-summary', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
