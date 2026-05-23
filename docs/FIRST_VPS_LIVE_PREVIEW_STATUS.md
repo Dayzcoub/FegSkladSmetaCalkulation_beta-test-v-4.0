@@ -19,6 +19,7 @@ URL: http://45.148.118.121:8088/#app
 - Amnezia VPN на 443 не трогали;
 - deploy/health/rollback контур подготовлен;
 - GitHub Actions manual deploy настроен и успешно прошёл зелёным;
+- GitHub Actions deploy-user trace проверен: SSH user `packit-deploy`, effective sudo user `root`;
 - интерфейс работает ровно в том состоянии, в котором разработка была остановлена.
 
 ## Что было сделано на VPS
@@ -46,7 +47,8 @@ URL: http://45.148.118.121:8088/#app
 - сервис отдаёт статический frontend через Python HTTP server на порту `8088`;
 - создан health-check script;
 - создан deploy script from GitHub main;
-- создан rollback script.
+- создан rollback script;
+- deploy script now writes installation and release metadata into each release under `packit-installation/`.
 
 ## GitHub Actions deploy
 
@@ -79,6 +81,44 @@ health-check
 
 Первый запуск workflow прошёл зелёным.
 
+Проверенный release metadata example:
+
+```json
+{
+  "releaseId": "20260523_091606",
+  "branch": "main",
+  "deployedBySshUser": "packit-deploy",
+  "deployedByEffectiveUser": "root",
+  "service": "packit-company-main-preview.service"
+}
+```
+
+## Installation identity
+
+Первая VPS installation имеет идентичность:
+
+```text
+companyId: packit-first-company
+companyCode: first-company
+installationId: 5402e645-b4be-416e-943f-b9e7cfdf45b1
+environment: first-company-production-like
+publicUrl: http://45.148.118.121:8088/#app
+```
+
+Shared config lives on VPS:
+
+```text
+/opt/packit/apps/company-main/shared/config/company.json
+/opt/packit/apps/company-main/shared/env/installation.env
+```
+
+Each release receives a read-only snapshot:
+
+```text
+/opt/packit/apps/company-main/current/packit-installation/company.json
+/opt/packit/apps/company-main/current/packit-installation/release-info.json
+```
+
 ## Что важно
 
 Текущий интерфейс работает так же, как работал на момент остановки разработки, со всеми уже известными незавершёнными местами и UI/логическими косяками.
@@ -89,7 +129,7 @@ health-check
 
 - не настраивали полноценный backend;
 - не подключали PostgreSQL;
-- не делали company config activation;
+- не делали company config activation inside frontend runtime;
 - не закрывали публичный порт `8088`;
 - не подключали домен;
 - не настраивали HTTPS;
@@ -113,4 +153,4 @@ health-check
 
 ## Текущий закон
 
-Первый VPS live-preview считается успешным инфраструктурным шагом: Pack.it запускается на реальном сервере, есть release/current structure, health-check, deploy, rollback and GitHub Actions manual deploy. Качество интерфейса и логики соответствует текущему незавершённому состоянию приложения и должно улучшаться отдельными итерациями разработки после этой контрольной точки.
+Первый VPS live-preview считается успешным инфраструктурным шагом: Pack.it запускается на реальном сервере, есть release/current structure, health-check, deploy, rollback, installation identity, release metadata and GitHub Actions manual deploy. Качество интерфейса и логики соответствует текущему незавершённому состоянию приложения и должно улучшаться отдельными итерациями разработки после этой контрольной точки.
