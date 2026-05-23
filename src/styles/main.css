@@ -8,6 +8,7 @@
 
 /* Shell */
 @import './components/shell.css';
+@import './components/brand-shell.css';
 
 /* Базовые компоненты */
 @import './components/layout.css';
