@@ -1,0 +1,22 @@
+[Unit]
+Description=PACK.IT company-main backend API
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=packit
+Group=packit
+WorkingDirectory=/opt/packit/apps/company-main/current/backend
+EnvironmentFile=/opt/packit/shared/env/company-main-api.env
+ExecStart=/usr/bin/node /opt/packit/apps/company-main/current/backend/src/server.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/opt/packit
+
+[Install]
+WantedBy=multi-user.target
