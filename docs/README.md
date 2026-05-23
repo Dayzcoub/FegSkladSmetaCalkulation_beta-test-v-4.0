@@ -40,6 +40,7 @@ This folder contains active project documentation and archived historical notes.
 - `SINGLE_TENANT_DEPLOYMENT.md` — separate closed installation per company with company-specific config and customization rules.
 - `LICENSE_AND_INSTALLATION.md` — company license, installation activation, grace period, migration and anti-copying principles.
 - `CENTRAL_REGISTRY_AND_COMPANY_ROUTING.md` — central registry for company routing, license checks and installation URLs without company working data.
+- `NAMING_AND_BRANDING_POLICY.md` — Pack.it product brand, company document branding, attribution and rebrand safety rules.
 - `DEPLOYMENT_AND_SCALING.md` — portable installation, VPS deployment, backup/restore and scaling contract.
 - `ARCHITECTURE.md` — current runtime structure and module ownership.
 - `DEVELOPMENT.md` — local development flow, commands and checks.
