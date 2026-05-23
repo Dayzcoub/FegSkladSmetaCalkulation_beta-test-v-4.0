@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_LIVE_STATE_FIX_2026_05_23';
-const CACHE_NAME = 'packit-equipment-live-state-fix-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-equipment-live-state-fix-2026-05-23';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_DROPDOWN_SUMMARY_FIX_2026_05_23';
+const CACHE_NAME = 'packit-equipment-dropdown-summary-fix-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-equipment-dropdown-summary-fix-2026-05-23';
 
 const CORE_ASSETS = [
   './',
