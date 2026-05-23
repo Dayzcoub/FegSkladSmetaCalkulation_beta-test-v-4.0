@@ -38,6 +38,7 @@ This folder contains active project documentation and archived historical notes.
 - `ERROR_HANDLING_AND_RECOVERY.md` — recovery rules for failed saves, partial confirmations, imports, documents, integrations and backend sync.
 - `OFFLINE_AND_PWA_CONTRACT.md` — offline/PWA rules, local queues, warehouse offline events and sync conflict handling.
 - `SINGLE_TENANT_DEPLOYMENT.md` — separate closed installation per company with company-specific config and customization rules.
+- `COMPANY_CONFIGURATION.md` — company-level branding, templates, modules, roles, categories, warehouse, finance and integration settings.
 - `LICENSE_AND_INSTALLATION.md` — company license, installation activation, grace period, migration and anti-copying principles.
 - `CENTRAL_REGISTRY_AND_COMPANY_ROUTING.md` — central registry for company routing, license checks and installation URLs without company working data.
 - `NAMING_AND_BRANDING_POLICY.md` — Pack.it product brand, company document branding, attribution and rebrand safety rules.
