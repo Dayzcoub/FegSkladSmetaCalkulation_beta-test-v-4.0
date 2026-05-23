@@ -24,6 +24,7 @@ This folder contains active project documentation and archived historical notes.
 ### Access, security and integrations
 
 - `ACCESS_CONTROL.md` — access model with base profiles, system permissions, project assignments, access keys and audit log.
+- `NOTIFICATION_POLICY.md` — notification priorities, channels, routing, anti-spam, lifecycle, offline queue and license notifications.
 - `SECURITY.md` — secrets, frontend limits, file access, demo data, audit and backup security rules.
 - `INTEGRATIONS.md` — integration adapter principles for calendar, notifications, storage, email/SMS/push and future systems.
 
