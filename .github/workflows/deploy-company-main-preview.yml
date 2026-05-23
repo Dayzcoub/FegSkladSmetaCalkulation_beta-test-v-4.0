@@ -28,7 +28,13 @@ jobs:
           test -f src/modules/PackitAssetManifest.js
           test -f src/modules/PackitShellBranding.js
           test -f public/assets/packit/brand/dark/packit_symbol.png
+          test -f src/styles/modules/quote-equipment-layout.css
+          test -f src/styles/modules/quote-equipment-tighten.css
           grep -q "PackitShellBranding" index.html
+          grep -q "quote-equipment-layout.css" src/styles/main.css
+          grep -q "quote-equipment-tighten.css" src/styles/main.css
+          grep -q "quote-equipment-layout.css" sw.js
+          grep -q "quote-equipment-tighten.css" sw.js
 
       - name: Deploy over SSH through documented VPS scripts
         uses: appleboy/ssh-action@v1.0.3
@@ -37,10 +43,12 @@ jobs:
           username: ${{ secrets.PACKIT_VPS_USER }}
           key: ${{ secrets.PACKIT_VPS_SSH_KEY }}
           port: ${{ secrets.PACKIT_VPS_PORT || '22' }}
-          script_stop: true
+          script_stop: false
           command_timeout: 10m
           script: |
-            set -euo pipefail
+            set -u
+            DEPLOY_STATUS=0
+            HEALTH_STATUS=0
 
             echo "=== WHOAMI ==="
             whoami
@@ -48,17 +56,43 @@ jobs:
 
             echo "=== DOCUMENTED DEPLOY SCRIPT ==="
             test -x /opt/packit/scripts/deploy/deploy-company-main-from-github.sh
-            sudo -n /opt/packit/scripts/deploy/deploy-company-main-from-github.sh
+            sudo -n /opt/packit/scripts/deploy/deploy-company-main-from-github.sh || DEPLOY_STATUS=$?
+            echo "DEPLOY_STATUS=$DEPLOY_STATUS"
 
             echo "=== HEALTH CHECK ==="
-            sudo -n /opt/packit/scripts/health/check-company-main-preview.sh
+            sudo -n /opt/packit/scripts/health/check-company-main-preview.sh || HEALTH_STATUS=$?
+            echo "HEALTH_STATUS=$HEALTH_STATUS"
 
             echo "=== CURRENT RELEASE ==="
-            readlink -f /opt/packit/apps/company-main/current
+            readlink -f /opt/packit/apps/company-main/current 2>/dev/null || true
 
             echo "=== RELEASE INFO ==="
             cat /opt/packit/apps/company-main/current/packit-installation/release-info.json 2>/dev/null || true
             cat /opt/packit/apps/company-main/current/packit-release.json 2>/dev/null || true
 
-            echo "=== HTTP SW ==="
-            curl -fsS http://127.0.0.1:8088/sw.js | head -5
+            echo "=== FILE CHECK ==="
+            ls -la /opt/packit/apps/company-main/current/src/styles/modules/quote-equipment-layout.css 2>/dev/null || true
+            ls -la /opt/packit/apps/company-main/current/src/styles/modules/quote-equipment-tighten.css 2>/dev/null || true
+            grep -n "quote-equipment" /opt/packit/apps/company-main/current/src/styles/main.css 2>/dev/null || true
+            grep -n "quote-equipment" /opt/packit/apps/company-main/current/sw.js 2>/dev/null || true
+
+            echo "=== HTTP ==="
+            curl -I http://127.0.0.1:8088/ || true
+            curl -fsS http://127.0.0.1:8088/sw.js | head -5 || true
+            curl -fsS http://127.0.0.1:8088/src/styles/modules/quote-equipment-layout.css | head -5 || true
+            curl -fsS http://127.0.0.1:8088/src/styles/modules/quote-equipment-tighten.css | head -5 || true
+
+            echo "=== SERVICE ==="
+            sudo -n systemctl status packit-company-main-preview.service --no-pager || true
+
+            echo "=== JOURNAL ==="
+            sudo -n journalctl -u packit-company-main-preview.service -n 80 --no-pager || true
+
+            if [ "$DEPLOY_STATUS" -ne 0 ]; then
+              echo "Deploy script failed with $DEPLOY_STATUS"
+              exit "$DEPLOY_STATUS"
+            fi
+            if [ "$HEALTH_STATUS" -ne 0 ]; then
+              echo "Health check failed with $HEALTH_STATUS"
+              exit "$HEALTH_STATUS"
+            fi
