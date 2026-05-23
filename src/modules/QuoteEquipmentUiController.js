@@ -34,7 +34,7 @@
       card = GLOBAL.document.createElement('div');
       card.className = 'v4-equipment-manual-toggle-card';
       card.setAttribute('data-packit-equipment-manual-toggle', 'true');
-      card.innerHTML = '<div class="v4-equipment-manual-toggle-copy"><b>Ручная позиция без базы</b><span>Скрыто по умолчанию. Используй только если позиции нет в базе или нет доступа быстро добавить её в каталог. Обычный дефицит склада закрывается субарендой внутри складской строки.</span></div><label class="v4-equipment-manual-toggle-check"><input type="checkbox" data-packit-equipment-manual-checkbox> показать ручные</label>';
+      card.innerHTML = '<div class="v4-equipment-manual-toggle-copy"><b>Ручная позиция без базы</b><span>Только если позиции нет в базе или нет доступа быстро добавить её в каталог. Обычный дефицит закрывается субарендой внутри складской строки.</span></div><label class="v4-equipment-manual-toggle-check"><input type="checkbox" data-packit-equipment-manual-checkbox> показать</label>';
       const anchor = manualKicker || manualList;
       anchor.parentNode.insertBefore(card, anchor);
       const checkbox = card.querySelector('[data-packit-equipment-manual-checkbox]');
@@ -45,11 +45,25 @@
     setManualOpen(panel, shouldOpen);
   }
 
+  function compactStockGroups(panel) {
+    const groups = Array.from(panel.querySelectorAll(':scope > .v4-equipment-group'));
+    groups.forEach(group => {
+      const selectedRows = group.querySelectorAll('.v4-equipment-smart-row.is-selected').length;
+      group.setAttribute('data-packit-equipment-zone', 'stock');
+      group.dataset.packitSelectedCount = String(selectedRows);
+      group.classList.toggle('has-selected-rows', selectedRows > 0);
+      group.classList.toggle('is-empty-group', selectedRows <= 0);
+      if (selectedRows <= 0 && !group.dataset.packitUserOpened) group.removeAttribute('open');
+      group.addEventListener('toggle', () => {
+        if (group.open) group.dataset.packitUserOpened = 'true';
+      }, { once: true });
+    });
+  }
+
   function tagEquipmentZones(panel) {
     if (!panel) return;
     panel.classList.add('v4-equipment-panel--structured');
-    const groups = panel.querySelectorAll(':scope > .v4-equipment-group');
-    groups.forEach(group => group.setAttribute('data-packit-equipment-zone', 'stock'));
+    compactStockGroups(panel);
     const summary = panel.querySelector(':scope > .v4-summary-grid');
     if (summary) summary.setAttribute('data-packit-equipment-zone', 'summary');
     const basket = panel.querySelector(':scope > .v4-equipment-basket, :scope > .v4-note:nth-child(3)');
@@ -85,7 +99,7 @@
   }
 
   ROOT.QuoteEquipmentUiController = {
-    version: '1.0.0',
+    version: '1.1.0',
     init,
     enhance,
     setManualOpen
