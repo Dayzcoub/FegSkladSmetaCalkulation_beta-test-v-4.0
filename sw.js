@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_NAV_LOGO_POLISH_2026_05_23';
-const CACHE_NAME = 'packit-nav-logo-polish-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-nav-logo-polish-2026-05-23';
+const CACHE_VERSION = 'PACKIT_HORIZONTAL_LOGO_ASSET_2026_05_23';
+const CACHE_NAME = 'packit-horizontal-logo-asset-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-horizontal-logo-asset-2026-05-23';
 
 const CORE_ASSETS = [
   './',
@@ -126,6 +126,7 @@ const CORE_ASSETS = [
   './src/modules/V4DesignSystem.js',
   './src/modules/V4AppShell.js',
   './public/assets/packit/brand/dark/packit_symbol.png',
+  './public/assets/packit/brand/dark/packit_logo_horizontal.png',
   './stage-deck-texture.png',
   './led-cabinet-texture.png',
   './icon-180.png',
