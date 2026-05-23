@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_UI_CONTROLLER_2026_05_23';
-const CACHE_NAME = 'packit-equipment-ui-controller-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-equipment-ui-controller-2026-05-23';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_LIVE_STATE_FIX_2026_05_23';
+const CACHE_NAME = 'packit-equipment-live-state-fix-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-equipment-live-state-fix-2026-05-23';
 
 const CORE_ASSETS = [
   './',
@@ -129,6 +129,7 @@ const CORE_ASSETS = [
   './src/modules/V4ClientsPanel.js',
   './src/modules/QuoteWizard.js',
   './src/modules/QuoteEquipmentUiController.js',
+  './src/modules/QuoteEquipmentLiveStateFix.js',
   './src/modules/V4DesignSystem.js',
   './src/modules/V4AppShell.js',
   './public/assets/packit/brand/dark/packit_symbol.png',
