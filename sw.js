@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_UI_BRAND_ADMIN_FIX_2026_05_23';
-const CACHE_NAME = 'packit-ui-brand-admin-fix-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-brand-admin-fix-2026-05-23';
+const CACHE_VERSION = 'PACKIT_UI_BRAND_ADMIN_RAW_PREVIEW_2026_05_23';
+const CACHE_NAME = 'packit-ui-brand-admin-raw-preview-2026-05-23';
+const RUNTIME_CACHE = 'packit-runtime-brand-admin-raw-preview-2026-05-23';
 
 const CORE_ASSETS = [
   './',
@@ -125,7 +125,7 @@ const CORE_ASSETS = [
   './src/modules/QuoteWizard.js',
   './src/modules/V4DesignSystem.js',
   './src/modules/V4AppShell.js',
-  './assets/packit/brand/dark/packit_symbol.png',
+  './public/assets/packit/brand/dark/packit_symbol.png',
   './stage-deck-texture.png',
   './led-cabinet-texture.png',
   './icon-180.png',
