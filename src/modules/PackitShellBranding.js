@@ -8,30 +8,37 @@
     return ROOT.PackitAssetManifest || null;
   }
 
-  function resolveNavLogo() {
+  function resolveSymbol() {
     const assets = getAssets();
     if (!assets || !assets.resolve) return '';
-    return assets.resolve('brand.logo.navLockup', { theme: 'dark' })
-      || assets.resolve('brand.logo.horizontal', { theme: 'dark' })
-      || '';
+    return assets.resolve('brand.symbol', { theme: 'dark' }) || '';
   }
 
   function applyShellBranding(root) {
     const scope = root || GLOBAL.document;
     if (!scope || !scope.querySelectorAll) return;
 
-    const logoSrc = resolveNavLogo();
-    if (!logoSrc) return;
+    const symbolSrc = resolveSymbol();
+    if (!symbolSrc) return;
 
     scope.querySelectorAll('.packit-nav-logo').forEach(logo => {
       if (!logo) return;
-      const currentImg = logo.querySelector && logo.querySelector('img.packit-nav-logo-lockup');
-      if (logo.dataset.packitBrandLockup === logoSrc && currentImg) return;
+      const currentImg = logo.querySelector && logo.querySelector('img.packit-nav-logo-symbol');
+      if (logo.dataset.packitBrandSafe === symbolSrc && currentImg) return;
 
-      logo.classList.add('packit-nav-logo--asset-lockup');
+      logo.classList.remove('packit-nav-logo--asset-lockup');
+      logo.classList.add('packit-nav-logo--safe-lockup');
       logo.setAttribute('aria-label', 'PACK.IT / ПАК.ИТ');
-      logo.innerHTML = '<img class="packit-nav-logo-lockup" src="' + escapeAttr(logoSrc) + '" alt="PACK.IT / ПАК.ИТ" loading="eager">';
-      logo.dataset.packitBrandLockup = logoSrc;
+      logo.innerHTML = [
+        '<span class="packit-nav-logo-mark packit-nav-logo-mark--asset" aria-hidden="true">',
+          '<img class="packit-nav-logo-symbol" src="' + escapeAttr(symbolSrc) + '" alt="" loading="eager">',
+        '</span>',
+        '<span class="packit-nav-logo-text">',
+          '<span class="packit-nav-logo-name">PACK.IT</span>',
+          '<span class="packit-nav-logo-sub">Stage PRO</span>',
+        '</span>'
+      ].join('');
+      logo.dataset.packitBrandSafe = symbolSrc;
     });
   }
 
@@ -74,7 +81,7 @@
   }
 
   ROOT.PackitShellBranding = {
-    version: '1.2.0',
+    version: '1.3.0',
     applyShellBranding,
     init,
   };
