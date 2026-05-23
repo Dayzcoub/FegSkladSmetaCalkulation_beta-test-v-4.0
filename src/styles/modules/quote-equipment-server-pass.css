@@ -1,6 +1,4 @@
-/* PACK.IT quote equipment server pass
-   Server-backed equipment picker is now the primary flow.
-   Manual rows are hidden from the default step view; stock deficit/subrent is handled inside stock rows. */
+/* PACK.IT compact equipment quote layout */
 
 body.v4-only-body [data-quote-equipment-panel] {
   grid-template-columns: minmax(0, 1fr) 240px;
@@ -10,7 +8,6 @@ body.v4-only-body [data-quote-equipment-panel] {
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges {
   grid-column: 1 / -1;
-  grid-row: auto;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid {
@@ -31,133 +28,108 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-note:nth-child(3) {
   top: 166px;
 }
 
-body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group,
-body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-compact-list {
-  grid-column: 1;
-  min-width: 0;
-}
-
-body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group {
-  margin: 0;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-
-body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group summary {
-  min-height: 36px;
-  padding: 8px 10px;
-}
-
-body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group:not([open]) summary {
-  min-height: 34px;
-}
-
-body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group.is-empty-group:not([open]) {
-  opacity: .72;
-}
-
-body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group.is-empty-group:not([open]) summary span::after {
-  content: ' · раскрыть';
-  opacity: .7;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-list {
-  display: grid;
-  gap: 6px;
-  padding: 8px;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row {
-  grid-template-columns: minmax(260px, 1fr) 72px minmax(138px, 180px);
-  gap: 6px;
-  align-items: end;
-  padding: 8px;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row .v4-field {
-  gap: 4px;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row .v4-mini-input,
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row input,
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row select {
-  min-height: 30px;
-  height: 30px;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row .v4-equipment-row-control {
-  grid-column: 1 / -1;
-  grid-template-columns: auto minmax(160px, 1fr);
-  gap: 6px;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row .v4-equipment-row-control .btn-compact {
-  min-height: 28px;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-deficit-subrent {
-  grid-column: 1 / -1;
-  margin-top: 2px;
-  padding: 8px;
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--warning, #f59e0b) 8%, var(--surface));
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-top {
-  display: grid;
-  grid-template-columns: minmax(170px, 1fr) 72px minmax(160px, 220px) auto;
-  gap: 6px;
-  align-items: end;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-prices {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 6px;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-prices .v4-field:first-child {
-  display: none;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-title b {
-  display: block;
-  color: var(--warning, #f59e0b);
-  font-size: 11px;
-  line-height: 1.15;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-title span {
-  display: block;
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 9px;
-  line-height: 1.25;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-subrentor-add {
-  min-height: 30px;
-  align-self: end;
-  white-space: nowrap;
-}
-
-body.v4-only-body [data-quote-equipment-panel] > .v4-kicker,
-body.v4-only-body [data-quote-equipment-panel] > .v4-manual-equipment-list {
+body.v4-only-body .packit-equipment-legacy-hidden {
   display: none !important;
 }
 
-body.v4-only-body [data-quote-equipment-panel][data-packit-manual-open="true"] > .v4-kicker,
-body.v4-only-body [data-quote-equipment-panel][data-packit-manual-open="true"] > .v4-manual-equipment-list {
-  display: block !important;
+body.v4-only-body .packit-equipment-compact-root {
   grid-column: 1;
+  display: grid;
+  gap: 10px;
+  min-width: 0;
 }
 
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-manual-toggle-card {
-  grid-column: 2;
-  grid-row: 4;
-  position: sticky;
-  top: 294px;
+body.v4-only-body .packit-equipment-addbar {
+  display: grid;
+  grid-template-columns: 180px minmax(280px, 1fr) 88px auto;
+  gap: 8px;
+  align-items: end;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+}
+
+body.v4-only-body .packit-equipment-addbar label,
+body.v4-only-body .packit-subrent-inline label,
+body.v4-only-body .packit-manual-inline label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+body.v4-only-body .packit-equipment-addbar input,
+body.v4-only-body .packit-equipment-addbar select,
+body.v4-only-body .packit-subrent-inline input,
+body.v4-only-body .packit-subrent-inline select,
+body.v4-only-body .packit-manual-inline input,
+body.v4-only-body .packit-manual-inline select {
+  width: 100%;
+  min-height: 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text-strong);
+  padding: 6px 9px;
+  font-size: 12px;
+  outline: none;
+}
+
+body.v4-only-body .packit-equipment-search-wrap {
+  position: relative;
+}
+
+body.v4-only-body .packit-equipment-search-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 90;
+  max-height: 320px;
+  overflow: auto;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-soft);
+}
+
+body.v4-only-body .packit-equipment-search-menu[hidden] {
+  display: none;
+}
+
+body.v4-only-body .packit-equipment-search-menu button {
+  width: 100%;
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+body.v4-only-body .packit-equipment-search-menu button:hover {
+  background: var(--surface);
+}
+
+body.v4-only-body .packit-equipment-search-menu b {
+  color: var(--text-strong);
+  font-size: 12px;
+}
+
+body.v4-only-body .packit-equipment-search-menu span,
+body.v4-only-body .packit-equipment-no-results {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+body.v4-only-body .packit-equipment-table-card {
   display: grid;
   gap: 8px;
   padding: 10px;
@@ -166,79 +138,171 @@ body.v4-only-body [data-quote-equipment-panel] .v4-equipment-manual-toggle-card 
   background: var(--panel-2);
 }
 
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-manual-toggle-copy b {
-  display: block;
-  font-size: 12px;
-  line-height: 1.25;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-manual-toggle-copy span {
-  display: block;
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.35;
-}
-
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-manual-toggle-check {
+body.v4-only-body .packit-equipment-table-head {
   display: flex;
+  justify-content: space-between;
+  gap: 12px;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--text);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
 }
 
-body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-compact-list {
-  grid-column: 2;
-  grid-row: 5;
-  position: sticky;
-  top: 430px;
-  max-height: 320px;
-  overflow: auto;
-  margin-top: 0;
+body.v4-only-body .packit-equipment-table-head b {
+  color: var(--text-strong);
+  font-size: 13px;
 }
 
-body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-compact-list > .v4-note {
-  margin: 0;
+body.v4-only-body .packit-equipment-table-head span {
+  color: var(--muted);
+  font-size: 11px;
 }
 
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-compact-row {
-  grid-template-columns: minmax(0, 1fr);
-  gap: 4px;
+body.v4-only-body .packit-equipment-table {
+  display: grid;
+  gap: 6px;
+}
+
+body.v4-only-body .packit-equipment-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 76px 68px 74px 82px 104px 126px 56px;
+  gap: 6px;
+  align-items: center;
   padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
 }
 
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-compact-main b,
-body.v4-only-body [data-quote-equipment-panel] .v4-equipment-compact-main span {
+body.v4-only-body .packit-equipment-name {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+body.v4-only-body .packit-equipment-name b,
+body.v4-only-body .packit-equipment-source b,
+body.v4-only-body .packit-equipment-price b,
+body.v4-only-body .packit-equipment-stat b {
+  color: var(--text-strong);
+  font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+body.v4-only-body .packit-equipment-name span,
+body.v4-only-body .packit-equipment-source span,
+body.v4-only-body .packit-equipment-price span,
+body.v4-only-body .packit-equipment-stat span,
+body.v4-only-body .packit-equipment-qty span {
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.v4-only-body .packit-equipment-qty {
+  display: grid;
+  gap: 3px;
+}
+
+body.v4-only-body .packit-equipment-qty input {
+  width: 100%;
+  min-height: 28px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text-strong);
+  padding: 4px 7px;
+}
+
+body.v4-only-body .packit-equipment-stat,
+body.v4-only-body .packit-equipment-source,
+body.v4-only-body .packit-equipment-price {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+body.v4-only-body .packit-equipment-stat.ok b { color: var(--success); }
+body.v4-only-body .packit-equipment-stat.bad b { color: var(--danger); }
+body.v4-only-body .packit-equipment-stat.warn b { color: var(--warning, #f59e0b); }
+body.v4-only-body .packit-equipment-stat.muted { opacity: .62; }
+
+body.v4-only-body .packit-equipment-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+body.v4-only-body .packit-equipment-actions button {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+body.v4-only-body .packit-subrent-inline {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) 72px minmax(170px, 1.2fr) auto 86px 92px auto;
+  gap: 6px;
+  align-items: end;
+  padding: 8px;
+  border: 1px dashed color-mix(in srgb, var(--warning, #f59e0b) 58%, var(--line));
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--warning, #f59e0b) 8%, var(--surface));
+}
+
+body.v4-only-body .packit-subrent-inline > b {
+  color: var(--warning, #f59e0b);
+  font-size: 11px;
+}
+
+body.v4-only-body .packit-equipment-manual-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 2px;
+}
+
+body.v4-only-body .packit-manual-inline {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 72px 64px 104px 76px 92px auto;
+  gap: 6px;
+  align-items: end;
+  padding: 8px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+body.v4-only-body .packit-equipment-row.is-manual {
+  grid-template-columns: minmax(220px, 1fr) 74px 110px 126px 56px;
+}
+
+body.v4-only-body [data-packit-equipment-state] {
+  display: none !important;
 }
 
 @media (max-width: 1180px) {
   body.v4-only-body [data-quote-equipment-panel] {
     grid-template-columns: 1fr;
   }
-
   body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid,
   body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
-  body.v4-only-body [data-quote-equipment-panel] > .v4-note:nth-child(3),
-  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group,
-  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-compact-list,
-  body.v4-only-body [data-quote-equipment-panel] .v4-equipment-manual-toggle-card {
+  body.v4-only-body .packit-equipment-compact-root {
     grid-column: 1;
-    grid-row: auto;
     position: static;
   }
-
-  body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-top,
-  body.v4-only-body [data-quote-equipment-panel] .v4-equipment-linked-subrent-prices {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 767px) {
-  body.v4-only-body [data-quote-equipment-panel] .v4-equipment-smart-row {
+  body.v4-only-body .packit-equipment-addbar,
+  body.v4-only-body .packit-equipment-row,
+  body.v4-only-body .packit-subrent-inline,
+  body.v4-only-body .packit-manual-inline,
+  body.v4-only-body .packit-equipment-row.is-manual {
     grid-template-columns: 1fr;
   }
 }
