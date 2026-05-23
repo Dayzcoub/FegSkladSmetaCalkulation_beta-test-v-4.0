@@ -1,0 +1,60 @@
+/* PACK.IT quote equipment tighten pass */
+body.v4-only-body [data-quote-equipment-panel] > .v4-note {
+  padding: 11px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  line-height: 1.45;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row {
+  padding: 10px;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row > .v4-equipment-smart-row {
+  grid-template-columns: minmax(260px, 1fr) 84px 92px 126px;
+  align-items: end;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row .v4-equipment-smart-source,
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row .v4-equipment-smart-qty,
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row .v4-equipment-smart-availability,
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row .v4-equipment-row-control {
+  grid-column: auto;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row .v4-equipment-row-control {
+  grid-column: 1 / -1;
+  grid-template-columns: auto minmax(180px, 1fr);
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-details {
+  margin-top: 8px;
+  padding-top: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-details .v4-field:nth-child(2) {
+  grid-column: span 2;
+}
+
+body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-details .v4-field:nth-child(7) {
+  grid-column: 1 / 3;
+}
+
+@media (max-width: 1440px) {
+  body.v4-only-body [data-quote-equipment-panel] {
+    grid-template-columns: 230px minmax(0, 1fr) 250px;
+  }
+
+  body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row > .v4-equipment-smart-row,
+  body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row .v4-equipment-smart-name,
+  body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-row .v4-equipment-row-control,
+  body.v4-only-body [data-quote-equipment-panel] .v4-manual-equipment-details .v4-field:nth-child(7) {
+    grid-column: 1 / -1;
+  }
+}
