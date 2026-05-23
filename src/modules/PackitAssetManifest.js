@@ -13,6 +13,9 @@
           light: `${BASE_PATH}/brand/light/packit_logo_horizontal.png`,
           dark: `${BASE_PATH}/brand/dark/packit_logo_horizontal.png`,
         }),
+        navLockup: Object.freeze({
+          dark: `${BASE_PATH}/brand/dark/packit_logo_nav_lockup.png`,
+        }),
       }),
       symbol: Object.freeze({
         light: `${BASE_PATH}/brand/light/packit_symbol.png`,
@@ -76,6 +79,7 @@
 
   const ALIASES = Object.freeze({
     'brand.logo.horizontal': 'brand.logo.horizontal',
+    'brand.logo.navLockup': 'brand.logo.navLockup',
     'brand.symbol': 'brand.symbol',
     'brand.appIcon': 'brand.appIcon',
     'brand.splash': 'brand.splash',
@@ -173,7 +177,7 @@
   }
 
   ROOT.PackitAssetManifest = {
-    version: '1.0.2',
+    version: '1.0.3',
     basePath: BASE_PATH,
     assets: ASSETS,
     resolve,
