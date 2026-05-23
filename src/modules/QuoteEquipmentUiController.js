@@ -24,13 +24,6 @@
     const n = num(value);
     return Number.isInteger(n) ? String(n) : n.toFixed(1).replace(/\.0$/, '');
   }
-  function itemLabel(item) { return item && item.code ? `${item.code} — ${item.name}` : (item && item.name) || ''; }
-  function categoryLabel(key) {
-    return ({
-      sound_pa: 'Звук ПА', consoles: 'Пульты', monitoring: 'Мониторинг', backline: 'Бэклайн',
-      light: 'Свет', services: 'Услуги', commutation: 'Коммутация', consumables: 'Расходники', other: 'Другое'
-    })[key] || key || 'Другое';
-  }
 
   function injectStyles() {
     if (!GLOBAL.document || GLOBAL.document.getElementById('packit-equipment-live-style')) return;
@@ -47,6 +40,25 @@
     GLOBAL.document.head.appendChild(style);
   }
 
+  function categoryLabel(key) {
+    return ({
+      sound_pa: 'Звук ПА',
+      consoles: 'Пульты',
+      monitoring: 'Мониторинг',
+      backline: 'Бэклайн',
+      light: 'Свет',
+      services: 'Услуги',
+      commutation: 'Коммутация',
+      consumables: 'Расходники',
+      other: 'Другое'
+    })[key] || key || 'Другое';
+  }
+
+  function itemLabel(item) {
+    if (!item) return '';
+    return item.code ? `${item.code} — ${item.name}` : item.name;
+  }
+
   function getItems(panel) {
     const legacyRows = Array.from(panel.querySelectorAll('.v4-equipment-group [data-quote-equipment-choice]'));
     const legacyCategories = Array.from(new Set(legacyRows.map(input => txt(input.getAttribute('data-quote-equipment-category'))).filter(Boolean)));
@@ -57,6 +69,7 @@
     list = Array.isArray(list) ? list.filter(item => item && item.isActive !== false) : [];
     return legacyCategories.length ? list.filter(item => legacyCategories.includes(item.category)) : list;
   }
+
   function getSubrentors() {
     try {
       const dir = ROOT.SupplierDirectory;
@@ -66,14 +79,18 @@
     } catch (_) {}
     return [];
   }
+
   function supplierName(id, fallback) {
     const safeId = txt(id);
     if (!safeId) return fallback || '';
     try {
       const supplier = ROOT.SupplierDirectory && ROOT.SupplierDirectory.findSupplier ? ROOT.SupplierDirectory.findSupplier(safeId) : null;
       return supplier && supplier.name ? supplier.name : (fallback || safeId);
-    } catch (_) { return fallback || safeId; }
+    } catch (_) {
+      return fallback || safeId;
+    }
   }
+
   function findItem(items, value) {
     const needle = txt(value).toLowerCase();
     if (!needle) return null;
@@ -82,6 +99,7 @@
       || items.find(item => txt(item.code).toLowerCase() === needle || txt(item.name).toLowerCase() === needle)
       || items.find(item => itemLabel(item).toLowerCase().includes(needle));
   }
+
   function dedupeRows(rows) {
     const map = new Map();
     (Array.isArray(rows) ? rows : []).forEach(row => {
@@ -90,8 +108,34 @@
     });
     return Array.from(map.values());
   }
+
+  function manualKey(row) {
+    return [
+      txt(row && row.name).toLowerCase(),
+      qty(row && row.qty),
+      txt(row && row.unit).toLowerCase(),
+      qty(row && (row.clientPrice || row.rentalPrice || row.subrentPrice)),
+      txt(row && row.sourceType).toLowerCase(),
+      txt(row && row.supplierName).toLowerCase()
+    ].join('|');
+  }
+
   function normalizeManualRows(rows) {
-    return (Array.isArray(rows) ? rows : []).filter(row => txt(row && row.name)).map(row => Object.assign({ qty: 1, unit: 'шт', sourceType: 'manual' }, row));
+    const seen = new Set();
+    const result = [];
+    (Array.isArray(rows) ? rows : []).forEach(row => {
+      const clean = Object.assign({ qty: 1, unit: 'шт', sourceType: 'manual' }, row || {});
+      clean.name = txt(clean.name);
+      if (!clean.name) return;
+      clean.qty = Math.max(1, num(clean.qty) || 1);
+      clean.unit = txt(clean.unit) || 'шт';
+      clean.sourceType = txt(clean.sourceType) || 'manual';
+      const key = manualKey(clean);
+      if (seen.has(key)) return;
+      seen.add(key);
+      result.push(clean);
+    });
+    return result;
   }
 
   function rowStatus(row, item) {
@@ -105,13 +149,14 @@
     const rows = getSubrentors();
     const selected = txt(selectedId);
     const legacy = selected && !rows.some(row => row.id === selected)
-      ? `<option value="${attr(selected)}" selected>${esc(selectedName || selected)}</option>` : '';
+      ? `<option value="${attr(selected)}" selected>${esc(selectedName || selected)}</option>`
+      : '';
     return `<option value="">Выбрать субарендатора</option>${legacy}${rows.map(row => `<option value="${attr(row.id)}" ${row.id === selected ? 'selected' : ''}>${esc(row.name || row.id)}</option>`).join('')}`;
   }
 
   function captureLegacyRows(panel, items) {
     const out = [];
-    panel.querySelectorAll('.v4-equipment-group [data-quote-equipment-smart-row], [data-packit-equipment-state] [data-quote-equipment-smart-row]').forEach(row => {
+    panel.querySelectorAll('.v4-equipment-group [data-quote-equipment-smart-row]').forEach(row => {
       const choice = row.querySelector('[data-quote-equipment-choice]');
       const qtyInput = row.querySelector('[data-quote-equipment-qty]');
       const item = findItem(items, choice && choice.value);
@@ -131,9 +176,10 @@
     });
     return dedupeRows(out);
   }
+
   function captureManualRows(panel) {
     const rows = [];
-    panel.querySelectorAll('.v4-manual-equipment-list [data-quote-equipment-manual-row], [data-packit-equipment-state] [data-quote-equipment-manual-row]').forEach(row => {
+    panel.querySelectorAll('.v4-manual-equipment-list [data-quote-equipment-manual-row]').forEach(row => {
       const get = key => row.querySelector(`[data-quote-equipment-manual-field="${key}"]`);
       const name = txt(get('name') && get('name').value);
       if (!name) return;
@@ -154,9 +200,42 @@
     return normalizeManualRows(rows);
   }
 
+  function deactivateLegacyInputs(node) {
+    node.querySelectorAll('[data-quote-equipment-smart-row]').forEach(el => {
+      el.setAttribute('data-packit-disabled-smart-row', el.getAttribute('data-quote-equipment-smart-row') || '');
+      el.removeAttribute('data-quote-equipment-smart-row');
+    });
+    node.querySelectorAll('[data-quote-equipment-manual-row]').forEach(el => {
+      el.setAttribute('data-packit-disabled-manual-row', el.getAttribute('data-quote-equipment-manual-row') || '');
+      el.removeAttribute('data-quote-equipment-manual-row');
+    });
+    node.querySelectorAll('[data-quote-equipment-choice]').forEach(el => {
+      el.setAttribute('data-packit-disabled-choice', 'true');
+      el.removeAttribute('data-quote-equipment-choice');
+    });
+    node.querySelectorAll('[data-quote-equipment-qty]').forEach(el => {
+      el.setAttribute('data-packit-disabled-qty', 'true');
+      el.removeAttribute('data-quote-equipment-qty');
+    });
+    node.querySelectorAll('[data-quote-equipment-manual-field]').forEach(el => {
+      el.setAttribute('data-packit-disabled-manual-field', el.getAttribute('data-quote-equipment-manual-field') || '');
+      el.removeAttribute('data-quote-equipment-manual-field');
+    });
+    node.querySelectorAll('[data-quote-equipment-linked-subrent-supplier-id], [data-quote-equipment-linked-subrent-supplier], [data-quote-equipment-linked-subrent-price], [data-quote-equipment-linked-client-price], [data-quote-equipment-linked-subrent-qty]').forEach(el => {
+      Array.from(el.attributes).forEach(attribute => {
+        if (attribute.name.startsWith('data-quote-equipment-linked-')) {
+          el.setAttribute(`data-packit-disabled-${attribute.name.replace(/^data-/, '')}`, attribute.value || '');
+          el.removeAttribute(attribute.name);
+        }
+      });
+    });
+  }
+
   function disableLegacy(panel) {
     panel.querySelectorAll(':scope > .v4-equipment-group, :scope > .v4-kicker, :scope > .v4-manual-equipment-list, :scope > .v4-equipment-compact-list').forEach(node => {
-      if (!node.hasAttribute('data-packit-compact-root')) node.classList.add('packit-equipment-legacy-hidden');
+      if (node.hasAttribute('data-packit-compact-root')) return;
+      node.classList.add('packit-equipment-legacy-hidden');
+      deactivateLegacyInputs(node);
     });
   }
 
@@ -165,7 +244,7 @@
     const items = getItems(panel);
     const rows = captureLegacyRows(panel, items);
     const manualRows = captureManualRows(panel);
-    panel.__packitEquipmentState = { rows, manualRows, manualOpen: false, selectedItemId: '' };
+    panel.__packitEquipmentState = { rows, manualRows, manualOpen: false };
     return panel.__packitEquipmentState;
   }
 
@@ -177,8 +256,9 @@
       panel.appendChild(state);
     }
     state.hidden = true;
+    const safeRows = dedupeRows(rows);
     const safeManualRows = normalizeManualRows(manualRows);
-    state.innerHTML = dedupeRows(rows).map(row => {
+    state.innerHTML = safeRows.map(row => {
       const item = items.find(x => x.id === row.itemId);
       if (!item) return '';
       return `<div class="v4-equipment-smart-row is-selected" data-quote-equipment-smart-row="${attr(item.category)}">
@@ -208,8 +288,8 @@
   function renderPanel(panel, options) {
     const opts = options || {};
     injectStyles();
-    disableLegacy(panel);
     const state = ensureState(panel);
+    disableLegacy(panel);
     const items = getItems(panel);
     state.rows = dedupeRows(state.rows).filter(row => items.some(item => item.id === row.itemId));
     state.manualRows = normalizeManualRows(state.manualRows);
@@ -281,6 +361,7 @@
       <button type="button" class="btn-secondary btn-compact" data-packit-subrent-apply>Применить</button>
     </div>`;
   }
+
   function renderManualEditor() {
     return `<div class="packit-manual-inline">
       <label>Название<input data-packit-manual-name placeholder="Позиция вне базы"></label>
@@ -300,25 +381,27 @@
       const item = items.find(x => x.id === row.itemId);
       if (!item) return acc;
       const s = rowStatus(row, item);
-      if (s.deficit > 0) {
-        acc.deficitRows += 1;
-        acc.deficitQty += s.deficit;
-        acc.subrentQty += s.subrent;
-      } else {
-        acc.stockOkRows += 1;
-      }
+      acc.stockQty += s.stock;
+      if (s.stock > 0) acc.stockRows += 1;
+      acc.deficitQty += s.deficit;
+      acc.subrentQty += s.subrent;
+      if (s.deficit > 0) acc.deficitRows += 1;
+      if (s.subrent > 0) acc.subrentRows += 1;
       return acc;
-    }, { stockOkRows: 0, deficitRows: 0, deficitQty: 0, subrentQty: 0 });
+    }, { stockQty: 0, stockRows: 0, deficitQty: 0, deficitRows: 0, subrentQty: 0, subrentRows: 0 });
     const manualCount = normalizeManualRows(manualRows).length;
-    summary.innerHTML = `<div class="packit-live-summary-card ok"><b>${qty(stats.stockOkRows)}</b><span>склад OK</span></div>
-      <div class="packit-live-summary-card bad"><b>${qty(stats.deficitRows)}</b><span>дефицит · ${qty(stats.deficitQty)} шт</span></div>
-      <div class="packit-live-summary-card warn"><b>${qty(stats.subrentQty)}</b><span>субаренда</span></div>
-      ${manualCount ? `<div class="packit-live-summary-card"><b>${qty(manualCount)}</b><span>ручные</span></div>` : ''}`;
+    summary.innerHTML = `<div class="packit-live-summary-card ok"><b>${qty(stats.stockQty)}</b><span>складом · ${qty(stats.stockRows)} поз.</span></div>
+      <div class="packit-live-summary-card bad"><b>${qty(stats.deficitQty)}</b><span>дефицит · ${qty(stats.deficitRows)} поз.</span></div>
+      <div class="packit-live-summary-card warn"><b>${qty(stats.subrentQty)}</b><span>субаренда · ${qty(stats.subrentRows)} поз.</span></div>
+      ${manualCount ? `<div class="packit-live-summary-card"><b>${qty(manualCount)}</b><span>ручные позиции</span></div>` : ''}`;
   }
+
   function commitHidden(panel) {
-    const btn = panel.closest('[data-quote-form]') && panel.closest('[data-quote-form]').querySelector('[data-quote-bind-equipment]');
+    const form = panel.closest('[data-quote-form]');
+    const btn = form && form.querySelector('[data-quote-bind-equipment]');
     if (btn) btn.click();
   }
+
   function commitAndRender(panel) {
     renderPanel(panel, { commit: true });
   }
@@ -425,6 +508,7 @@
     } catch (_) {}
     chooseNewSubrentor(saved, rowEl, panel);
   }
+
   function chooseNewSubrentor(saved, rowEl, panel) {
     if (!saved) return;
     const state = ensureState(panel);
@@ -435,13 +519,14 @@
     }
     commitAndRender(panel);
   }
+
   function addManual(root, panel) {
     const state = ensureState(panel);
     const editor = root.querySelector('[data-packit-manual-editor]');
     const get = key => editor.querySelector(`[data-packit-manual-${key}]`);
     const name = txt(get('name') && get('name').value);
     if (!name) return;
-    state.manualRows.push({
+    state.manualRows = normalizeManualRows(state.manualRows.concat([{
       name,
       qty: Math.max(1, num(get('qty') && get('qty').value) || 1),
       unit: txt(get('unit') && get('unit').value) || 'шт',
@@ -449,7 +534,7 @@
       weightKg: num(get('weight') && get('weight').value),
       powerW: num(get('power') && get('power').value),
       sourceType: 'manual'
-    });
+    }]));
     state.manualOpen = false;
     commitAndRender(panel);
   }
@@ -458,14 +543,14 @@
     const scope = root && root.querySelectorAll ? root : GLOBAL.document;
     if (!scope) return;
     scope.querySelectorAll('[data-quote-equipment-panel]').forEach(panel => {
-      if (panel.dataset.packitCompactEquipmentReady === 'true') return;
+      if (panel.dataset.packitCompactEquipmentReady === 'true' && panel.querySelector('[data-packit-equipment-compact-root]')) return;
       injectStyles();
-      disableLegacy(panel);
       ensureState(panel);
       renderPanel(panel);
       panel.dataset.packitCompactEquipmentReady = 'true';
     });
   }
+
   function wrapQuoteWizardRender() {
     const wizard = ROOT.QuoteWizard;
     if (!wizard || !wizard.renderWizardMap || wizard.__packitEquipmentUiWrapped) return false;
@@ -479,13 +564,18 @@
     wizard.__packitEquipmentUiWrapped = true;
     return true;
   }
+
   function init() {
     wrapQuoteWizardRender();
     enhance(GLOBAL.document);
   }
 
-  ROOT.QuoteEquipmentUiController = { version: '2.1.0', init, enhance };
-  if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
-  else init();
+  ROOT.QuoteEquipmentUiController = { version: '2.2.0-manual-dedupe', init, enhance };
+
+  if (GLOBAL.document && GLOBAL.document.readyState === 'loading') {
+    GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
   GLOBAL.setTimeout(init, 250);
 })();
