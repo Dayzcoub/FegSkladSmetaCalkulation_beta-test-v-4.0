@@ -63,7 +63,57 @@
     if (subrentQty) subrentQty.value = qty(status.subrent);
   }
 
+  function getManualKey(row) {
+    return [
+      text(row && row.name).toLowerCase(),
+      qty(row && row.qty),
+      qty(row && (row.clientPrice || row.rentalPrice || row.subrentPrice)),
+      text(row && row.unit).toLowerCase()
+    ].join('|');
+  }
+
+  function cleanupManualDuplicates(panel) {
+    if (!panel) return;
+
+    if (panel.__packitEquipmentState && Array.isArray(panel.__packitEquipmentState.manualRows)) {
+      const seen = new Set();
+      panel.__packitEquipmentState.manualRows = panel.__packitEquipmentState.manualRows.filter(row => {
+        const key = getManualKey(row);
+        if (!text(row && row.name)) return false;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    const seenDom = new Set();
+    panel.querySelectorAll('[data-packit-manual-row-visible]').forEach(rowEl => {
+      const name = text(rowEl.querySelector('.packit-equipment-name b') && rowEl.querySelector('.packit-equipment-name b').textContent).toLowerCase();
+      const amount = text(rowEl.querySelector('.packit-equipment-stat b') && rowEl.querySelector('.packit-equipment-stat b').textContent);
+      const price = text(rowEl.querySelector('.packit-equipment-price b') && rowEl.querySelector('.packit-equipment-price b').textContent);
+      const key = [name, amount, price].join('|');
+      if (!name || seenDom.has(key)) rowEl.remove();
+      else seenDom.add(key);
+    });
+
+    const state = panel.querySelector('[data-packit-equipment-state]');
+    if (state) {
+      const seenHidden = new Set();
+      state.querySelectorAll('[data-quote-equipment-manual-row]').forEach(rowEl => {
+        const nameInput = rowEl.querySelector('[data-quote-equipment-manual-field="name"]');
+        const qtyInput = rowEl.querySelector('[data-quote-equipment-manual-field="qty"]');
+        const priceInput = rowEl.querySelector('[data-quote-equipment-manual-field="clientPrice"]');
+        const key = [text(nameInput && nameInput.value).toLowerCase(), qty(qtyInput && qtyInput.value), qty(priceInput && priceInput.value)].join('|');
+        if (!text(nameInput && nameInput.value) || seenHidden.has(key)) rowEl.remove();
+        else seenHidden.add(key);
+      });
+    }
+  }
+
   function updateSummary(panel) {
+    if (!panel) return;
+    cleanupManualDuplicates(panel);
+
     const summary = panel.querySelector(':scope > .v4-summary-grid') || panel.querySelector('.v4-summary-grid');
     if (!summary) return;
 
@@ -93,41 +143,14 @@
       ${manualRows ? `<div class="packit-live-summary-card"><b>${qty(manualRows)}</b><span>ручные позиции</span></div>` : ''}`;
   }
 
-  function forceCompact(root) {
-    const scope = root && root.querySelectorAll ? root : GLOBAL.document;
-    if (!scope) return;
-    scope.querySelectorAll('[data-quote-equipment-panel]').forEach(panel => {
-      const hasCompact = Boolean(panel.querySelector('[data-packit-equipment-compact-root]'));
-      const hasLegacyVisible = Boolean(panel.querySelector(':scope > .v4-equipment-group:not(.packit-equipment-legacy-hidden)'));
-      if (!hasCompact || hasLegacyVisible) {
-        panel.dataset.packitCompactEquipmentReady = '';
-        if (ROOT.QuoteEquipmentUiController && ROOT.QuoteEquipmentUiController.enhance) {
-          ROOT.QuoteEquipmentUiController.enhance(panel.parentNode || panel);
-        }
-      }
-      updateSummary(panel);
-    });
-  }
-
-  function wrapWizard() {
-    const wizard = ROOT.QuoteWizard;
-    if (!wizard || !wizard.renderWizardMap || wizard.__packitEquipmentLiveFixWrapped) return false;
-    const original = wizard.renderWizardMap.bind(wizard);
-    wizard.renderWizardMap = function packitLiveFixRender(target, draft) {
-      const result = original(target, draft);
-      const targetRoot = result || (typeof target === 'string' ? GLOBAL.document.getElementById(target) : target);
-      const run = () => forceCompact(targetRoot || GLOBAL.document);
-      if (GLOBAL.requestAnimationFrame) GLOBAL.requestAnimationFrame(run);
-      else GLOBAL.setTimeout(run, 0);
-      return result;
-    };
-    wizard.__packitEquipmentLiveFixWrapped = true;
-    return true;
+  function updateAll() {
+    if (!GLOBAL.document) return;
+    GLOBAL.document.querySelectorAll('[data-quote-equipment-panel]').forEach(updateSummary);
   }
 
   function bindLiveEvents() {
-    if (!GLOBAL.document || GLOBAL.document.__packitEquipmentLiveFixBound) return;
-    GLOBAL.document.__packitEquipmentLiveFixBound = true;
+    if (!GLOBAL.document || GLOBAL.document.__packitEquipmentSafeLiveFixBound) return;
+    GLOBAL.document.__packitEquipmentSafeLiveFixBound = true;
     const handler = event => {
       if (!event.target || !event.target.closest) return;
       const panel = event.target.closest('[data-quote-equipment-panel]');
@@ -145,14 +168,13 @@
   }
 
   function init() {
-    wrapWizard();
     bindLiveEvents();
-    forceCompact(GLOBAL.document);
+    updateAll();
+    GLOBAL.setTimeout(updateAll, 300);
   }
 
-  ROOT.QuoteEquipmentLiveStateFix = { version: '1.0.0', init, updateSummary, forceCompact };
+  ROOT.QuoteEquipmentLiveStateFix = { version: '1.1.0-safe', init, updateSummary, cleanupManualDuplicates };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
-  GLOBAL.setTimeout(init, 300);
 })();
