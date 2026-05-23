@@ -1,0 +1,17 @@
+{
+  "name": "packit-company-main-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "PACK.IT company-main backend API for PostgreSQL-backed equipment, stock, quotes and reservations.",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "check": "node --check src/server.mjs"
+  },
+  "dependencies": {
+    "pg": "8.13.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
