@@ -1,5 +1,49 @@
 /* PACK.IT compact equipment quote layout */
 
+body.v4-only-body .v4-steps {
+  align-items: stretch;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+body.v4-only-body .v4-steps > li {
+  flex: 0 0 128px;
+  min-width: 128px;
+  display: block;
+}
+
+body.v4-only-body .v4-steps > li > button {
+  width: 100%;
+  min-height: 52px;
+  height: 52px;
+  display: grid;
+  grid-template-rows: 12px minmax(16px, 1fr) 12px;
+  align-content: center;
+  gap: 1px;
+  padding: 6px 8px;
+  overflow: hidden;
+}
+
+body.v4-only-body .v4-steps > li > button span,
+body.v4-only-body .v4-steps > li > button b,
+body.v4-only-body .v4-steps > li > button small {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.1;
+}
+
+body.v4-only-body .v4-steps > li > button b {
+  align-self: center;
+}
+
+body.v4-only-body .v4-steps > li > button small {
+  min-height: 12px;
+}
+
 body.v4-only-body [data-quote-equipment-panel] {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
@@ -37,7 +81,8 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges .v4-
   opacity: 1;
 }
 
-body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid {
+body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid,
+body.v4-only-body [data-quote-equipment-panel] > .v4-note:not(.v4-step-error) {
   display: none !important;
 }
 
@@ -58,13 +103,6 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipme
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--surface);
-}
-
-body.v4-only-body [data-quote-equipment-panel] > .v4-note:nth-child(3) {
-  grid-column: 2;
-  grid-row: 1;
-  position: static;
-  justify-self: end;
 }
 
 body.v4-only-body .packit-equipment-legacy-hidden,
