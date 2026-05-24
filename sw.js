@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_WIZARD_FOOTER_LAYOUT_2026_05_24';
-const CACHE_NAME = 'packit-wizard-footer-layout-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-wizard-footer-layout-2026-05-24';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_CONTROL_HEIGHT_2026_05_24';
+const CACHE_NAME = 'packit-equipment-control-height-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-equipment-control-height-2026-05-24';
 
 const CORE_ASSETS = [
   './',
