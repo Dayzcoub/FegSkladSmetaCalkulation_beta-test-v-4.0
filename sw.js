@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_SHELL_CARD_CONTRACT_CLEANUP_2026_05_24';
-const CACHE_NAME = 'packit-shell-card-contract-cleanup-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-shell-card-contract-cleanup-2026-05-24';
+const CACHE_VERSION = 'PACKIT_SHELL_EMPTY_STATE_CLEANUP_2026_05_24';
+const CACHE_NAME = 'packit-shell-empty-state-cleanup-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-shell-empty-state-cleanup-2026-05-24';
 
 const CORE_ASSETS = [
   './',
