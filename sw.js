@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_SUMMARY_SQUEEZE_2026_05_24';
-const CACHE_NAME = 'packit-equipment-summary-squeeze-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-summary-squeeze-2026-05-24';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_TOOLBAR_OVERRIDE_2026_05_24';
+const CACHE_NAME = 'packit-equipment-toolbar-override-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-equipment-toolbar-override-2026-05-24';
 
 const CORE_ASSETS = [
   './',
@@ -24,6 +24,7 @@ const CORE_ASSETS = [
   './src/styles/modules/quote-equipment-layout.css',
   './src/styles/modules/quote-equipment-tighten.css',
   './src/styles/modules/quote-equipment-server-pass.css',
+  './src/styles/modules/quote-equipment-toolbar-final.css',
   './src/modules/index.js',
   './src/modules/FormatUtils.js',
   './src/modules/DomUtils.js',
