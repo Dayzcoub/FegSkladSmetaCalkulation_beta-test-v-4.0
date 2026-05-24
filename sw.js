@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_CSS_ENTRY_CLEANUP_2026_05_24';
-const CACHE_NAME = 'packit-css-entry-cleanup-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-css-entry-cleanup-2026-05-24';
+const CACHE_VERSION = 'PACKIT_CLIENT_FOOTER_ALIGNMENT_2026_05_24';
+const CACHE_NAME = 'packit-client-footer-alignment-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-client-footer-alignment-2026-05-24';
 
 const CORE_ASSETS = [
   './',
