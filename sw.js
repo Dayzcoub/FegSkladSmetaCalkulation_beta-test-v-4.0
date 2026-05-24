@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_RENDER_OBSERVER_2026_05_24';
-const CACHE_NAME = 'packit-equipment-render-observer-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-render-observer-2026-05-24';
+const CACHE_VERSION = 'PACKIT_DOM_ROW_EQUIPMENT_SUMMARY_2026_05_24';
+const CACHE_NAME = 'packit-dom-row-equipment-summary-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-dom-row-equipment-summary-2026-05-24';
 
 const CORE_ASSETS = [
   './',
