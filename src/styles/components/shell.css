@@ -495,6 +495,37 @@ body.v4-only-body .packit-section {
 }
 
 /* =====================================================================
+   SHELL EMPTY / FALLBACK STATES
+   ===================================================================== */
+
+body.v4-only-body .packit-page > .v4-card:only-child,
+body.v4-only-body .packit-page > .packit-card:only-child {
+  max-width: 720px;
+}
+
+body.v4-only-body .packit-page > .v4-card:only-child .v4-kicker,
+body.v4-only-body .packit-page > .packit-card:only-child .v4-kicker {
+  margin-bottom: 6px;
+}
+
+body.v4-only-body .packit-page > .v4-card:only-child h3,
+body.v4-only-body .packit-page > .packit-card:only-child h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+
+body.v4-only-body .packit-page > .v4-card:only-child .v4-muted,
+body.v4-only-body .packit-page > .packit-card:only-child .v4-muted {
+  margin: 0;
+  max-width: 560px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* =====================================================================
    AUTH STATE (не вошли)
    ===================================================================== */
 
