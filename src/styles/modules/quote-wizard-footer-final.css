@@ -50,6 +50,10 @@ body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > [data-quote-save]
   min-width: 196px;
 }
 
+body.v4-only-body .v4-quote-form[data-quote-active-step="client"] .v4-wizard-nav-group--end > [data-quote-save] {
+  min-width: 240px;
+}
+
 body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > button:last-child,
 body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > [data-quote-next] {
   min-width: 166px;
