@@ -1,8 +1,8 @@
 /* PACK.IT compact equipment quote layout */
 
 body.v4-only-body [data-quote-equipment-panel] {
-  grid-template-columns: minmax(0, 1fr) 240px;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 12px;
   align-items: start;
 }
 
@@ -11,21 +11,25 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges {
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid {
-  grid-column: 2;
-  grid-row: 2;
-  position: sticky;
-  top: 10px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 6px;
+  display: none !important;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
 body.v4-only-body [data-quote-equipment-panel] > .v4-note:nth-child(3) {
   grid-column: 2;
-  grid-row: 3;
+  grid-row: 2 / span 2;
   position: sticky;
-  top: 166px;
+  top: 12px;
+  align-self: start;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
 }
 
 body.v4-only-body .packit-equipment-legacy-hidden,
@@ -38,20 +42,42 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-kicker {
 
 body.v4-only-body .packit-equipment-compact-root {
   grid-column: 1;
+  grid-row: 2 / span 4;
   display: grid;
   gap: 10px;
   min-width: 0;
 }
 
+body.v4-only-body .packit-live-summary-card {
+  min-height: 58px;
+  align-content: center;
+}
+
+body.v4-only-body .packit-live-summary-card b {
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+body.v4-only-body .packit-live-summary-card span {
+  line-height: 1.25;
+}
+
 body.v4-only-body .packit-equipment-addbar {
   display: grid;
-  grid-template-columns: 180px minmax(280px, 1fr) 88px auto;
+  grid-template-columns: 180px minmax(260px, 1fr) 88px 136px;
   gap: 8px;
   align-items: end;
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--panel-2);
+}
+
+body.v4-only-body .packit-equipment-addbar .btn-primary,
+body.v4-only-body .packit-equipment-addbar button {
+  min-height: 34px;
+  width: 100%;
+  justify-content: center;
 }
 
 body.v4-only-body .packit-equipment-addbar label,
@@ -168,7 +194,7 @@ body.v4-only-body .packit-equipment-table {
 
 body.v4-only-body .packit-equipment-row {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) 76px 68px 74px 82px 104px 126px 56px;
+  grid-template-columns: minmax(210px, 1.2fr) 76px 64px 72px 78px 98px minmax(112px, .7fr) 34px;
   gap: 6px;
   align-items: center;
   padding: 8px;
@@ -253,7 +279,7 @@ body.v4-only-body .packit-equipment-actions button {
 body.v4-only-body .packit-subrent-inline {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(130px, 1fr) 72px minmax(170px, 1.2fr) auto 86px 92px auto;
+  grid-template-columns: minmax(120px, .8fr) 72px minmax(160px, 1.2fr) auto 86px 92px auto;
   gap: 6px;
   align-items: end;
   padding: 8px;
@@ -285,7 +311,7 @@ body.v4-only-body .packit-manual-inline {
 }
 
 body.v4-only-body .packit-equipment-row.is-manual {
-  grid-template-columns: minmax(220px, 1fr) 74px 110px 126px 56px;
+  grid-template-columns: minmax(220px, 1fr) 74px 110px 126px 34px;
 }
 
 body.v4-only-body [data-packit-equipment-state] {
@@ -298,15 +324,28 @@ body.v4-only-body [data-packit-equipment-state] {
   }
   body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid,
   body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
+  body.v4-only-body [data-quote-equipment-panel] > .v4-note:nth-child(3),
   body.v4-only-body .packit-equipment-compact-root {
     grid-column: 1;
+    grid-row: auto;
     position: static;
+  }
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   body.v4-only-body .packit-equipment-addbar,
   body.v4-only-body .packit-equipment-row,
   body.v4-only-body .packit-subrent-inline,
   body.v4-only-body .packit-manual-inline,
   body.v4-only-body .packit-equipment-row.is-manual {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
     grid-template-columns: 1fr;
   }
 }
