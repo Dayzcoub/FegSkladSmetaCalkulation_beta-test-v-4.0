@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_SCOPE_TABS_2026_05_24';
-const CACHE_NAME = 'packit-equipment-scope-tabs-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-scope-tabs-2026-05-24';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_TABS_MENU_POLISH_2026_05_24';
+const CACHE_NAME = 'packit-equipment-tabs-menu-polish-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-equipment-tabs-menu-polish-2026-05-24';
 
 const CORE_ASSETS = [
   './',
