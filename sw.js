@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_LAYOUT_LEVEL_FOOTER_CONTRACT_2026_05_24';
-const CACHE_NAME = 'packit-layout-level-footer-contract-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-layout-level-footer-contract-2026-05-24';
+const CACHE_VERSION = 'PACKIT_CLIENT_FOOTER_ACTION_WIDTH_2026_05_24';
+const CACHE_NAME = 'packit-client-footer-action-width-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-client-footer-action-width-2026-05-24';
 
 const CORE_ASSETS = [
   './',
