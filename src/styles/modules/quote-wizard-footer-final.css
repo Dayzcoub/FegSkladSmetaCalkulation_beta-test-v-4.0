@@ -45,13 +45,21 @@ body.v4-only-body .v4-quote-layout .v4-wizard-nav button {
   margin: 0;
 }
 
+body.v4-only-body .v4-quote-layout .v4-wizard-nav [data-quote-prev][disabled] {
+  opacity: 1;
+  cursor: default;
+  color: var(--text);
+  background: var(--surface-elevated);
+  border-color: var(--line-medium);
+}
+
 body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > button:first-child,
 body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > [data-quote-save] {
   min-width: 196px;
 }
 
 body.v4-only-body .v4-quote-form[data-quote-active-step="client"] .v4-wizard-nav-group--end > [data-quote-save] {
-  min-width: 240px;
+  min-width: 196px;
 }
 
 body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > button:last-child,
