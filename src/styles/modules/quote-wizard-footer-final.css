@@ -26,10 +26,10 @@ body.v4-only-body .v4-quote-form .v4-wizard-nav-group {
 }
 
 body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  justify-content: end;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
   justify-self: end;
   align-items: center;
   gap: 8px;
@@ -41,14 +41,21 @@ body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
 body.v4-only-body .v4-quote-form .v4-wizard-nav button {
   min-height: 34px;
   white-space: nowrap;
+  margin: 0;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:first-child {
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:first-child,
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-save] {
   min-width: 196px;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:last-child {
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:last-child,
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-next] {
   min-width: 166px;
+}
+
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-save] + [data-quote-next] {
+  margin-left: 0;
 }
 
 body.v4-only-body .v4-quote-layout + .v4-note[data-wizard-zone="note"] {
@@ -88,14 +95,15 @@ body.v4-only-body .v4-quote-form[data-quote-active-step="equipment"] .v4-wizard-
     justify-content: stretch;
     justify-self: stretch;
     flex-direction: column;
-    grid-auto-flow: row;
-    grid-auto-columns: auto;
+    flex-wrap: nowrap;
     margin-left: 0;
   }
 
   body.v4-only-body .v4-quote-form .v4-wizard-nav button,
   body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:first-child,
-  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:last-child {
+  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:last-child,
+  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-save],
+  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-next] {
     width: 100%;
     min-width: 0;
   }
