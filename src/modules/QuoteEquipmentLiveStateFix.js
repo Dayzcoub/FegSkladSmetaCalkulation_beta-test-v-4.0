@@ -143,6 +143,23 @@
     return stats;
   }
 
+  function ensureBasket(panel) {
+    let basket = panel.querySelector(':scope > .v4-equipment-basket') || panel.querySelector('.v4-equipment-basket');
+    if (basket) return basket;
+    if (!GLOBAL.document) return null;
+
+    basket = GLOBAL.document.createElement('section');
+    basket.className = 'v4-equipment-basket v4-equipment-basket--availability';
+    basket.setAttribute('data-packit-generated-equipment-basket', 'true');
+
+    const badges = panel.querySelector(':scope > .v4-equipment-scope-badges');
+    const compactRoot = panel.querySelector('[data-packit-equipment-compact-root]');
+    if (badges && badges.nextSibling) panel.insertBefore(basket, badges.nextSibling);
+    else if (compactRoot) panel.insertBefore(basket, compactRoot);
+    else panel.appendChild(basket);
+    return basket;
+  }
+
   function updateSummary(panel) {
     if (!panel) return;
     cleanupManualDuplicates(panel);
@@ -153,7 +170,7 @@
     const summary = panel.querySelector(':scope > .v4-summary-grid') || panel.querySelector('.v4-summary-grid');
     if (summary) summary.innerHTML = html;
 
-    const basket = panel.querySelector(':scope > .v4-equipment-basket') || panel.querySelector('.v4-equipment-basket');
+    const basket = ensureBasket(panel);
     if (basket) basket.innerHTML = html;
   }
 
@@ -252,7 +269,7 @@
     GLOBAL.setTimeout(updateAll, 900);
   }
 
-  ROOT.QuoteEquipmentLiveStateFix = { version: '1.4.0-visible-basket-piece-summary', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
+  ROOT.QuoteEquipmentLiveStateFix = { version: '1.5.0-ensure-empty-basket', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
