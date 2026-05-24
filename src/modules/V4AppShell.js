@@ -103,15 +103,15 @@
     root.innerHTML = `
       <div class="packit-auth-wrap">
         <div class="packit-auth-card">
-          <div class="v4-kicker" style="margin-bottom:8px">Проектный доступ</div>
-          <h2 style="margin-bottom:8px">Доступ завершён</h2>
-          <p class="v4-muted" style="margin-bottom:16px">Проектный ключ истёк или ещё не активен. Обратитесь к администратору.</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--line)">
+          <div class="v4-kicker packit-auth-kicker">Проектный доступ</div>
+          <h2 class="packit-auth-title">Доступ завершён</h2>
+          <p class="v4-muted packit-auth-copy">Проектный ключ истёк или ещё не активен. Обратитесь к администратору.</p>
+          <div class="packit-auth-user-row">
             <div>
-              <div style="font-size:13px;font-weight:600;color:var(--text-strong)">${escapeHtml(user && (user.displayName || user.email) || 'Гость')}</div>
-              <div style="font-size:11px;color:var(--muted)">${escapeHtml(roleLabel)}</div>
+              <div class="packit-auth-user-name">${escapeHtml(user && (user.displayName || user.email) || 'Гость')}</div>
+              <div class="packit-auth-user-role">${escapeHtml(roleLabel)}</div>
             </div>
-            <button class="btn-secondary" style="height:32px;padding:0 12px;font-size:12px" data-v4-logout>Выйти</button>
+            <button class="btn-secondary packit-auth-logout-btn" data-v4-logout>Выйти</button>
           </div>
         </div>
       </div>`;
@@ -580,13 +580,13 @@
 
     mount.innerHTML = `
       <div class="v4-sync-stack">
-        <div class="packit-card" style="margin-bottom:12px">
+        <div class="packit-card packit-sync-card">
           <div class="v4-kicker">Backend / Sync</div>
-          <h3 style="margin:4px 0 8px">Консоли синхронизации</h3>
-          <p class="v4-muted" style="font-size:12px;margin-bottom:12px">
+          <h3 class="packit-sync-title">Консоли синхронизации</h3>
+          <p class="v4-muted packit-sync-copy">
             Каждая консоль загружается отдельно. Нажмите кнопку чтобы открыть.
           </p>
-          <div class="v4-sync-actions" style="display:flex;flex-wrap:wrap;gap:6px" id="v4SyncBtns"></div>
+          <div class="v4-sync-actions packit-sync-actions" id="v4SyncBtns"></div>
         </div>
         <div id="v4SyncActiveMount"></div>
       </div>`;
@@ -601,7 +601,7 @@
       var btn = document.createElement('button');
       btn.className = available ? 'btn-secondary' : 'btn-secondary';
       btn.textContent = item.label;
-      if (!available) { btn.disabled = true; btn.style.opacity = '0.4'; }
+      if (!available) { btn.disabled = true; btn.classList.add('is-disabled'); }
       btn.addEventListener('click', function() {
         if (activeIdx === idx) {
           activeMount.innerHTML = '';
@@ -612,7 +612,7 @@
         activeIdx = idx;
         btnsEl.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
-        activeMount.innerHTML = '<div class="v4-note" style="padding:14px;margin-top:8px">Загрузка...</div>';
+        activeMount.innerHTML = '<div class="v4-note packit-sync-loading">Загрузка...</div>';
         setTimeout(function() {
           activeMount.innerHTML = '';
           var m = getModule(item.mod);
