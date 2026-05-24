@@ -121,31 +121,40 @@
     }
   }
 
+  function renderPieceCards(stats) {
+    const s = stats || { stockQty: 0, deficitQty: 0, subrentQty: 0, manualRows: 0 };
+    return `<div class="packit-live-summary-card ok"><b>${qty(s.stockQty)}</b><span>складом закрыто, шт</span></div>
+      <div class="packit-live-summary-card bad"><b>${qty(s.deficitQty)}</b><span>дефицит, шт</span></div>
+      <div class="packit-live-summary-card warn"><b>${qty(s.subrentQty)}</b><span>субаренда, шт</span></div>
+      ${s.manualRows ? `<div class="packit-live-summary-card"><b>${qty(s.manualRows)}</b><span>ручные позиции</span></div>` : ''}`;
+  }
+
+  function buildPieceStats(panel) {
+    const stats = { stockQty: 0, deficitQty: 0, subrentQty: 0, manualRows: 0 };
+    panel.querySelectorAll('[data-packit-row]').forEach(rowEl => {
+      const status = getRowStatus(rowEl);
+      if (!status.item || status.requested <= 0) return;
+      stats.stockQty += status.stock;
+      stats.deficitQty += status.deficit;
+      stats.subrentQty += status.subrent;
+      updateVisibleRow(rowEl);
+    });
+    stats.manualRows = panel.querySelectorAll('[data-packit-manual-row-visible]').length;
+    return stats;
+  }
+
   function updateSummary(panel) {
     if (!panel) return;
     cleanupManualDuplicates(panel);
 
+    const stats = buildPieceStats(panel);
+    const html = renderPieceCards(stats);
+
     const summary = panel.querySelector(':scope > .v4-summary-grid') || panel.querySelector('.v4-summary-grid');
-    if (!summary) return;
+    if (summary) summary.innerHTML = html;
 
-    let stockQty = 0;
-    let deficitQty = 0;
-    let subrentQty = 0;
-
-    panel.querySelectorAll('[data-packit-row]').forEach(rowEl => {
-      const status = getRowStatus(rowEl);
-      if (!status.item || status.requested <= 0) return;
-      stockQty += status.stock;
-      deficitQty += status.deficit;
-      subrentQty += status.subrent;
-      updateVisibleRow(rowEl);
-    });
-
-    const manualRows = panel.querySelectorAll('[data-packit-manual-row-visible]').length;
-    summary.innerHTML = `<div class="packit-live-summary-card ok"><b>${qty(stockQty)}</b><span>складом закрыто, шт</span></div>
-      <div class="packit-live-summary-card bad"><b>${qty(deficitQty)}</b><span>дефицит, шт</span></div>
-      <div class="packit-live-summary-card warn"><b>${qty(subrentQty)}</b><span>субаренда, шт</span></div>
-      ${manualRows ? `<div class="packit-live-summary-card"><b>${qty(manualRows)}</b><span>ручные позиции</span></div>` : ''}`;
+    const basket = panel.querySelector(':scope > .v4-equipment-basket') || panel.querySelector('.v4-equipment-basket');
+    if (basket) basket.innerHTML = html;
   }
 
   function updateAll() {
@@ -157,7 +166,9 @@
     if (!panel) return;
     updateSummary(panel);
     GLOBAL.setTimeout(() => updateSummary(panel), 0);
+    GLOBAL.setTimeout(() => updateSummary(panel), 16);
     GLOBAL.setTimeout(() => updateSummary(panel), 80);
+    GLOBAL.setTimeout(() => updateSummary(panel), 180);
     GLOBAL.setTimeout(() => updateSummary(panel), 420);
     GLOBAL.setTimeout(() => updateSummary(panel), 900);
   }
@@ -224,6 +235,7 @@
     };
     GLOBAL.document.addEventListener('input', handler, true);
     GLOBAL.document.addEventListener('change', handler, true);
+    GLOBAL.document.addEventListener('keyup', handler, true);
     GLOBAL.document.addEventListener('click', event => {
       const panel = event.target && event.target.closest ? event.target.closest('[data-quote-equipment-panel]') : null;
       if (panel) GLOBAL.setTimeout(() => scheduleUpdate(panel), 0);
@@ -235,11 +247,12 @@
     bindSearchCloseEvents();
     updateAll();
     GLOBAL.setTimeout(updateAll, 0);
+    GLOBAL.setTimeout(updateAll, 80);
     GLOBAL.setTimeout(updateAll, 300);
     GLOBAL.setTimeout(updateAll, 900);
   }
 
-  ROOT.QuoteEquipmentLiveStateFix = { version: '1.3.0-piece-summary', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
+  ROOT.QuoteEquipmentLiveStateFix = { version: '1.4.0-visible-basket-piece-summary', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
