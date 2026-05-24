@@ -3,6 +3,7 @@
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
+  let burstTimer = 0;
 
   function hasVisibleLegacy(panel) {
     if (!panel) return false;
@@ -36,14 +37,43 @@
     });
   }
 
-  function init() {
+  function burst() {
     apply();
-    GLOBAL.setTimeout(apply, 250);
-    GLOBAL.setTimeout(apply, 750);
-    GLOBAL.setInterval(apply, 1200);
+    GLOBAL.setTimeout(apply, 16);
+    GLOBAL.setTimeout(apply, 80);
+    GLOBAL.setTimeout(apply, 180);
+    GLOBAL.setTimeout(apply, 420);
+    GLOBAL.setTimeout(apply, 900);
   }
 
-  ROOT.QuoteEquipmentReentryGuard = { version: '1.0.0', init, apply };
+  function startBurstWindow() {
+    if (burstTimer) GLOBAL.clearInterval(burstTimer);
+    const stopAt = Date.now() + 5000;
+    burst();
+    burstTimer = GLOBAL.setInterval(() => {
+      apply();
+      if (Date.now() > stopAt) {
+        GLOBAL.clearInterval(burstTimer);
+        burstTimer = 0;
+      }
+    }, 120);
+  }
+
+  function bindEvents() {
+    if (!GLOBAL.document || GLOBAL.document.__packitEquipmentFastReentryBound) return;
+    GLOBAL.document.__packitEquipmentFastReentryBound = true;
+    ['click', 'input', 'change', 'keydown'].forEach(type => {
+      GLOBAL.document.addEventListener(type, startBurstWindow, true);
+    });
+  }
+
+  function init() {
+    bindEvents();
+    startBurstWindow();
+    GLOBAL.setInterval(apply, 600);
+  }
+
+  ROOT.QuoteEquipmentReentryGuard = { version: '1.1.0-fast-reentry', init, apply, burst: startBurstWindow };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') {
     GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
