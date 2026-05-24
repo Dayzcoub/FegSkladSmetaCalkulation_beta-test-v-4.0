@@ -199,6 +199,43 @@
     GLOBAL.setTimeout(() => updateSummary(panel), 900);
   }
 
+  function isEquipmentRenderNode(node) {
+    if (!node || node.nodeType !== 1 || !node.matches) return false;
+    return node.matches('[data-packit-equipment-compact-root], [data-packit-row], [data-packit-subrent-inline], .packit-equipment-table-card')
+      || !!node.querySelector('[data-packit-equipment-compact-root], [data-packit-row], [data-packit-subrent-inline], .packit-equipment-table-card');
+  }
+
+  function bindRenderObserver() {
+    if (!GLOBAL.document || !GLOBAL.MutationObserver || GLOBAL.document.__packitEquipmentRenderObserverBound) return;
+    GLOBAL.document.__packitEquipmentRenderObserverBound = true;
+    const pending = new Set();
+    let timer = 0;
+    const flush = () => {
+      timer = 0;
+      Array.from(pending).forEach(panel => {
+        pending.delete(panel);
+        if (panel && panel.isConnected) scheduleUpdate(panel);
+      });
+    };
+    const queue = panel => {
+      if (!panel) return;
+      pending.add(panel);
+      if (!timer) timer = GLOBAL.setTimeout(flush, 0);
+    };
+    const observer = new GLOBAL.MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        Array.from(mutation.addedNodes || []).forEach(node => {
+          if (!isEquipmentRenderNode(node)) return;
+          if (node.matches && node.matches('[data-quote-equipment-panel]')) queue(node);
+          const panel = node.closest ? node.closest('[data-quote-equipment-panel]') : null;
+          if (panel) queue(panel);
+          if (node.querySelectorAll) node.querySelectorAll('[data-quote-equipment-panel]').forEach(queue);
+        });
+      });
+    });
+    observer.observe(GLOBAL.document.body || GLOBAL.document.documentElement, { childList: true, subtree: true });
+  }
+
   function closeSearchMenus(exceptWrap) {
     if (!GLOBAL.document) return;
     GLOBAL.document.querySelectorAll('[data-packit-eq-menu]').forEach(menu => {
@@ -271,6 +308,7 @@
   function init() {
     bindLiveEvents();
     bindSearchCloseEvents();
+    bindRenderObserver();
     updateAll();
     GLOBAL.setTimeout(updateAll, 0);
     GLOBAL.setTimeout(updateAll, 80);
@@ -278,7 +316,7 @@
     GLOBAL.setTimeout(updateAll, 900);
   }
 
-  ROOT.QuoteEquipmentLiveStateFix = { version: '1.6.0-normalize-subrent-actions', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
+  ROOT.QuoteEquipmentLiveStateFix = { version: '1.7.0-observe-rerenders', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
