@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_TOOLBAR_CLEANUP_2026_05_24';
-const CACHE_NAME = 'packit-equipment-toolbar-cleanup-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-toolbar-cleanup-2026-05-24';
+const CACHE_VERSION = 'PACKIT_WIZARD_FOOTER_LAYOUT_2026_05_24';
+const CACHE_NAME = 'packit-wizard-footer-layout-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-wizard-footer-layout-2026-05-24';
 
 const CORE_ASSETS = [
   './',
