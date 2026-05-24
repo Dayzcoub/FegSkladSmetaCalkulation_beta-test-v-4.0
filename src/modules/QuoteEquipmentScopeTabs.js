@@ -64,7 +64,7 @@
       badge.setAttribute('tabindex', '0');
       badge.setAttribute('data-packit-equipment-scope-tab', scopeKey);
       badge.setAttribute('aria-pressed', activeScope === scopeKey ? 'true' : 'false');
-      badge.title = activeScope === scopeKey ? 'Сбросить фильтр раздела' : `Фильтр: ${scopeLabel(scopeKey)}`;
+      badge.removeAttribute('title');
       badge.classList.toggle('is-active', activeScope === scopeKey);
     });
   }
@@ -217,7 +217,7 @@
     GLOBAL.setTimeout(() => enhance(GLOBAL.document), 300);
   }
 
-  ROOT.QuoteEquipmentScopeTabs = { version: '1.1.0-menu-observer', init, enhance, filterMenu };
+  ROOT.QuoteEquipmentScopeTabs = { version: '1.1.1-no-native-tooltip', init, enhance, filterMenu };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
