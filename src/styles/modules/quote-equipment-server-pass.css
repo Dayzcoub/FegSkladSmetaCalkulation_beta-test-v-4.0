@@ -3,13 +3,17 @@
 body.v4-only-body [data-quote-equipment-panel] {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
-  align-items: center;
+  align-items: stretch;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges {
   grid-column: 1;
   grid-row: 1;
   min-width: 0;
+  min-height: 42px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges .v4-badge {
@@ -42,13 +46,18 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipme
   grid-column: 2;
   grid-row: 1;
   position: static;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(78px, 1fr));
-  gap: 6px;
-  width: auto;
+  display: inline-grid;
+  grid-template-columns: repeat(3, 118px);
+  gap: 0;
+  width: fit-content;
+  max-width: max-content;
   min-width: 0;
-  align-self: center;
+  align-self: stretch;
   justify-self: end;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-note:nth-child(3) {
@@ -71,9 +80,17 @@ body.v4-only-body .packit-equipment-compact-root {
 }
 
 body.v4-only-body .packit-live-summary-card {
-  min-height: 34px;
+  min-height: 40px;
   align-content: center;
-  padding: 5px 8px;
+  padding: 5px 10px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+
+body.v4-only-body .packit-live-summary-card:last-child {
+  border-right: 0;
 }
 
 body.v4-only-body .packit-live-summary-card b {
@@ -162,7 +179,11 @@ body.v4-only-body .packit-equipment-search-menu[hidden] {
 body.v4-only-body .packit-equipment-search-menu button {
   width: 100%;
   display: grid;
+  grid-template-columns: 1fr;
   gap: 2px;
+  justify-items: start;
+  align-items: start;
+  justify-content: stretch;
   padding: 8px;
   border: 0;
   border-radius: var(--radius-md);
@@ -172,8 +193,19 @@ body.v4-only-body .packit-equipment-search-menu button {
   cursor: pointer;
 }
 
+body.v4-only-body .packit-equipment-search-menu button[hidden] {
+  display: none !important;
+}
+
 body.v4-only-body .packit-equipment-search-menu button:hover {
   background: var(--surface);
+}
+
+body.v4-only-body .packit-equipment-search-menu b,
+body.v4-only-body .packit-equipment-search-menu span {
+  display: block;
+  width: 100%;
+  text-align: left;
 }
 
 body.v4-only-body .packit-equipment-search-menu b {
@@ -367,7 +399,17 @@ body.v4-only-body [data-packit-equipment-state] {
   body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
     grid-template-columns: 1fr;
     width: 100%;
+    max-width: none;
     justify-self: stretch;
+  }
+
+  body.v4-only-body .packit-live-summary-card {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  body.v4-only-body .packit-live-summary-card:last-child {
+    border-bottom: 0;
   }
 
   body.v4-only-body .packit-equipment-addbar,
