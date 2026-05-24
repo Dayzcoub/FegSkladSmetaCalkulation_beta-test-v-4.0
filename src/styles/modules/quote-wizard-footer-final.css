@@ -1,0 +1,94 @@
+/* PACK.IT quote wizard footer final pass
+   Purpose: make the bottom of wizard steps a compact action bar, not a loose footer block. */
+
+body.v4-only-body .v4-quote-form {
+  display: grid;
+  gap: 12px;
+}
+
+body.v4-only-body .v4-quote-form .v4-wizard-nav {
+  display: grid;
+  grid-template-columns: minmax(120px, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group,
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+}
+
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
+  justify-content: flex-end;
+  justify-self: end;
+  margin-left: auto;
+}
+
+body.v4-only-body .v4-quote-form .v4-wizard-nav button {
+  min-height: 34px;
+  white-space: nowrap;
+}
+
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end .btn-secondary {
+  min-width: 210px;
+}
+
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end .btn-primary {
+  min-width: 154px;
+}
+
+body.v4-only-body .v4-quote-layout + .v4-note[data-wizard-zone="note"] {
+  margin-top: 0;
+  min-height: 0;
+  padding: 7px 10px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: color-mix(in srgb, var(--surface) 54%, transparent);
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+body.v4-only-body .v4-quote-form[data-quote-active-step="equipment"] {
+  padding-bottom: 12px;
+}
+
+body.v4-only-body .v4-quote-form[data-quote-active-step="equipment"] .packit-equipment-table-card {
+  margin-bottom: 0;
+}
+
+body.v4-only-body .v4-quote-form[data-quote-active-step="equipment"] .v4-wizard-nav {
+  margin-top: 0;
+}
+
+@media (max-width: 767px) {
+  body.v4-only-body .v4-quote-form .v4-wizard-nav {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  body.v4-only-body .v4-quote-form .v4-wizard-nav-group,
+  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
+    width: 100%;
+    justify-content: stretch;
+    justify-self: stretch;
+    flex-direction: column;
+    margin-left: 0;
+  }
+
+  body.v4-only-body .v4-quote-form .v4-wizard-nav button,
+  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end .btn-secondary,
+  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end .btn-primary {
+    width: 100%;
+    min-width: 0;
+  }
+}
