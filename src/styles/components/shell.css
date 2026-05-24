@@ -517,6 +517,75 @@ body.v4-only-body .packit-auth-card {
   box-shadow: var(--shadow-soft);
 }
 
+body.v4-only-body .packit-auth-kicker,
+body.v4-only-body .packit-auth-title {
+  margin-bottom: 8px;
+}
+
+body.v4-only-body .packit-auth-copy {
+  margin-bottom: 16px;
+}
+
+body.v4-only-body .packit-auth-user-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+body.v4-only-body .packit-auth-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+body.v4-only-body .packit-auth-user-role {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+body.v4-only-body .packit-auth-logout-btn {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+/* =====================================================================
+   SYNC SHELL PAGE
+   ===================================================================== */
+
+body.v4-only-body .packit-sync-card {
+  margin-bottom: 12px;
+}
+
+body.v4-only-body .packit-sync-title {
+  margin: 4px 0 8px;
+}
+
+body.v4-only-body .packit-sync-copy {
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+body.v4-only-body .packit-sync-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+body.v4-only-body .packit-sync-actions .is-disabled {
+  opacity: 0.4;
+}
+
+body.v4-only-body .packit-sync-loading {
+  padding: 14px;
+  margin-top: 8px;
+}
+
 /* =====================================================================
    RESPONSIVE
    ===================================================================== */
