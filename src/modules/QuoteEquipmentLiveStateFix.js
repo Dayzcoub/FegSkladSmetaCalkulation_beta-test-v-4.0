@@ -38,9 +38,23 @@
     return Math.max(0, num(stock) - num(reserved));
   }
 
+  function getDomStat(rowEl, index) {
+    const stat = rowEl && rowEl.querySelectorAll ? rowEl.querySelectorAll('.packit-equipment-stat')[index] : null;
+    const value = stat && stat.querySelector ? stat.querySelector('b') : null;
+    return num(value && value.textContent);
+  }
+
   function getRowStatus(rowEl) {
     const item = getItemById(rowEl.getAttribute('data-packit-row'));
     const requested = Math.max(0, num(rowEl.querySelector('[data-packit-row-qty]') && rowEl.querySelector('[data-packit-row-qty]').value));
+
+    if (!item) {
+      const stock = getDomStat(rowEl, 0);
+      const deficit = getDomStat(rowEl, 1);
+      const subrent = getDomStat(rowEl, 2);
+      return { item: null, requested, available: stock, stock, deficit, subrent };
+    }
+
     const available = getAvailableQty(item);
     const stock = Math.min(requested, available);
     const deficit = Math.max(0, requested - stock);
@@ -141,7 +155,7 @@
     const stats = { stockQty: 0, deficitQty: 0, subrentQty: 0, manualRows: 0 };
     panel.querySelectorAll('[data-packit-row]').forEach(rowEl => {
       const status = getRowStatus(rowEl);
-      if (!status.item || status.requested <= 0) return;
+      if (status.requested <= 0 && status.stock <= 0 && status.deficit <= 0 && status.subrent <= 0) return;
       stats.stockQty += status.stock;
       stats.deficitQty += status.deficit;
       stats.subrentQty += status.subrent;
@@ -168,6 +182,11 @@
     return basket;
   }
 
+  function writeHtmlIfChanged(node, html) {
+    if (!node) return;
+    if (node.innerHTML !== html) node.innerHTML = html;
+  }
+
   function updateSummary(panel) {
     if (!panel) return;
     cleanupManualDuplicates(panel);
@@ -177,10 +196,10 @@
     const html = renderPieceCards(stats);
 
     const summary = panel.querySelector(':scope > .v4-summary-grid') || panel.querySelector('.v4-summary-grid');
-    if (summary) summary.innerHTML = html;
+    writeHtmlIfChanged(summary, html);
 
     const basket = ensureBasket(panel);
-    if (basket) basket.innerHTML = html;
+    writeHtmlIfChanged(basket, html);
   }
 
   function updateAll() {
@@ -316,7 +335,7 @@
     GLOBAL.setTimeout(updateAll, 900);
   }
 
-  ROOT.QuoteEquipmentLiveStateFix = { version: '1.7.0-observe-rerenders', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
+  ROOT.QuoteEquipmentLiveStateFix = { version: '1.8.0-dom-row-summary', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
