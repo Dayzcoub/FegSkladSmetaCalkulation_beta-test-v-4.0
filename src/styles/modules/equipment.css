@@ -1,245 +1,12 @@
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   KPI STRIP — 6 плиток в одну горизонтальную строку
-   ═══════════════════════════════════════════════════════════════════════════════ */
-
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3 {
-  display: grid !important;
-  grid-template-columns: repeat(6, 1fr) !important;
-  gap: 0 !important;
-  border: 1px solid var(--line) !important;
-  border-radius: var(--radius-lg) !important;
-  overflow: hidden !important;
-  background: var(--panel-2) !important;
-  margin: 0 !important;
-}
-
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3 .v4-mini {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  justify-content: flex-start !important;
-  gap: 2px !important;
-  padding: 10px 14px !important;
-  border-right: 1px solid var(--line-soft) !important;
-  border-radius: 0 !important;
-  background: none !important;
-  border-top: none !important;
-  border-bottom: none !important;
-  border-left: none !important;
-}
-
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3 .v4-mini:last-child {
-  border-right: none !important;
-}
-
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3 .v4-mini b {
-  font-size: 16px !important;
-  font-weight: 700 !important;
-  color: var(--text-strong) !important;
-  letter-spacing: -0.01em !important;
-  line-height: 1.2 !important;
-  white-space: nowrap !important;
-}
-
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3 .v4-mini span {
-  font-size: 10px !important;
-  color: var(--muted) !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.04em !important;
-  white-space: nowrap !important;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   STATUS CARDS — компактная сетка 2 колонки без чёрного badge
-   ═══════════════════════════════════════════════════════════════════════════════ */
-
-body.v4-only-body .v4-equipment-category-health {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 8px !important;
-  padding: 8px 12px !important;
-  background: var(--surface) !important;
-  border: 1px solid var(--line) !important;
-  border-radius: var(--radius-md) !important;
-  min-height: 0 !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
-}
-
-body.v4-only-body .v4-equipment-category-health.ok   { border-left: 3px solid var(--success) !important; }
-body.v4-only-body .v4-equipment-category-health.warn { border-left: 3px solid var(--warning) !important; }
-body.v4-only-body .v4-equipment-category-health.bad  { border-left: 3px solid var(--danger)  !important; }
-
-body.v4-only-body .v4-equipment-category-health > div {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 1px !important;
-  min-width: 0 !important;
-}
-
-body.v4-only-body .v4-equipment-category-health b {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: var(--text-strong) !important;
-  line-height: 1.3 !important;
-}
-
-body.v4-only-body .v4-equipment-category-health span {
-  font-size: 11px !important;
-  color: var(--muted) !important;
-  line-height: 1.3 !important;
-}
-
-/* small — подсказка справа, одна строка, truncated */
-body.v4-only-body .v4-equipment-category-health small {
-  font-size: 11px !important;
-  color: var(--muted-2) !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  max-width: 40% !important;
-  min-width: 0 !important;
-  flex-shrink: 1 !important;
-  text-align: right !important;
-}
-
-/* Левая часть тоже с overflow */
-body.v4-only-body .v4-equipment-category-health > div {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 1px !important;
-  min-width: 0 !important;
-  flex: 1 !important;
-  overflow: hidden !important;
-}
-
-body.v4-only-body .v4-equipment-category-health b,
-body.v4-only-body .v4-equipment-category-health span {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
-/* Убираем чёрный badge equipment_items — заменяем на inline текст */
-body.v4-only-body .v4-equipment-category-health code {
-  background: none !important;
-  border: none !important;
-  color: var(--muted) !important;
-  font-family: var(--font-mono) !important;
-  font-size: 11px !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-}
-
-/* Status strip — 2 колонки, полная ширина, не выходит за края */
-body.v4-only-body .v4-db-status-strip {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-  gap: 6px !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
-}
-
-/* Последняя нечётная карточка (Manual completion) — на всю ширину */
-body.v4-only-body .v4-db-status-strip .v4-equipment-category-health:last-child:nth-child(odd) {
-  grid-column: 1 / -1 !important;
-}
-
 /* =============================================================================
-   PACK.IT — Equipment Database  |  clean rewrite
+   PACK.IT — Equipment database page
+   Scope: База оборудования + shared equipment rows/cards/editor.
+   No business logic changes.
    ============================================================================= */
 
-
-/* ─── Equipment panel — убираем лишние отступы ──────────────────────────────── */
-
-body.v4-only-body [data-v4-equipment-panel] {
-  display: flex;
-  flex-direction: column;
-  gap: 10px !important;
-  padding: 14px !important;
-}
-
-/* card-head без лишнего margin */
-body.v4-only-body [data-v4-equipment-panel] .v4-card-head {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-  border-bottom: none !important;
-}
-
-/* Admin toolbar кнопки — две строки компактно */
-body.v4-only-body [data-v4-equipment-panel] .v4-auth-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  align-items: center;
-}
-
-body.v4-only-body [data-v4-equipment-panel] .v4-auth-actions .btn-secondary {
-  font-size: 11px !important;
-  height: 24px !important;
-  padding: 0 8px !important;
-}
-
-/* KPI strip — убираем margin */
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:first-of-type {
-  margin: 0 !important;
-}
-
-/* Status cards — меньше gap */
-body.v4-only-body .v4-db-status-card {
-  padding: 7px 12px !important;
-}
-
-/* Checkbox "Только активные" — inline */
-body.v4-only-body [data-v4-equipment-panel] input[type="checkbox"] {
-  width: auto !important;
-  height: auto !important;
-  display: inline !important;
-  margin-right: 6px;
-}
-
-/* Убираем лишний padding у v4-note под фильтрами */
-body.v4-only-body [data-v4-equipment-panel] .v4-note:not(.v4-project-filter-grid) {
-  padding: 7px 12px;
-  font-size: 12px;
-  margin: 0;
-}
-
-/* Search row — компактно */
-body.v4-only-body .v4-equipment-search-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 8px;
-  align-items: end;
-}
-
-/* Category pills — меньше padding */
-body.v4-only-body .v4-equipment-category-tabs {
-  padding: 6px 0;
-  gap: 4px;
-  border-bottom: 1px solid var(--line);
-}
-
-body.v4-only-body .v4-equipment-category-tabs button {
-  height: 24px !important;
-  padding: 0 8px !important;
-  font-size: 11px !important;
-}
-
-/* Table wrap — без лишнего margin сверху */
-body.v4-only-body .v4-table-wrap--equipment {
-  margin-top: 0 !important;
-}
-
-
-/* ─── TOP TOOLBAR ───────────────────────────────────────────────────────────── */
+/* -----------------------------------------------------------------------------
+   Page shell
+   ----------------------------------------------------------------------------- */
 
 body.v4-only-body [data-v4-equipment-panel] {
   display: flex;
@@ -247,155 +14,277 @@ body.v4-only-body [data-v4-equipment-panel] {
   gap: 12px;
 }
 
-body.v4-only-body [data-v4-equipment-panel] .v4-card-head {
+body.v4-only-body [data-v4-equipment-panel] > .v4-card-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
+  margin-bottom: 0;
 }
 
-/* Admin tools — две строки */
-body.v4-only-body .v4-auth-actions {
+body.v4-only-body [data-v4-equipment-panel] > .v4-card-head h3 {
+  margin: 4px 0 6px;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+body.v4-only-body [data-v4-equipment-panel] > .v4-card-head .v4-muted {
+  max-width: 760px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+body.v4-only-body [data-v4-equipment-panel] > .v4-card-head .v4-auth-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
   align-items: center;
-  max-width: 580px;
-}
-
-body.v4-only-body .v4-auth-actions .btn-primary {
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: 620px;
   flex-shrink: 0;
 }
 
-body.v4-only-body .v4-auth-actions .btn-secondary {
+body.v4-only-body [data-v4-equipment-panel] > .v4-card-head .btn-secondary {
+  min-height: 28px;
+  padding-inline: 9px;
   font-size: 11px;
-  height: 26px;
-  padding: 0 8px;
 }
 
-/* ─── KPI STRIP ─────────────────────────────────────────────────────────────── */
+/* -----------------------------------------------------------------------------
+   KPI strip
+   ----------------------------------------------------------------------------- */
 
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:first-of-type,
-body.v4-only-body .v4-equipment-kpi-strip {
+body.v4-only-body [data-v4-equipment-panel] > .v4-grid-3:first-of-type {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0;
+  margin: 0;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  overflow: hidden;
   background: var(--panel-2);
 }
 
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:first-of-type .v4-mini {
+body.v4-only-body [data-v4-equipment-panel] > .v4-grid-3:first-of-type .v4-mini {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 2px;
   padding: 10px 14px;
+  border: 0;
   border-right: 1px solid var(--line-soft);
   border-radius: 0;
-  background: none;
-  border-top: none;
-  border-bottom: none;
-  border-left: none;
+  background: transparent;
 }
 
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:first-of-type .v4-mini:last-child { border-right: none; }
+body.v4-only-body [data-v4-equipment-panel] > .v4-grid-3:first-of-type .v4-mini:last-child {
+  border-right: 0;
+}
 
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:first-of-type .v4-mini b {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-strong);
+body.v4-only-body [data-v4-equipment-panel] > .v4-grid-3:first-of-type .v4-mini b {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 17px;
+  line-height: 1.15;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  color: var(--text-strong);
 }
 
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:first-of-type .v4-mini span {
+body.v4-only-body [data-v4-equipment-panel] > .v4-grid-3:first-of-type .v4-mini span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 10px;
-  color: var(--muted);
   font-weight: 600;
-  text-transform: uppercase;
+  line-height: 1.2;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-/* ─── STATUS CARDS (Нормализация, Типы, Supabase...) ────────────────────────── */
+/* -----------------------------------------------------------------------------
+   Admin status strip
+   ----------------------------------------------------------------------------- */
 
-body.v4-only-body .v4-db-status-card {
+body.v4-only-body .v4-db-status-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px;
+  min-width: 0;
+}
+
+body.v4-only-body .v4-db-status-strip .v4-equipment-category-health:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+body.v4-only-body .v4-equipment-category-health {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
+  min-width: 0;
   padding: 8px 12px;
-  background: var(--surface);
+  overflow: hidden;
   border: 1px solid var(--line);
+  border-left-width: 3px;
   border-radius: var(--radius-md);
-  font-size: 12px;
-  cursor: pointer;
-  transition: border-color 0.1s;
-}
-
-body.v4-only-body .v4-db-status-card:hover { border-color: var(--line-medium); }
-body.v4-only-body .v4-db-status-card b { color: var(--text-strong); font-size: 13px; font-weight: 600; }
-body.v4-only-body .v4-db-status-card span { color: var(--muted); font-size: 11px; text-align: right; }
-
-/* Status cards группа */
-body.v4-only-body .v4-db-status-strip {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* ─── FILTERS ────────────────────────────────────────────────────────────────── */
-
-body.v4-only-body .v4-equipment-search-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr auto;
-  gap: 8px;
-  align-items: end;
-}
-
-/* Category pills */
-body.v4-only-body .v4-equipment-category-tabs {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-body.v4-only-body .v4-equipment-category-tabs button {
-  height: 26px;
-  padding: 0 10px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
   background: var(--surface);
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+
+body.v4-only-body .v4-equipment-category-health.ok { border-left-color: var(--success); }
+body.v4-only-body .v4-equipment-category-health.warn { border-left-color: var(--warning); }
+body.v4-only-body .v4-equipment-category-health.bad { border-left-color: var(--danger); }
+
+body.v4-only-body .v4-equipment-category-health > div {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+body.v4-only-body .v4-equipment-category-health b,
+body.v4-only-body .v4-equipment-category-health span,
+body.v4-only-body .v4-equipment-category-health small {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-body.v4-only-body .v4-equipment-category-tabs button:hover {
-  background: var(--surface-elevated);
-  color: var(--text);
+body.v4-only-body .v4-equipment-category-health b {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-strong);
 }
 
-body.v4-only-body .v4-equipment-category-tabs button.active {
-  background: var(--blue-soft);
-  border-color: var(--blue-line);
-  color: var(--blue-text);
-  font-weight: 600;
+body.v4-only-body .v4-equipment-category-health span {
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--muted);
 }
 
-/* ─── EQUIPMENT TABLE ────────────────────────────────────────────────────────── */
+body.v4-only-body .v4-equipment-category-health small {
+  max-width: 42%;
+  min-width: 160px;
+  text-align: right;
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--muted-2);
+}
 
-body.v4-only-body .v4-table-wrap--equipment {
-  background: var(--panel-2);
+body.v4-only-body .v4-equipment-category-health code,
+body.v4-only-body .v4-db-status-strip code {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted-2);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* -----------------------------------------------------------------------------
+   Filters and category actions
+   ----------------------------------------------------------------------------- */
+
+body.v4-only-body .v4-equipment-tools {
+  display: grid;
+  grid-template-columns: minmax(260px, 2fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) auto;
+  gap: 8px;
+  align-items: end;
+  padding: 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-equipment-tools .field {
+  min-width: 0;
+  margin: 0;
+}
+
+body.v4-only-body .v4-equipment-tools input,
+body.v4-only-body .v4-equipment-tools select {
+  min-height: 34px;
+}
+
+body.v4-only-body .v4-equipment-active-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+body.v4-only-body .v4-equipment-active-filter input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--blue);
+}
+
+body.v4-only-body [data-v4-equipment-panel] > .v4-auth-actions:not(.v4-completion-filters) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 0;
+}
+
+body.v4-only-body [data-v4-equipment-panel] > .v4-auth-actions:not(.v4-completion-filters) .btn-secondary,
+body.v4-only-body [data-v4-equipment-panel] .v4-completion-filters .btn-secondary {
+  min-height: 26px;
+  padding-inline: 9px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+body.v4-only-body [data-v4-equipment-panel] .v4-completion-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 0;
+}
+
+body.v4-only-body [data-v4-equipment-panel] .v4-completion-filters .btn-secondary.active {
+  border-color: var(--warning-border);
+  background: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+body.v4-only-body [data-v4-equipment-panel] .v4-hint-card {
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* -----------------------------------------------------------------------------
+   Table
+   ----------------------------------------------------------------------------- */
+
+body.v4-only-body .v4-table-wrap--equipment {
+  margin-top: 0;
   overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
 }
 
 body.v4-only-body .v4-table--equipment {
@@ -404,122 +293,237 @@ body.v4-only-body .v4-table--equipment {
 }
 
 body.v4-only-body .v4-table--equipment th {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
   background: var(--surface);
   color: var(--muted);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--line);
-  white-space: nowrap;
   text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 body.v4-only-body .v4-table--equipment td {
-  padding: 8px 10px;
+  padding: 9px 10px;
   border-bottom: 1px solid var(--line-soft);
-  vertical-align: middle;
+  vertical-align: top;
   font-size: 12px;
 }
 
-body.v4-only-body .v4-table--equipment tbody tr:last-child td { border-bottom: none; }
-body.v4-only-body .v4-table--equipment tbody tr:hover td { background: rgba(255,255,255,.02); }
+body.v4-only-body .v4-table--equipment tbody tr:last-child td {
+  border-bottom: 0;
+}
 
-/* Name cell */
-body.v4-only-body .v4-equipment-name-cell b {
+body.v4-only-body .v4-table--equipment tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+body.v4-only-body .v4-table--equipment .v4-name-cell b,
+body.v4-only-body .v4-table--equipment .v4-equipment-name-cell b {
   display: block;
   font-size: 13px;
-  font-weight: 600;
-  color: var(--text-strong);
   line-height: 1.3;
+  color: var(--text-strong);
 }
 
-body.v4-only-body .v4-equipment-name-cell small {
-  display: block;
-  font-size: 11px;
+body.v4-only-body .v4-table--equipment .v4-muted,
+body.v4-only-body .v4-table--equipment small {
   color: var(--muted);
+  font-size: 11px;
 }
 
-/* Code badge */
-body.v4-only-body .v4-equipment-code {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--muted-2);
+body.v4-only-body .v4-table--equipment code,
+body.v4-only-body .v4-table--equipment .v4-equipment-category-badge,
+body.v4-only-body .v4-table--equipment .v4-badge-dark {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 11px;
+}
+
+body.v4-only-body .v4-table--equipment .block-load-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  margin-top: 4px;
+  padding: 0 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
   background: var(--surface);
-  padding: 1px 5px;
-  border-radius: 3px;
-  border: 1px solid var(--line-soft);
+  font-size: 11px;
+  font-weight: 600;
   white-space: nowrap;
 }
 
-/* Category / type badges */
-body.v4-only-body .v4-equipment-scope-badges {
-  display: flex;
-  gap: 3px;
-  flex-wrap: wrap;
+body.v4-only-body .v4-table--equipment .block-load-status.ok { border-color: var(--success-border); color: var(--success); }
+body.v4-only-body .v4-table--equipment .block-load-status.risk { border-color: var(--warning-border); color: var(--warning); }
+body.v4-only-body .v4-table--equipment .block-load-status.bad { border-color: var(--danger-border); color: var(--danger); }
+
+body.v4-only-body .v4-table--equipment .v4-actions-cell,
+body.v4-only-body .v4-table--equipment .v4-source-cell {
+  white-space: nowrap;
 }
 
-/* Stock availability */
-body.v4-only-body .v4-equipment-stock-cell {
+body.v4-only-body .v4-table--equipment .btn-compact {
+  min-height: 28px;
+  padding-inline: 9px;
+  font-size: 11px;
+}
+
+body.v4-only-body .v4-equipment-load-more {
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+}
+
+body.v4-only-body .v4-equipment-output {
+  margin-top: 12px;
+}
+
+body.v4-only-body .v4-equipment-output:empty {
+  display: none;
+}
+
+/* -----------------------------------------------------------------------------
+   Mobile cards
+   ----------------------------------------------------------------------------- */
+
+body.v4-only-body .v4-equipment-card-list {
+  display: none;
+}
+
+body.v4-only-body .v4-equipment-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+}
+
+body.v4-only-body .v4-equipment-card-top {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+body.v4-only-body .v4-equipment-code {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 6px;
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--muted-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+body.v4-only-body .v4-equipment-card h4 {
+  margin: 4px 0 6px;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--text-strong);
+}
+
+body.v4-only-body .v4-equipment-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+body.v4-only-body .v4-equipment-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+body.v4-only-body .v4-equipment-card-grid > div {
+  display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 1px;
 }
 
-body.v4-only-body .v4-equipment-stock-cell b { color: var(--text-strong); font-size: 12px; font-weight: 600; }
-body.v4-only-body .v4-equipment-stock-cell .ok  { color: var(--success); font-size: 11px; }
-body.v4-only-body .v4-equipment-stock-cell .bad { color: var(--danger);  font-size: 11px; }
-body.v4-only-body .v4-equipment-stock-cell span { color: var(--muted);   font-size: 11px; }
-
-/* Availability chip inline */
-body.v4-only-body .v4-availability-mini {
-  padding: 3px 7px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  white-space: nowrap;
+body.v4-only-body .v4-equipment-card-grid > div span {
+  font-size: 10px;
+  color: var(--muted);
 }
 
-body.v4-only-body .v4-availability-mini.is-ok      { border-color: var(--success-border); color: var(--success); }
-body.v4-only-body .v4-availability-mini.is-deficit { border-color: var(--danger-border);  color: var(--danger); }
-body.v4-only-body .v4-availability-mini.is-subrent { border-color: var(--warning-border); color: var(--warning); }
+body.v4-only-body .v4-equipment-card-grid > div b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--text-strong);
+}
 
-/* ─── EQUIPMENT EDITOR MODAL ────────────────────────────────────────────────── */
+body.v4-only-body .v4-equipment-card-grid > div small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  color: var(--muted-2);
+}
+
+body.v4-only-body .v4-equipment-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+/* -----------------------------------------------------------------------------
+   Equipment editor modal
+   ----------------------------------------------------------------------------- */
 
 body.v4-only-body .v4-equipment-editor-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.72);
+  z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  z-index: 200;
+  background: rgba(0, 0, 0, 0.72);
 }
 
 body.v4-only-body .v4-equipment-editor {
-  background: var(--panel-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-soft);
-  width: min(960px, calc(100vw - 32px));
-  max-height: calc(100vh - 32px);
   display: flex;
   flex-direction: column;
+  width: min(960px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
   overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-2xl);
+  background: var(--panel-2);
+  box-shadow: var(--shadow-soft);
 }
 
 body.v4-only-body .v4-equipment-editor-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+  flex-shrink: 0;
   padding: 14px 16px;
   border-bottom: 1px solid var(--line);
   background: var(--surface);
-  flex-shrink: 0;
+}
+
+body.v4-only-body .v4-equipment-editor-head h3 {
+  margin: 4px 0 6px;
+}
+
+body.v4-only-body .v4-equipment-editor-head .v4-muted {
+  margin: 0;
+  max-width: 720px;
+  font-size: 12px;
 }
 
 body.v4-only-body .v4-equipment-editor-body {
@@ -531,15 +535,62 @@ body.v4-only-body .v4-equipment-editor-body {
   gap: 14px;
 }
 
-body.v4-only-body .v4-equipment-editor-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+body.v4-only-body .v4-equipment-editor form,
+body.v4-only-body .v4-equipment-editor [data-v4-equipment-editor-form] {
+  overflow: auto;
 }
 
-/* ─── Smart equipment rows (в сметчике) ─────────────────────────────────────── */
+body.v4-only-body .v4-equipment-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 16px;
+}
 
-body.v4-only-body .v4-equipment-smart-list { display: flex; flex-direction: column; gap: 6px; }
+body.v4-only-body .v4-equipment-code-field {
+  min-width: 0;
+}
+
+body.v4-only-body .v4-equipment-code-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+}
+
+body.v4-only-body .v4-equipment-editor-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+body.v4-only-body .v4-equipment-editor-check input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  margin: 0;
+  accent-color: var(--blue);
+}
+
+/* -----------------------------------------------------------------------------
+   Smart equipment rows in quote workflows
+   ----------------------------------------------------------------------------- */
+
+body.v4-only-body .v4-equipment-smart-list,
+body.v4-only-body .v4-equipment-compact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
 body.v4-only-body .v4-equipment-smart-row {
   display: grid;
@@ -547,15 +598,15 @@ body.v4-only-body .v4-equipment-smart-row {
   gap: 8px;
   align-items: center;
   padding: 8px 10px;
-  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  transition: border-color 0.1s;
+  background: var(--surface);
+  transition: border-color 0.12s ease;
 }
 
-body.v4-only-body .v4-equipment-smart-row:hover { border-color: var(--line-medium); }
-
-body.v4-only-body .v4-equipment-compact-list { display: flex; flex-direction: column; gap: 5px; }
+body.v4-only-body .v4-equipment-smart-row:hover {
+  border-color: var(--line-medium);
+}
 
 body.v4-only-body .v4-equipment-compact-row {
   display: grid;
@@ -563,38 +614,43 @@ body.v4-only-body .v4-equipment-compact-row {
   gap: 8px;
   align-items: center;
   padding: 7px 10px;
-  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
+  background: var(--surface);
 }
 
-body.v4-only-body .v4-equipment-compact-row.is-deficit { border-color: var(--danger-border); background: var(--danger-bg); }
-body.v4-only-body .v4-equipment-compact-row.is-subrent { border-color: var(--warning-border); background: var(--warning-bg); }
+body.v4-only-body .v4-equipment-compact-row.is-deficit {
+  border-color: var(--danger-border);
+  background: var(--danger-bg);
+}
+
+body.v4-only-body .v4-equipment-compact-row.is-subrent {
+  border-color: var(--warning-border);
+  background: var(--warning-bg);
+}
 
 body.v4-only-body .v4-equipment-compact-main b,
 body.v4-only-body .v4-equipment-compact-qty b,
 body.v4-only-body .v4-equipment-compact-source b {
   display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-strong);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 12px;
+  color: var(--text-strong);
 }
 
 body.v4-only-body .v4-equipment-compact-main span,
 body.v4-only-body .v4-equipment-compact-qty span,
 body.v4-only-body .v4-equipment-compact-source span {
   display: block;
-  font-size: 10px;
-  color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 10px;
+  color: var(--muted);
 }
 
-/* Row icon buttons */
 body.v4-only-body .v4-equipment-row-icon {
   width: 26px;
   height: 26px;
@@ -607,196 +663,137 @@ body.v4-only-body .v4-equipment-row-icon {
   color: var(--muted);
   font-size: 12px;
   cursor: pointer;
-  transition: background 0.1s, border-color 0.1s, color 0.1s;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
-body.v4-only-body .v4-equipment-row-icon:hover { background: var(--warning-bg); border-color: var(--warning-border); color: var(--warning-text); }
-body.v4-only-body .v4-equipment-row-icon[data-quote-equipment-row-delete]:hover { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger-text); }
-body.v4-only-body .v4-equipment-row-icon:disabled { opacity: 0.35; cursor: not-allowed; }
-
-/* Скрываем card-list на десктопе (дублирует таблицу) */
-body.v4-only-body .v4-equipment-card-list {
-  display: none;
+body.v4-only-body .v4-equipment-row-icon:hover {
+  border-color: var(--warning-border);
+  background: var(--warning-bg);
+  color: var(--warning-text);
 }
 
-/* Responsive */
-@media (max-width: 1100px) {
-  body.v4-only-body .v4-equipment-search-row { grid-template-columns: 1fr 1fr; }
-  body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:first-of-type { grid-template-columns: repeat(3, 1fr); }
+body.v4-only-body .v4-equipment-row-icon[data-quote-equipment-row-delete]:hover {
+  border-color: var(--danger-border);
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
-@media (max-width: 800px) {
-  body.v4-only-body .v4-table-wrap--equipment { display: none; }
-  body.v4-only-body .v4-equipment-card-list { display: grid !important; grid-template-columns: 1fr; gap: 8px; }
-  body.v4-only-body .v4-equipment-smart-row { grid-template-columns: 1fr 60px; }
-  body.v4-only-body .v4-equipment-editor { width: 100%; max-height: 100vh; border-radius: 0; }
-  body.v4-only-body .v4-equipment-editor-backdrop { padding: 0; align-items: flex-end; }
+body.v4-only-body .v4-equipment-row-icon:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
-
-/* Перебиваем инлайн-стили от ensureEquipmentEditorStyles */
-body.v4-only-body .v4-equipment-card {
-  background: var(--panel-2) !important;
-  border: 1px solid var(--line) !important;
-  border-radius: var(--radius-lg) !important;
-  padding: 14px !important;
-}
-
-body.v4-only-body .v4-equipment-card h4 {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color: var(--text-strong) !important;
-  margin: 4px 0 6px !important;
-}
-
-body.v4-only-body .v4-equipment-card p { color: var(--muted) !important; font-size: 12px !important; }
-
-body.v4-only-body .v4-equipment-card-grid {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 8px !important;
-  margin-top: 8px !important;
-}
-
-body.v4-only-body .v4-equipment-card-grid > div {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 1px !important;
-}
-
-body.v4-only-body .v4-equipment-card-grid > div span { font-size: 10px !important; color: var(--muted) !important; }
-body.v4-only-body .v4-equipment-card-grid > div b { font-size: 12px !important; color: var(--text-strong) !important; font-weight: 600 !important; }
-body.v4-only-body .v4-equipment-card-grid > div small { font-size: 10px !important; color: var(--muted-2) !important; }
-
-body.v4-only-body .v4-equipment-card-actions { margin-top: 8px !important; }
-
-/* v4-grid-3 после KPI strip (статус-карточки, sync, etc) */
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:not(:first-of-type) {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Каждая статус-карточка — горизонтальная строка */
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:not(:first-of-type) > div,
-body.v4-only-body [data-v4-equipment-panel] .v4-mini {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 12px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  font-size: 12px;
-}
-
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:not(:first-of-type) > div b,
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:not(:first-of-type) > div strong {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-strong);
-}
-
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:not(:first-of-type) > div span,
-body.v4-only-body [data-v4-equipment-panel] .v4-grid-3:not(:first-of-type) > div small {
-  font-size: 11px;
-  color: var(--muted);
-  text-align: right;
-}
-
-
-
-/* ─── Убираем тёмные badge в таблице оборудования ───────────────────────────── */
-
-body.v4-only-body .v4-table--equipment .v4-equipment-category-badge,
-body.v4-only-body .v4-table--equipment code,
-body.v4-only-body .v4-table--equipment .v4-badge-dark {
-  background: none !important;
-  border: none !important;
-  color: var(--muted) !important;
-  font-size: 11px !important;
-  padding: 0 !important;
-  font-family: inherit !important;
-}
-
-/* Убираем badge в equipment-card и equipment-category-health */
-body.v4-only-body code {
-  background: var(--surface) !important;
-  border: 1px solid var(--line-soft) !important;
-  color: var(--muted) !important;
-  border-radius: 3px !important;
-  padding: 1px 4px !important;
-  font-family: var(--font-mono) !important;
-  font-size: 11px !important;
-}
-
-/* Внутри status cards — совсем без рамки */
-body.v4-only-body .v4-equipment-category-health code,
-body.v4-only-body .v4-db-status-strip code {
-  background: none !important;
-  border: none !important;
-  color: var(--muted-2) !important;
-  padding: 0 !important;
-  font-size: 11px !important;
-}
-
-/* Scope badges в таблице — pill стиль */
-body.v4-only-body .v4-equipment-scope-badge {
+body.v4-only-body .v4-availability-mini {
   display: inline-flex;
   align-items: center;
-  padding: 1px 6px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 600;
-  background: var(--surface);
+  min-height: 22px;
+  padding: 0 7px;
   border: 1px solid var(--line);
-  color: var(--muted);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 11px;
   white-space: nowrap;
 }
 
-/* Убираем pill-like badge в category cell */
-body.v4-only-body .v4-table--equipment td:nth-child(3) > span,
-body.v4-only-body .v4-equipment-category-cell > span {
-  display: inline-flex;
-  align-items: center;
-  padding: 1px 6px;
-  border-radius: 3px;
-  font-size: 11px;
-  background: var(--surface);
-  border: 1px solid var(--line-soft);
-  color: var(--muted);
-  white-space: nowrap;
-  margin: 1px 0;
+body.v4-only-body .v4-availability-mini.is-ok { border-color: var(--success-border); color: var(--success); }
+body.v4-only-body .v4-availability-mini.is-deficit { border-color: var(--danger-border); color: var(--danger); }
+body.v4-only-body .v4-availability-mini.is-subrent { border-color: var(--warning-border); color: var(--warning); }
+
+/* -----------------------------------------------------------------------------
+   Responsive
+   ----------------------------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+  body.v4-only-body [data-v4-equipment-panel] > .v4-grid-3:first-of-type {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body.v4-only-body .v4-equipment-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.v4-only-body .v4-equipment-active-filter {
+    justify-content: flex-start;
+  }
 }
 
+@media (max-width: 900px) {
+  body.v4-only-body [data-v4-equipment-panel] > .v4-card-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
+  body.v4-only-body [data-v4-equipment-panel] > .v4-card-head .v4-auth-actions {
+    justify-content: flex-start;
+    max-width: none;
+  }
 
-/* ─── Чекбокс "Позиция активна" в редакторе ─────────────────────────────────── */
+  body.v4-only-body .v4-db-status-strip {
+    grid-template-columns: 1fr;
+  }
 
-body.v4-only-body .v4-equipment-editor-check {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  color: var(--text) !important;
-  cursor: pointer !important;
-  padding: 6px 10px !important;
-  background: var(--surface) !important;
-  border: 1px solid var(--line) !important;
-  border-radius: var(--radius-md) !important;
-  width: auto !important;
-  max-width: fit-content !important;
+  body.v4-only-body .v4-db-status-strip .v4-equipment-category-health:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  body.v4-only-body .v4-equipment-category-health {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  body.v4-only-body .v4-equipment-category-health small {
+    max-width: 100%;
+    min-width: 0;
+    text-align: left;
+  }
+
+  body.v4-only-body .v4-table-wrap--equipment {
+    display: none;
+  }
+
+  body.v4-only-body .v4-equipment-card-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  body.v4-only-body .v4-equipment-editor {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  body.v4-only-body .v4-equipment-editor-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  body.v4-only-body .v4-equipment-editor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body .v4-equipment-smart-row,
+  body.v4-only-body .v4-equipment-compact-row {
+    grid-template-columns: 1fr 72px;
+  }
 }
 
-body.v4-only-body .v4-equipment-editor-check input[type="checkbox"] {
-  width: 14px !important;
-  height: 14px !important;
-  min-width: 14px !important;
-  accent-color: var(--blue) !important;
-  cursor: pointer !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 3px !important;
+@media (max-width: 640px) {
+  body.v4-only-body [data-v4-equipment-panel] > .v4-grid-3:first-of-type,
+  body.v4-only-body .v4-equipment-tools {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body [data-v4-equipment-panel] > .v4-grid-3:first-of-type .v4-mini {
+    border-right: 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  body.v4-only-body [data-v4-equipment-panel] > .v4-grid-3:first-of-type .v4-mini:last-child {
+    border-bottom: 0;
+  }
+
+  body.v4-only-body .v4-equipment-card-grid {
+    grid-template-columns: 1fr;
+  }
 }
