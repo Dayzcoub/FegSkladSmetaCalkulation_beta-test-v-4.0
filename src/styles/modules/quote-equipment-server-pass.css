@@ -28,7 +28,11 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-note:nth-child(3) {
   top: 166px;
 }
 
-body.v4-only-body .packit-equipment-legacy-hidden {
+body.v4-only-body .packit-equipment-legacy-hidden,
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-group,
+body.v4-only-body [data-quote-equipment-panel] > .v4-manual-equipment-list,
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-compact-list,
+body.v4-only-body [data-quote-equipment-panel] > .v4-kicker {
   display: none !important;
 }
 
