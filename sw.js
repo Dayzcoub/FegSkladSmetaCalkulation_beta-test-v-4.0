@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_WIZARD_NAV_CLEANUP_2026_05_24';
-const CACHE_NAME = 'packit-wizard-nav-cleanup-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-wizard-nav-cleanup-2026-05-24';
+const CACHE_VERSION = 'PACKIT_LAYOUT_LEVEL_FOOTER_CONTRACT_2026_05_24';
+const CACHE_NAME = 'packit-layout-level-footer-contract-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-layout-level-footer-contract-2026-05-24';
 
 const CORE_ASSETS = [
   './',
