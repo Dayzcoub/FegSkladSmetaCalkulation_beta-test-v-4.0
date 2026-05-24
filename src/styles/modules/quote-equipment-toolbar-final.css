@@ -2,7 +2,7 @@
    Cleanup pass: one compact toolbar contract, no hard cascade hacks. */
 
 body.v4-only-body [data-quote-equipment-panel] {
-  --packit-eq-control-h: 32px;
+  --packit-eq-control-h: 34px;
   grid-template-columns: max-content max-content minmax(0, 1fr);
   column-gap: 12px;
   row-gap: 10px;
@@ -85,8 +85,8 @@ body.v4-only-body .packit-subrent-inline input,
 body.v4-only-body .packit-subrent-inline select,
 body.v4-only-body .packit-manual-inline input,
 body.v4-only-body .packit-manual-inline select {
-  block-size: var(--packit-eq-control-h);
-  min-block-size: var(--packit-eq-control-h);
+  height: var(--packit-eq-control-h);
+  min-height: var(--packit-eq-control-h);
   box-sizing: border-box;
 }
 
@@ -94,8 +94,8 @@ body.v4-only-body .packit-equipment-addbar [data-packit-eq-add],
 body.v4-only-body .packit-subrent-inline [data-packit-subrent-add],
 body.v4-only-body .packit-subrent-inline [data-packit-subrent-apply],
 body.v4-only-body .packit-manual-inline [data-packit-manual-add] {
-  block-size: var(--packit-eq-control-h);
-  min-block-size: var(--packit-eq-control-h);
+  height: var(--packit-eq-control-h);
+  min-height: var(--packit-eq-control-h);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -107,7 +107,7 @@ body.v4-only-body .packit-manual-inline [data-packit-manual-add] {
 
 body.v4-only-body .packit-subrent-inline > b {
   align-self: end;
-  min-block-size: var(--packit-eq-control-h);
+  min-height: var(--packit-eq-control-h);
   display: inline-flex;
   align-items: center;
 }
