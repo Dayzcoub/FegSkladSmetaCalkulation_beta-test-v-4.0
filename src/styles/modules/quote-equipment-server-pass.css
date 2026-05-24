@@ -1,14 +1,15 @@
 /* PACK.IT compact equipment quote layout */
 
 body.v4-only-body [data-quote-equipment-panel] {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
-  align-items: start;
+  align-items: center;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges {
   grid-column: 1;
   grid-row: 1;
+  min-width: 0;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid {
@@ -17,21 +18,23 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid {
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
-  grid-column: 1;
-  grid-row: 3;
+  grid-column: 2;
+  grid-row: 1;
   position: static;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  width: 100%;
+  grid-template-columns: repeat(3, minmax(78px, 1fr));
+  gap: 6px;
+  width: auto;
   min-width: 0;
-  align-self: stretch;
+  align-self: center;
+  justify-self: end;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-note:nth-child(3) {
-  grid-column: 1;
-  grid-row: 3;
+  grid-column: 2;
+  grid-row: 1;
   position: static;
+  justify-self: end;
 }
 
 body.v4-only-body .packit-equipment-legacy-hidden,
@@ -47,21 +50,24 @@ body.v4-only-body .packit-equipment-compact-root {
 }
 
 body.v4-only-body .packit-live-summary-card {
-  min-height: 48px;
+  min-height: 34px;
   align-content: center;
+  padding: 5px 8px;
 }
 
 body.v4-only-body .packit-live-summary-card b {
-  font-size: 20px;
-  line-height: 1.05;
+  font-size: 16px;
+  line-height: 1;
 }
 
 body.v4-only-body .packit-live-summary-card span {
-  line-height: 1.25;
+  font-size: 8px;
+  line-height: 1.15;
+  letter-spacing: .035em;
 }
 
 body.v4-only-body .packit-equipment-addbar {
-  grid-column: 1;
+  grid-column: 1 / -1;
   grid-row: 2;
   display: grid;
   grid-template-columns: 180px minmax(320px, 1fr) 88px 136px;
@@ -161,8 +167,8 @@ body.v4-only-body .packit-equipment-no-results {
 }
 
 body.v4-only-body .packit-equipment-table-card {
-  grid-column: 1;
-  grid-row: 4;
+  grid-column: 1 / -1;
+  grid-row: 3;
   display: grid;
   gap: 8px;
   min-width: 0;
@@ -322,23 +328,32 @@ body.v4-only-body [data-packit-equipment-state] {
   display: none !important;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 767px) {
+  body.v4-only-body [data-quote-equipment-panel] {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges,
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability,
+  body.v4-only-body .packit-equipment-addbar,
+  body.v4-only-body .packit-equipment-table-card {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
   body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
   body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1fr;
+    width: 100%;
+    justify-self: stretch;
   }
+
   body.v4-only-body .packit-equipment-addbar,
   body.v4-only-body .packit-equipment-row,
   body.v4-only-body .packit-subrent-inline,
   body.v4-only-body .packit-manual-inline,
   body.v4-only-body .packit-equipment-row.is-manual {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 767px) {
-  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
-  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
     grid-template-columns: 1fr;
   }
 }
