@@ -6,7 +6,7 @@ body.v4-only-body .v4-quote-form {
   gap: 12px;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav {
+body.v4-only-body .v4-quote-layout .v4-wizard-nav {
   display: grid;
   grid-template-columns: minmax(120px, auto) minmax(0, 1fr);
   align-items: center;
@@ -14,9 +14,10 @@ body.v4-only-body .v4-quote-form .v4-wizard-nav {
   margin-top: 2px;
   padding-top: 12px;
   border-top: 1px solid var(--line);
+  width: 100%;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group {
+body.v4-only-body .v4-quote-layout .v4-wizard-nav-group {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -25,7 +26,7 @@ body.v4-only-body .v4-quote-form .v4-wizard-nav-group {
   margin: 0;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
+body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -38,23 +39,23 @@ body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
   margin-left: auto;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav button {
+body.v4-only-body .v4-quote-layout .v4-wizard-nav button {
   min-height: 34px;
   white-space: nowrap;
   margin: 0;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:first-child,
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-save] {
+body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > button:first-child,
+body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > [data-quote-save] {
   min-width: 196px;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:last-child,
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-next] {
+body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > button:last-child,
+body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > [data-quote-next] {
   min-width: 166px;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-save] + [data-quote-next] {
+body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > [data-quote-save] + [data-quote-next] {
   margin-left: 0;
 }
 
@@ -84,13 +85,13 @@ body.v4-only-body .v4-quote-form[data-quote-active-step="equipment"] .v4-wizard-
 }
 
 @media (max-width: 767px) {
-  body.v4-only-body .v4-quote-form .v4-wizard-nav {
+  body.v4-only-body .v4-quote-layout .v4-wizard-nav {
     grid-template-columns: 1fr;
     gap: 8px;
   }
 
-  body.v4-only-body .v4-quote-form .v4-wizard-nav-group,
-  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
+  body.v4-only-body .v4-quote-layout .v4-wizard-nav-group,
+  body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end {
     width: 100%;
     justify-content: stretch;
     justify-self: stretch;
@@ -99,11 +100,11 @@ body.v4-only-body .v4-quote-form[data-quote-active-step="equipment"] .v4-wizard-
     margin-left: 0;
   }
 
-  body.v4-only-body .v4-quote-form .v4-wizard-nav button,
-  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:first-child,
-  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:last-child,
-  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-save],
-  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > [data-quote-next] {
+  body.v4-only-body .v4-quote-layout .v4-wizard-nav button,
+  body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > button:first-child,
+  body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > button:last-child,
+  body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > [data-quote-save],
+  body.v4-only-body .v4-quote-layout .v4-wizard-nav-group--end > [data-quote-next] {
     width: 100%;
     min-width: 0;
   }
