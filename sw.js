@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_CLIENT_FORM_STRIP_2026_05_24';
-const CACHE_NAME = 'packit-client-form-strip-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-client-form-strip-2026-05-24';
+const CACHE_VERSION = 'PACKIT_CLIENT_FORM_STRIP_CENTERED_2026_05_24';
+const CACHE_NAME = 'packit-client-form-strip-centered-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-client-form-strip-centered-2026-05-24';
 
 const CORE_ASSETS = [
   './',
