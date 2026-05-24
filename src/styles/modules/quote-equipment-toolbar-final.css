@@ -81,33 +81,33 @@ body.v4-only-body .packit-manual-inline {
 
 body.v4-only-body .packit-equipment-addbar input,
 body.v4-only-body .packit-equipment-addbar select,
-body.v4-only-body .packit-equipment-addbar button,
 body.v4-only-body .packit-subrent-inline input,
 body.v4-only-body .packit-subrent-inline select,
-body.v4-only-body .packit-subrent-inline button,
 body.v4-only-body .packit-manual-inline input,
-body.v4-only-body .packit-manual-inline select,
-body.v4-only-body .packit-manual-inline button {
-  height: var(--packit-eq-control-h);
-  min-height: var(--packit-eq-control-h);
-  max-height: var(--packit-eq-control-h);
+body.v4-only-body .packit-manual-inline select {
+  block-size: var(--packit-eq-control-h);
+  min-block-size: var(--packit-eq-control-h);
   box-sizing: border-box;
 }
 
-body.v4-only-body .packit-equipment-addbar button,
-body.v4-only-body .packit-subrent-inline button,
-body.v4-only-body .packit-manual-inline button {
+body.v4-only-body .packit-equipment-addbar [data-packit-eq-add],
+body.v4-only-body .packit-subrent-inline [data-packit-subrent-add],
+body.v4-only-body .packit-subrent-inline [data-packit-subrent-apply],
+body.v4-only-body .packit-manual-inline [data-packit-manual-add] {
+  block-size: var(--packit-eq-control-h);
+  min-block-size: var(--packit-eq-control-h);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding-block: 0;
   line-height: 1;
   white-space: nowrap;
+  align-self: end;
 }
 
 body.v4-only-body .packit-subrent-inline > b {
   align-self: end;
-  min-height: var(--packit-eq-control-h);
+  min-block-size: var(--packit-eq-control-h);
   display: inline-flex;
   align-items: center;
 }
