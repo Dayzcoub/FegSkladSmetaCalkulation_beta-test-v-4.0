@@ -12,6 +12,27 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges {
   min-width: 0;
 }
 
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges .v4-badge {
+  cursor: pointer;
+  user-select: none;
+  transition: border-color .12s ease, background .12s ease, color .12s ease, opacity .12s ease;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges .v4-badge:hover,
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges .v4-badge:focus-visible {
+  border-color: var(--accent-line, var(--accent));
+  color: var(--text-strong);
+  outline: none;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges .v4-badge.is-active,
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges .v4-badge[aria-pressed="true"] {
+  border-color: var(--accent-line, var(--accent));
+  background: var(--accent-soft);
+  color: var(--accent);
+  opacity: 1;
+}
+
 body.v4-only-body [data-quote-equipment-panel] > .v4-summary-grid {
   display: none !important;
 }
