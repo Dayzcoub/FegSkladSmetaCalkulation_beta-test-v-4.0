@@ -1,5 +1,5 @@
 /* PACK.IT quote wizard footer final pass
-   Purpose: make the bottom of wizard steps a compact action bar, not a loose footer block. */
+   Purpose: keep every wizard step footer on one shared action-bar contract. */
 
 body.v4-only-body .v4-quote-form {
   display: grid;
@@ -16,8 +16,7 @@ body.v4-only-body .v4-quote-form .v4-wizard-nav {
   border-top: 1px solid var(--line);
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group,
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -27,8 +26,15 @@ body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
 }
 
 body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end {
-  justify-content: flex-end;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  justify-content: end;
   justify-self: end;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
   margin-left: auto;
 }
 
@@ -37,12 +43,12 @@ body.v4-only-body .v4-quote-form .v4-wizard-nav button {
   white-space: nowrap;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end .btn-secondary {
-  min-width: 210px;
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:first-child {
+  min-width: 196px;
 }
 
-body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end .btn-primary {
-  min-width: 154px;
+body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:last-child {
+  min-width: 166px;
 }
 
 body.v4-only-body .v4-quote-layout + .v4-note[data-wizard-zone="note"] {
@@ -82,12 +88,14 @@ body.v4-only-body .v4-quote-form[data-quote-active-step="equipment"] .v4-wizard-
     justify-content: stretch;
     justify-self: stretch;
     flex-direction: column;
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
     margin-left: 0;
   }
 
   body.v4-only-body .v4-quote-form .v4-wizard-nav button,
-  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end .btn-secondary,
-  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end .btn-primary {
+  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:first-child,
+  body.v4-only-body .v4-quote-form .v4-wizard-nav-group--end > button:last-child {
     width: 100%;
     min-width: 0;
   }
