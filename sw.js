@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_REENTRY_GUARD_2026_05_23';
-const CACHE_NAME = 'packit-equipment-reentry-guard-2026-05-23';
-const RUNTIME_CACHE = 'packit-runtime-equipment-reentry-guard-2026-05-23';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_SUMMARY_FIX_2026_05_24';
+const CACHE_NAME = 'packit-equipment-summary-fix-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-equipment-summary-fix-2026-05-24';
 
 const CORE_ASSETS = [
   './',
@@ -68,6 +68,7 @@ const CORE_ASSETS = [
   './src/modules/LedCalculator.js',
   './src/modules/LedCalculatorUI.js',
   './src/modules/V4StructureConfigurator.js',
+  './src/modules/QuickIdealCatalog.js',
   './src/modules/V4StructureVisualConfigurator.js',
   './src/modules/V4SharedBomBridge.js',
   './src/modules/V4LedBomBridge.js',
@@ -132,105 +133,27 @@ const CORE_ASSETS = [
   './src/modules/QuoteEquipmentLiveStateFix.js',
   './src/modules/QuoteEquipmentReentryGuard.js',
   './src/modules/V4DesignSystem.js',
-  './src/modules/V4AppShell.js',
-  './public/assets/packit/brand/dark/packit_symbol.png',
-  './public/assets/packit/brand/dark/packit_logo_horizontal.png',
-  './public/assets/packit/brand/dark/packit_logo_nav_lockup.png',
-  './stage-deck-texture.png',
-  './led-cabinet-texture.png',
-  './icon-180.png',
-  './icon-192.png',
-  './icon-512.png'
+  './src/modules/V4AppShell.js'
 ];
-
-const OPTIONAL_ASSETS = [
-  'https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
-  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.4/dist/umd/supabase.min.js'
-];
-
-function isCoreAssetRequest(url) {
-  if (url.origin !== self.location.origin) return false;
-  return CORE_ASSETS.some(asset => {
-    const assetUrl = new URL(asset, self.location.href);
-    return url.pathname === assetUrl.pathname;
-  });
-}
-
-function isOptionalAssetRequest(url) {
-  return OPTIONAL_ASSETS.includes(url.href);
-}
-
-function isSensitiveOrApiRequest(url) {
-  return url.hostname.includes('supabase.co')
-    || url.pathname.includes('/rest/v1/')
-    || url.pathname.includes('/auth/v1/')
-    || url.pathname.includes('/storage/v1/');
-}
-
-function canUseRuntimeCache(url) {
-  if (isSensitiveOrApiRequest(url)) return false;
-  return url.origin === self.location.origin || isOptionalAssetRequest(url);
-}
-
-function putCache(cacheName, request, response) {
-  if (!response || response.status !== 200) return response;
-  const copy = response.clone();
-  caches.open(cacheName).then(cache => cache.put(request, copy)).catch(() => null);
-  return response;
-}
 
 self.addEventListener('install', event => {
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(CORE_ASSETS)
-        .then(() => cache.addAll(OPTIONAL_ASSETS).catch(() => null)))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(CORE_ASSETS)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys
-        .filter(key => ![CACHE_NAME, RUNTIME_CACHE].includes(key))
-        .map(key => caches.delete(key))
-    )).then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
-  if (event.data && event.data.type === 'CLEAR_RUNTIME_CACHE') event.waitUntil(caches.delete(RUNTIME_CACHE));
-  if (event.data && event.data.type === 'CLEAR_ALL_CACHES') {
-    event.waitUntil(caches.keys().then(keys => Promise.all(keys.map(key => caches.delete(key)))));
-  }
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME && key !== RUNTIME_CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));
 });
 
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-  const url = new URL(event.request.url);
-
-  if (isCoreAssetRequest(url)) {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => putCache(CACHE_NAME, event.request, response))
-        .catch(() => caches.match(event.request))
-    );
-    return;
-  }
-
-  if (!canUseRuntimeCache(url)) {
-    event.respondWith(fetch(event.request));
-    return;
-  }
-
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      const fetchPromise = fetch(event.request)
-        .then(response => putCache(RUNTIME_CACHE, event.request, response))
-        .catch(() => cached);
-      return cached || fetchPromise;
-    })
-  );
+  const request = event.request;
+  if (request.method !== 'GET') return;
+  event.respondWith(caches.match(request).then(cached => {
+    if (cached) return cached;
+    return fetch(request).then(response => {
+      if (!response || response.status !== 200 || response.type === 'opaque') return response;
+      const clone = response.clone();
+      caches.open(RUNTIME_CACHE).then(cache => cache.put(request, clone));
+      return response;
+    }).catch(() => caches.match('./index.html'));
+  }));
 });
