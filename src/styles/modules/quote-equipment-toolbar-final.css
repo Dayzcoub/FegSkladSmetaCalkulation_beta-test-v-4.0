@@ -3,6 +3,7 @@
 
 body.v4-only-body [data-quote-equipment-panel] {
   --packit-eq-control-h: 34px;
+  --packit-eq-label-slot-h: 14px;
   grid-template-columns: max-content max-content minmax(0, 1fr);
   column-gap: 12px;
   row-gap: 10px;
@@ -108,6 +109,11 @@ body.v4-only-body .packit-manual-inline [data-packit-manual-add] {
   align-self: end;
 }
 
+body.v4-only-body .packit-subrent-inline [data-packit-subrent-add],
+body.v4-only-body .packit-subrent-inline [data-packit-subrent-apply] {
+  margin-top: var(--packit-eq-label-slot-h);
+}
+
 body.v4-only-body .packit-subrent-inline > b {
   align-self: end;
   min-height: var(--packit-eq-control-h);
@@ -148,5 +154,10 @@ body.v4-only-body .packit-manual-inline label {
     flex-basis: auto;
     min-width: 0;
     max-width: none;
+  }
+
+  body.v4-only-body .packit-subrent-inline [data-packit-subrent-add],
+  body.v4-only-body .packit-subrent-inline [data-packit-subrent-apply] {
+    margin-top: 0;
   }
 }
