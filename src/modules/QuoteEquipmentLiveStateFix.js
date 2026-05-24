@@ -29,12 +29,21 @@
     return getItems().find(item => item && item.id === safeId) || null;
   }
 
+  function getAvailableQty(item) {
+    if (!item) return 0;
+    const explicitAvailable = item.availableQty == null ? item.available_qty : item.availableQty;
+    if (explicitAvailable != null && explicitAvailable !== '') return Math.max(0, num(explicitAvailable));
+    const stock = item.stockQty == null ? item.stock_qty : item.stockQty;
+    const reserved = item.reservedQty == null ? item.reserved_qty : item.reservedQty;
+    return Math.max(0, num(stock) - num(reserved));
+  }
+
   function getRowStatus(rowEl) {
     const item = getItemById(rowEl.getAttribute('data-packit-row'));
     const requested = Math.max(0, num(rowEl.querySelector('[data-packit-row-qty]') && rowEl.querySelector('[data-packit-row-qty]').value));
-    const available = Math.max(0, num(item && (item.availableQty == null ? item.stockQty : item.availableQty)));
+    const available = getAvailableQty(item);
     const stock = Math.min(requested, available);
-    const deficit = Math.max(0, requested - available);
+    const deficit = Math.max(0, requested - stock);
     return { item, requested, available, stock, deficit, subrent: deficit };
   }
 
@@ -44,6 +53,8 @@
     if (stats[0]) {
       const b = stats[0].querySelector('b');
       if (b) b.textContent = qty(status.stock);
+      stats[0].classList.toggle('ok', status.stock > 0);
+      stats[0].classList.toggle('muted', status.stock <= 0);
     }
     if (stats[1]) {
       const b = stats[1].querySelector('b');
@@ -118,28 +129,22 @@
     if (!summary) return;
 
     let stockQty = 0;
-    let stockRows = 0;
     let deficitQty = 0;
-    let deficitRows = 0;
     let subrentQty = 0;
-    let subrentRows = 0;
 
     panel.querySelectorAll('[data-packit-row]').forEach(rowEl => {
       const status = getRowStatus(rowEl);
       if (!status.item || status.requested <= 0) return;
       stockQty += status.stock;
-      if (status.stock > 0) stockRows += 1;
       deficitQty += status.deficit;
       subrentQty += status.subrent;
-      if (status.deficit > 0) deficitRows += 1;
-      if (status.subrent > 0) subrentRows += 1;
       updateVisibleRow(rowEl);
     });
 
     const manualRows = panel.querySelectorAll('[data-packit-manual-row-visible]').length;
-    summary.innerHTML = `<div class="packit-live-summary-card ok"><b>${qty(stockQty)}</b><span>складом · ${qty(stockRows)} поз.</span></div>
-      <div class="packit-live-summary-card bad"><b>${qty(deficitQty)}</b><span>дефицит · ${qty(deficitRows)} поз.</span></div>
-      <div class="packit-live-summary-card warn"><b>${qty(subrentQty)}</b><span>субаренда · ${qty(subrentRows)} поз.</span></div>
+    summary.innerHTML = `<div class="packit-live-summary-card ok"><b>${qty(stockQty)}</b><span>складом закрыто, шт</span></div>
+      <div class="packit-live-summary-card bad"><b>${qty(deficitQty)}</b><span>дефицит, шт</span></div>
+      <div class="packit-live-summary-card warn"><b>${qty(subrentQty)}</b><span>субаренда, шт</span></div>
       ${manualRows ? `<div class="packit-live-summary-card"><b>${qty(manualRows)}</b><span>ручные позиции</span></div>` : ''}`;
   }
 
@@ -151,6 +156,7 @@
   function scheduleUpdate(panel) {
     if (!panel) return;
     updateSummary(panel);
+    GLOBAL.setTimeout(() => updateSummary(panel), 0);
     GLOBAL.setTimeout(() => updateSummary(panel), 80);
     GLOBAL.setTimeout(() => updateSummary(panel), 420);
     GLOBAL.setTimeout(() => updateSummary(panel), 900);
@@ -228,11 +234,12 @@
     bindLiveEvents();
     bindSearchCloseEvents();
     updateAll();
+    GLOBAL.setTimeout(updateAll, 0);
     GLOBAL.setTimeout(updateAll, 300);
     GLOBAL.setTimeout(updateAll, 900);
   }
 
-  ROOT.QuoteEquipmentLiveStateFix = { version: '1.2.0-safe-dropdown-summary', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
+  ROOT.QuoteEquipmentLiveStateFix = { version: '1.3.0-piece-summary', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
