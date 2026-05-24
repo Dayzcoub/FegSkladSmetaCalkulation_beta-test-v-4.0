@@ -1,0 +1,103 @@
+/* PACK.IT quote equipment toolbar final geometry
+   Purpose: keep filters and KPI summary visually connected in one compact row. */
+
+body.v4-only-body [data-quote-equipment-panel] {
+  grid-template-columns: max-content max-content minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 10px;
+  align-items: center;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  max-width: max-content;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: start;
+  align-self: center;
+  margin-left: 2px;
+  display: inline-flex !important;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: auto !important;
+  max-width: max-content !important;
+  min-width: 0 !important;
+  grid-template-columns: none !important;
+  grid-auto-flow: unset !important;
+  grid-auto-columns: unset !important;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card {
+  flex: 0 0 88px;
+  min-width: 88px;
+  max-width: 88px;
+  min-height: 32px;
+  padding: 4px 8px;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card b {
+  font-size: 16px;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card span {
+  font-size: 0;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card.ok span::after,
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card.bad span::after,
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card.warn span::after {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.1;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card.ok span::after { content: 'склад, шт'; }
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card.bad span::after { content: 'дефицит, шт'; }
+body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card.warn span::after { content: 'субаренда, шт'; }
+
+body.v4-only-body .packit-equipment-addbar,
+body.v4-only-body .packit-equipment-table-card {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 767px) {
+  body.v4-only-body [data-quote-equipment-panel] {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-scope-badges,
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: stretch;
+    max-width: none;
+    margin-left: 0;
+  }
+
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card {
+    flex-basis: auto;
+    min-width: 0;
+    max-width: none;
+  }
+}
