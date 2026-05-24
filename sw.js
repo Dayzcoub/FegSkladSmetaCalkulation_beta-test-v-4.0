@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_FIRST_STEP_FOOTER_ALIGN_2026_05_24';
-const CACHE_NAME = 'packit-first-step-footer-align-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-first-step-footer-align-2026-05-24';
+const CACHE_VERSION = 'PACKIT_CLIENT_FOOTER_REATTACH_2026_05_24';
+const CACHE_NAME = 'packit-client-footer-reattach-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-client-footer-reattach-2026-05-24';
 
 const CORE_ASSETS = [
   './',
