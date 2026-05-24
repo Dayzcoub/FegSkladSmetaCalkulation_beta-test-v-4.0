@@ -1,7 +1,8 @@
-/* PACK.IT quote equipment toolbar final geometry
-   Purpose: keep filters and KPI summary visually connected in one compact row. */
+/* PACK.IT quote equipment toolbar geometry
+   Cleanup pass: one compact toolbar contract, no hard cascade hacks. */
 
 body.v4-only-body [data-quote-equipment-panel] {
+  --packit-eq-control-h: 32px;
   grid-template-columns: max-content max-content minmax(0, 1fr);
   column-gap: 12px;
   row-gap: 10px;
@@ -22,15 +23,15 @@ body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipme
   justify-self: start;
   align-self: center;
   margin-left: 2px;
-  display: inline-flex !important;
+  display: inline-flex;
   flex-wrap: nowrap;
   align-items: stretch;
-  width: auto !important;
-  max-width: max-content !important;
-  min-width: 0 !important;
-  grid-template-columns: none !important;
-  grid-auto-flow: unset !important;
-  grid-auto-columns: unset !important;
+  width: auto;
+  max-width: max-content;
+  min-width: 0;
+  grid-template-columns: none;
+  grid-auto-flow: unset;
+  grid-auto-columns: unset;
 }
 
 body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card {
@@ -72,9 +73,9 @@ body.v4-only-body .packit-equipment-table-card {
   grid-column: 1 / -1;
 }
 
-/* Compact equipment controls: keep buttons and fields on one baseline. */
 body.v4-only-body .packit-equipment-addbar,
-body.v4-only-body .packit-subrent-inline {
+body.v4-only-body .packit-subrent-inline,
+body.v4-only-body .packit-manual-inline {
   align-items: end;
 }
 
@@ -83,32 +84,37 @@ body.v4-only-body .packit-equipment-addbar select,
 body.v4-only-body .packit-equipment-addbar button,
 body.v4-only-body .packit-subrent-inline input,
 body.v4-only-body .packit-subrent-inline select,
-body.v4-only-body .packit-subrent-inline button {
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
+body.v4-only-body .packit-subrent-inline button,
+body.v4-only-body .packit-manual-inline input,
+body.v4-only-body .packit-manual-inline select,
+body.v4-only-body .packit-manual-inline button {
+  height: var(--packit-eq-control-h);
+  min-height: var(--packit-eq-control-h);
+  max-height: var(--packit-eq-control-h);
   box-sizing: border-box;
 }
 
 body.v4-only-body .packit-equipment-addbar button,
-body.v4-only-body .packit-subrent-inline button {
+body.v4-only-body .packit-subrent-inline button,
+body.v4-only-body .packit-manual-inline button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-block: 0;
   line-height: 1;
   white-space: nowrap;
 }
 
 body.v4-only-body .packit-subrent-inline > b {
   align-self: end;
-  min-height: 32px;
+  min-height: var(--packit-eq-control-h);
   display: inline-flex;
   align-items: center;
 }
 
-body.v4-only-body .packit-subrent-inline label {
+body.v4-only-body .packit-equipment-addbar label,
+body.v4-only-body .packit-subrent-inline label,
+body.v4-only-body .packit-manual-inline label {
   align-self: end;
 }
 
@@ -129,10 +135,10 @@ body.v4-only-body .packit-subrent-inline label {
 
   body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket,
   body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket.v4-equipment-basket--availability {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    width: 100% !important;
-    max-width: none !important;
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: none;
   }
 
   body.v4-only-body [data-quote-equipment-panel] > .v4-equipment-basket .packit-live-summary-card {
