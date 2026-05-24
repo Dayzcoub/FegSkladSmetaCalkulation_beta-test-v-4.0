@@ -72,6 +72,46 @@ body.v4-only-body .packit-equipment-table-card {
   grid-column: 1 / -1;
 }
 
+/* Compact equipment controls: keep buttons and fields on one baseline. */
+body.v4-only-body .packit-equipment-addbar,
+body.v4-only-body .packit-subrent-inline {
+  align-items: end;
+}
+
+body.v4-only-body .packit-equipment-addbar input,
+body.v4-only-body .packit-equipment-addbar select,
+body.v4-only-body .packit-equipment-addbar button,
+body.v4-only-body .packit-subrent-inline input,
+body.v4-only-body .packit-subrent-inline select,
+body.v4-only-body .packit-subrent-inline button {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  box-sizing: border-box;
+}
+
+body.v4-only-body .packit-equipment-addbar button,
+body.v4-only-body .packit-subrent-inline button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+body.v4-only-body .packit-subrent-inline > b {
+  align-self: end;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+}
+
+body.v4-only-body .packit-subrent-inline label {
+  align-self: end;
+}
+
 @media (max-width: 767px) {
   body.v4-only-body [data-quote-equipment-panel] {
     grid-template-columns: 1fr;
