@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_FLOW_LAYOUT_2026_05_24';
-const CACHE_NAME = 'packit-equipment-flow-layout-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-flow-layout-2026-05-24';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_SUMMARY_BADGE_ROW_2026_05_24';
+const CACHE_NAME = 'packit-equipment-summary-badge-row-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-equipment-summary-badge-row-2026-05-24';
 
 const CORE_ASSETS = [
   './',
