@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_TOOLBAR_POLISH_2026_05_24';
-const CACHE_NAME = 'packit-equipment-toolbar-polish-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-toolbar-polish-2026-05-24';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_EMPTY_STATE_FIX_2026_05_24';
+const CACHE_NAME = 'packit-equipment-empty-state-fix-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-equipment-empty-state-fix-2026-05-24';
 
 const CORE_ASSETS = [
   './',
