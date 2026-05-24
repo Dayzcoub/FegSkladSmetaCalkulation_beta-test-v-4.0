@@ -100,7 +100,7 @@ body.v4-only-body .v4-clients-panel .v4-client-form {
 body.v4-only-body .v4-clients-panel .v4-client-form > summary {
   display: flex;
   align-items: center;
-  min-height: 38px;
+  min-height: 34px;
   padding: 0 12px;
   cursor: pointer;
   font-size: 12px;
@@ -109,6 +109,10 @@ body.v4-only-body .v4-clients-panel .v4-client-form > summary {
   text-transform: uppercase;
   color: var(--text-strong);
   border-bottom: 1px solid transparent;
+}
+
+body.v4-only-body .v4-clients-panel .v4-client-form:not([open]) > summary {
+  min-height: 32px;
 }
 
 body.v4-only-body .v4-clients-panel .v4-client-form[open] > summary {
@@ -136,15 +140,45 @@ body.v4-only-body .v4-clients-panel .v4-table--clients td {
   vertical-align: top;
 }
 
+body.v4-only-body .v4-clients-panel .v4-table--clients td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+body.v4-only-body .v4-clients-panel .v4-table--clients .v4-num-cell b {
+  display: inline-block;
+  min-width: 18px;
+}
+
+body.v4-only-body .v4-clients-panel .v4-table--clients .v4-num-cell small {
+  display: block;
+  margin-top: 2px;
+}
+
 body.v4-only-body .v4-clients-panel .v4-table--clients .v4-actions {
   justify-content: flex-end;
+  align-items: center;
   gap: 6px;
+  flex-wrap: nowrap;
+}
+
+body.v4-only-body .v4-clients-panel .v4-table--clients .v4-actions button {
+  min-height: 30px;
+  padding-inline: 10px;
+  white-space: nowrap;
 }
 
 body.v4-only-body .v4-clients-panel .v4-table--clients tbody td[colspan] {
   padding: 18px 14px;
   color: var(--muted);
   text-align: center;
+}
+
+body.v4-only-body .v4-clients-panel .v4-client-empty-projects {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted-2);
+  line-height: 1.35;
 }
 
 body.v4-only-body .v4-clients-panel .v4-client-card-list {
