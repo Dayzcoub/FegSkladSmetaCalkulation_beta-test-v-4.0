@@ -1,0 +1,79 @@
+/* PACK.IT quote client dialog final pass
+   Fixes native dialog falling to top-left by giving it a real centered overlay layout. */
+
+body.v4-only-body .v4-quote-client-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 24px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  overflow: auto;
+  z-index: 10000;
+}
+
+body.v4-only-body .v4-quote-client-dialog:not([open]) {
+  display: none;
+}
+
+body.v4-only-body .v4-quote-client-dialog[open] {
+  display: grid;
+  place-items: center;
+}
+
+body.v4-only-body .v4-quote-client-dialog::backdrop {
+  background: rgba(2, 6, 23, .78);
+  backdrop-filter: blur(10px);
+}
+
+body.v4-only-body .v4-quote-client-modal-card {
+  width: min(680px, calc(100vw - 48px));
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  display: grid;
+  gap: 14px;
+  margin: auto;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl, 18px);
+  background: var(--panel-2);
+  box-shadow: var(--shadow-soft), 0 24px 90px rgba(0, 0, 0, .58);
+}
+
+body.v4-only-body .v4-quote-client-modal-card .v4-card-head,
+body.v4-only-body .v4-quote-client-modal-card .v4-card-head--compact {
+  align-items: start;
+  gap: 12px;
+  margin: 0;
+}
+
+body.v4-only-body .v4-quote-client-modal-card .v4-grid-2 {
+  gap: 10px;
+}
+
+body.v4-only-body .v4-quote-client-modal-card textarea {
+  min-height: 82px;
+  resize: vertical;
+}
+
+@media (max-width: 767px) {
+  body.v4-only-body .v4-quote-client-dialog {
+    padding: 12px;
+  }
+
+  body.v4-only-body .v4-quote-client-modal-card {
+    width: min(100%, calc(100vw - 24px));
+    max-height: calc(100dvh - 24px);
+    padding: 12px;
+  }
+
+  body.v4-only-body .v4-quote-client-modal-card .v4-card-head,
+  body.v4-only-body .v4-quote-client-modal-card .v4-card-head--compact {
+    grid-template-columns: 1fr;
+  }
+}
