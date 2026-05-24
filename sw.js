@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_CONTROL_HEIGHT_2026_05_24';
-const CACHE_NAME = 'packit-equipment-control-height-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-control-height-2026-05-24';
+const CACHE_VERSION = 'PACKIT_SCOPED_EQUIPMENT_BUTTON_HEIGHT_2026_05_24';
+const CACHE_NAME = 'packit-scoped-equipment-button-height-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-scoped-equipment-button-height-2026-05-24';
 
 const CORE_ASSETS = [
   './',
