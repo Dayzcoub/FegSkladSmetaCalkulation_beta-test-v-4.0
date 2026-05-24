@@ -23,13 +23,38 @@
     } catch (_) {}
   }
 
+  function reattachClientFooterNav(form) {
+    if (!form || !form.closest) return;
+    if ((form.getAttribute('data-quote-active-step') || '') !== 'client') return;
+    if (form.querySelector(':scope > .v4-wizard-nav')) return;
+
+    const layout = form.closest('.v4-quote-layout');
+    if (!layout) return;
+
+    let nav = null;
+    let node = form.nextElementSibling;
+    while (node) {
+      if (node.matches && node.matches('.v4-wizard-nav')) {
+        nav = node;
+        break;
+      }
+      if (node.matches && node.matches('[data-quote-form], .v4-quote-overview')) break;
+      node = node.nextElementSibling;
+    }
+    if (!nav) nav = layout.querySelector(':scope > .v4-wizard-nav');
+    if (!nav) return;
+
+    form.appendChild(nav);
+  }
+
   function normalizeWizardFooterContract(root) {
     const scope = root && root.querySelectorAll ? root : GLOBAL.document;
     if (!scope) return;
 
     scope.querySelectorAll('[data-quote-form]').forEach(form => {
+      reattachClientFooterNav(form);
       const activeStep = form.getAttribute('data-quote-active-step') || '';
-      const nav = form.querySelector('.v4-wizard-nav');
+      const nav = form.querySelector(':scope > .v4-wizard-nav') || form.querySelector('.v4-wizard-nav');
       if (!nav) return;
 
       const back = nav.querySelector('[data-quote-prev]');
@@ -46,7 +71,6 @@
       if (next) next.classList.add('v4-wizard-next-btn');
 
       if (activeStep === 'client' && save) {
-        save.textContent = 'Сохранить клиент и проект';
         save.setAttribute('data-quote-client-action', 'true');
       }
     });
@@ -104,7 +128,7 @@
     GLOBAL.setInterval(apply, 600);
   }
 
-  ROOT.QuoteEquipmentReentryGuard = { version: '1.2.0-footer-contract', init, apply, burst: startBurstWindow, normalizeWizardFooterContract };
+  ROOT.QuoteEquipmentReentryGuard = { version: '1.3.0-client-footer-reattach', init, apply, burst: startBurstWindow, normalizeWizardFooterContract };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') {
     GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
