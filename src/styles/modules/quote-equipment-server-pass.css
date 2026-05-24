@@ -6,10 +6,24 @@ body.v4-only-body .v4-steps {
   padding-bottom: 10px;
 }
 
-body.v4-only-body .v4-steps > li {
+body.v4-only-body .v4-steps > li,
+body.v4-only-body .v4-steps > li.v4-step-ok,
+body.v4-only-body .v4-steps > li.v4-step-active,
+body.v4-only-body .v4-steps > li.v4-step-error,
+body.v4-only-body .v4-steps > li.v4-step-warn,
+body.v4-only-body .v4-steps > li.v4-step-help {
   flex: 0 0 128px;
   min-width: 128px;
+  max-width: 128px;
+  min-height: 52px;
   display: block;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-bottom: 0;
+  color: inherit;
+  white-space: normal;
+  cursor: default;
 }
 
 body.v4-only-body .v4-steps > li > button {
@@ -22,6 +36,17 @@ body.v4-only-body .v4-steps > li > button {
   gap: 1px;
   padding: 6px 8px;
   overflow: hidden;
+  text-align: left;
+  cursor: pointer;
+}
+
+body.v4-only-body .v4-steps > li.v4-step-active > button {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+
+body.v4-only-body .v4-steps > li.v4-step-ok > button {
+  border-color: var(--success-border);
 }
 
 body.v4-only-body .v4-steps > li > button span,
