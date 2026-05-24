@@ -441,15 +441,6 @@ body.v4-only-body .packit-kpi-delta {
 body.v4-only-body .packit-kpi-delta.up { color: var(--success); }
 body.v4-only-body .packit-kpi-delta.down { color: var(--danger); }
 
-/* Content card */
-body.v4-only-body .packit-card,
-body.v4-only-body .v4-card {
-  background: var(--panel-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-}
-
 body.v4-only-body .packit-card-head {
   display: flex;
   align-items: center;
