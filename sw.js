@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_WIZARD_FOOTER_FINAL_2026_05_24';
-const CACHE_NAME = 'packit-wizard-footer-final-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-wizard-footer-final-2026-05-24';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_TOOLBAR_CLEANUP_2026_05_24';
+const CACHE_NAME = 'packit-equipment-toolbar-cleanup-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-equipment-toolbar-cleanup-2026-05-24';
 
 const CORE_ASSETS = [
   './',
@@ -26,6 +26,7 @@ const CORE_ASSETS = [
   './src/styles/modules/quote-equipment-server-pass.css',
   './src/styles/modules/quote-equipment-toolbar-final.css',
   './src/styles/modules/quote-wizard-footer-final.css',
+  './src/styles/modules/quote-client-dialog-final.css',
   './src/modules/index.js',
   './src/modules/FormatUtils.js',
   './src/modules/DomUtils.js',
