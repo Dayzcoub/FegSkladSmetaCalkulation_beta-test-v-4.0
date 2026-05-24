@@ -263,41 +263,6 @@ body.v4-only-body .v4-quote-form .v4-grid-2 {
   gap: 10px;
 }
 
-/* ─── BOTTOM NAV ─────────────────────────────────────────────────────────────── */
-
-body.v4-only-body .v4-wizard-nav {
-  display: flex;
-  flex-direction: row !important;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 0 0;
-  border-top: 1px solid var(--line);
-  margin-top: 4px;
-  width: 100%;
-}
-
-body.v4-only-body .v4-wizard-nav-group {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-}
-
-body.v4-only-body .v4-wizard-nav [data-quote-next] {
-  height: 38px;
-  padding: 0 18px;
-  font-size: 13px;
-  font-weight: 600;
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-
-body.v4-only-body .v4-wizard-nav [data-quote-next]:hover {
-  background: #ea6c0a;
-}
-
 /* ─── Scope grid ─────────────────────────────────────────────────────────────── */
 
 body.v4-only-body .v4-scope-grid {
