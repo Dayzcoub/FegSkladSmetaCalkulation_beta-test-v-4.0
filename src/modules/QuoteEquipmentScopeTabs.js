@@ -73,7 +73,14 @@
     if (!panel) return;
     const activeScope = text(panel.dataset.packitEquipmentScopeFilter);
     const menu = panel.querySelector('[data-packit-eq-menu]');
-    if (!activeScope || !menu || menu.hidden) return;
+    if (!menu) return;
+
+    if (!activeScope) {
+      menu.querySelectorAll('[data-packit-suggest]').forEach(button => { button.hidden = false; });
+      const empty = menu.querySelector('[data-packit-scope-empty]');
+      if (empty) empty.hidden = true;
+      return;
+    }
 
     const allowed = allowedCategorySet(activeScope);
     if (!allowed.size) return;
@@ -87,7 +94,7 @@
     });
 
     let empty = menu.querySelector('[data-packit-scope-empty]');
-    if (!visibleCount) {
+    if (!visibleCount && !menu.hidden) {
       if (!empty) {
         empty = GLOBAL.document.createElement('div');
         empty.className = 'packit-equipment-no-results';
@@ -101,20 +108,33 @@
     }
   }
 
+  function bindMenuObserver(panel) {
+    if (!panel || panel.__packitScopeMenuObserverBound) return;
+    const menu = panel.querySelector('[data-packit-eq-menu]');
+    if (!menu || typeof MutationObserver === 'undefined') return;
+    panel.__packitScopeMenuObserverBound = true;
+    const observer = new MutationObserver(() => {
+      GLOBAL.setTimeout(() => filterMenu(panel), 0);
+    });
+    observer.observe(menu, { childList: true, subtree: true });
+    panel.__packitScopeMenuObserver = observer;
+  }
+
   function refreshSearch(panel) {
     if (!panel) return;
     const search = panel.querySelector('[data-packit-eq-search]');
     const category = panel.querySelector('[data-packit-eq-category]');
     const activeScope = text(panel.dataset.packitEquipmentScopeFilter);
 
+    bindMenuObserver(panel);
     if (category && activeScope) category.value = '';
     if (search) {
       search.placeholder = activeScope ? `Поиск: ${scopeLabel(activeScope)}...` : 'Shure, SM58, BKL...';
       search.dispatchEvent(new Event('input', { bubbles: true }));
-      if (GLOBAL.document.activeElement === search) GLOBAL.setTimeout(() => filterMenu(panel), 0);
     }
     GLOBAL.setTimeout(() => filterMenu(panel), 0);
-    GLOBAL.setTimeout(() => filterMenu(panel), 80);
+    GLOBAL.setTimeout(() => filterMenu(panel), 30);
+    GLOBAL.setTimeout(() => filterMenu(panel), 120);
   }
 
   function setActiveScope(panel, scopeKey) {
@@ -159,14 +179,18 @@
     GLOBAL.document.addEventListener('input', event => {
       const panel = getPanel(event.target);
       if (panel && event.target.matches && event.target.matches('[data-packit-eq-search]')) {
+        bindMenuObserver(panel);
         GLOBAL.setTimeout(() => filterMenu(panel), 0);
+        GLOBAL.setTimeout(() => filterMenu(panel), 30);
       }
     }, true);
 
     GLOBAL.document.addEventListener('focusin', event => {
       const panel = getPanel(event.target);
       if (panel && event.target.matches && event.target.matches('[data-packit-eq-search]')) {
+        bindMenuObserver(panel);
         GLOBAL.setTimeout(() => filterMenu(panel), 0);
+        GLOBAL.setTimeout(() => filterMenu(panel), 30);
       }
     }, true);
 
@@ -179,7 +203,11 @@
   function enhance(root) {
     const scope = root && root.querySelectorAll ? root : GLOBAL.document;
     if (!scope) return;
-    scope.querySelectorAll('[data-quote-equipment-panel]').forEach(updateBadgeState);
+    scope.querySelectorAll('[data-quote-equipment-panel]').forEach(panel => {
+      updateBadgeState(panel);
+      bindMenuObserver(panel);
+      GLOBAL.setTimeout(() => filterMenu(panel), 0);
+    });
   }
 
   function init() {
@@ -189,7 +217,7 @@
     GLOBAL.setTimeout(() => enhance(GLOBAL.document), 300);
   }
 
-  ROOT.QuoteEquipmentScopeTabs = { version: '1.0.0', init, enhance, filterMenu };
+  ROOT.QuoteEquipmentScopeTabs = { version: '1.1.0-menu-observer', init, enhance, filterMenu };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
