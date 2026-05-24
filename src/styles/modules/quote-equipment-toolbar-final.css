@@ -90,6 +90,9 @@ body.v4-only-body .packit-manual-inline select {
   box-sizing: border-box;
 }
 
+body.v4-only-body .packit-equipment-addbar .btn-primary,
+body.v4-only-body .packit-subrent-inline .btn-compact,
+body.v4-only-body .packit-manual-inline .btn-primary,
 body.v4-only-body .packit-equipment-addbar [data-packit-eq-add],
 body.v4-only-body .packit-subrent-inline [data-packit-subrent-add],
 body.v4-only-body .packit-subrent-inline [data-packit-subrent-apply],
