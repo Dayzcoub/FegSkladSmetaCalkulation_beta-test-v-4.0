@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_SUMMARY_BADGE_ROW_2026_05_24';
-const CACHE_NAME = 'packit-equipment-summary-badge-row-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-summary-badge-row-2026-05-24';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_SCOPE_TABS_2026_05_24';
+const CACHE_NAME = 'packit-equipment-scope-tabs-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-equipment-scope-tabs-2026-05-24';
 
 const CORE_ASSETS = [
   './',
@@ -131,6 +131,7 @@ const CORE_ASSETS = [
   './src/modules/QuoteWizard.js',
   './src/modules/QuoteEquipmentUiController.js',
   './src/modules/QuoteEquipmentLiveStateFix.js',
+  './src/modules/QuoteEquipmentScopeTabs.js',
   './src/modules/QuoteEquipmentReentryGuard.js',
   './src/modules/V4DesignSystem.js',
   './src/modules/V4AppShell.js',
