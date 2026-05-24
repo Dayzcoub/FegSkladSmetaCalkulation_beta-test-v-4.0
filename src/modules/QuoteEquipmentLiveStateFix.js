@@ -4,7 +4,7 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  function text(value) { return String(value == null ? '' : value).trim(); }
+  function text(value) { return String(value == null ? '' : '').trim(); }
   function num(value) {
     const cleaned = typeof value === 'string' ? value.replace(/[^0-9.,-]/g, '').replace(',', '.') : value;
     const n = Number(cleaned);
@@ -45,6 +45,14 @@
     const stock = Math.min(requested, available);
     const deficit = Math.max(0, requested - stock);
     return { item, requested, available, stock, deficit, subrent: deficit };
+  }
+
+  function normalizeCompactActionButtons(panel) {
+    if (!panel) return;
+    panel.querySelectorAll('[data-packit-subrent-add], [data-packit-subrent-apply]').forEach(button => {
+      button.classList.remove('btn-compact');
+      button.classList.add('packit-equipment-inline-action');
+    });
   }
 
   function updateVisibleRow(rowEl) {
@@ -163,6 +171,7 @@
   function updateSummary(panel) {
     if (!panel) return;
     cleanupManualDuplicates(panel);
+    normalizeCompactActionButtons(panel);
 
     const stats = buildPieceStats(panel);
     const html = renderPieceCards(stats);
@@ -269,7 +278,7 @@
     GLOBAL.setTimeout(updateAll, 900);
   }
 
-  ROOT.QuoteEquipmentLiveStateFix = { version: '1.5.0-ensure-empty-basket', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
+  ROOT.QuoteEquipmentLiveStateFix = { version: '1.6.0-normalize-subrent-actions', init, updateSummary, cleanupManualDuplicates, closeSearchMenus };
 
   if (GLOBAL.document && GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
