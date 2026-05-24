@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_LAYOUT_POLISH_2026_05_24';
-const CACHE_NAME = 'packit-equipment-layout-polish-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-layout-polish-2026-05-24';
+const CACHE_VERSION = 'PACKIT_EQUIPMENT_FULL_WIDTH_2026_05_24';
+const CACHE_NAME = 'packit-equipment-full-width-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-equipment-full-width-2026-05-24';
 
 const CORE_ASSETS = [
   './',
