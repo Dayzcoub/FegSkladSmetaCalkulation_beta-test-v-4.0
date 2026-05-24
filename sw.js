@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_SHELL_EMPTY_STATE_CLEANUP_2026_05_24';
-const CACHE_NAME = 'packit-shell-empty-state-cleanup-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-shell-empty-state-cleanup-2026-05-24';
+const CACHE_VERSION = 'PACKIT_CLIENTS_PAGE_CLEANUP_2026_05_24';
+const CACHE_NAME = 'packit-clients-page-cleanup-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-clients-page-cleanup-2026-05-24';
 
 const CORE_ASSETS = [
   './',
@@ -27,6 +27,7 @@ const CORE_ASSETS = [
   './src/styles/modules/quote-equipment-toolbar-final.css',
   './src/styles/modules/quote-wizard-footer-final.css',
   './src/styles/modules/quote-client-dialog-final.css',
+  './src/styles/modules/clients.css',
   './src/modules/index.js',
   './src/modules/FormatUtils.js',
   './src/modules/DomUtils.js',
