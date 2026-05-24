@@ -186,7 +186,7 @@
 
   function renderClientProjectsMini(stats) {
     const projects = Array.isArray(stats.projects) ? stats.projects.slice(0, 3) : [];
-    if (!projects.length) return '<small>Связанных проектов пока нет</small>';
+    if (!projects.length) return '<small class="v4-client-empty-projects">Связанных проектов пока нет</small>';
     return `<div class="v4-client-project-links">${projects.map(project => `
       <button type="button" class="v4-mini-link" data-v4-client-open-project="${escapeHtml(project.projectId)}">${escapeHtml(project.projectName || 'Проект')}</button>
     `).join('')}</div>`;
