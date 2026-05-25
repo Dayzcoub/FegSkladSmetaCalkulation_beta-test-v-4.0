@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_SITE_CHECKLIST_CLEANUP_2026_05_24';
-const CACHE_NAME = 'packit-site-checklist-cleanup-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-site-checklist-cleanup-2026-05-24';
+const CACHE_VERSION = 'PACKIT_SITE_CHECKLIST_COMPACT_2026_05_24';
+const CACHE_NAME = 'packit-site-checklist-compact-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-site-checklist-compact-2026-05-24';
 
 const CORE_ASSETS = [
   './',
