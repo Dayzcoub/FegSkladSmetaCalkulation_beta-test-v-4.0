@@ -112,11 +112,13 @@ body.v4-only-body .v4-command-results {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+  align-items: start;
   margin-top: 0;
 }
 
 body.v4-only-body .v4-command-group {
   min-width: 0;
+  align-self: start;
   padding: 12px;
 }
 
