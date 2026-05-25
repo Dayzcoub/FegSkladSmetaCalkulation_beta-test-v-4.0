@@ -3,7 +3,7 @@
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
-  const REPORTS_CENTER_VERSION = '3.9.6';
+  const REPORTS_CENTER_VERSION = '3.9.7';
 
   function toText(value) { return String(value == null ? '' : value).trim(); }
   function toNumber(value, fallback) { const n = Number(value); return Number.isFinite(n) ? n : Number(fallback || 0); }
@@ -183,7 +183,7 @@
     const healthInputs = [projects.readinessAverage || 0, clients.contactCoverage || 0, quality ? quality.score : 100];
     const healthScore = Math.round(healthInputs.reduce((sum, value) => sum + toNumber(value, 0), 0) / healthInputs.length);
     return {
-      type: 'feg-stage-pro-operations-report',
+      type: 'packit-management-analytics-report',
       version: REPORTS_CENTER_VERSION,
       generatedAt: nowIso(),
       healthScore,
@@ -216,48 +216,89 @@
     if (!root) return null;
     const report = buildOperationsReport(options || {});
     root.innerHTML = `
-      <div class="v4-card v4-reports-center">
+      <div class="v4-card v4-reports-center v4-reports-center--management">
         <div class="v4-section-head">
           <div>
-            <div class="v4-kicker">Reports · operations overview</div>
-            <h3>Операционные отчёты</h3>
-            <p class="v4-muted">Сводка по проектам, клиентам, складу, базе оборудования и качеству данных перед backend sync.</p>
+            <div class="v4-kicker">Reports · management analytics</div>
+            <h3>Управленческие отчёты</h3>
+            <p class="v4-muted">Будущий директорский дашборд: проекты, деньги, склад, клиенты и команда. Сейчас раздел работает как понятная заготовка, а служебная диагностика оставлена ниже для администратора.</p>
           </div>
           <div class="v4-report-score ${escapeHtml(report.status)}">
             <b>${report.healthScore}%</b>
-            <span>${escapeHtml(report.status)}</span>
+            <span>качество данных</span>
           </div>
         </div>
-        <div class="v4-report-kpi-grid">
-          ${renderKpi('Проектов', report.projects.totalProjects, `готовность ${report.projects.readinessAverage}%`)}
-          ${renderKpi('Клиентов', report.clients.totalClients, `контакты ${report.clients.contactCoverage}%`)}
-          ${renderKpi('Позиций базы', report.equipment.totalItems, `активных ${report.equipment.activeItems}`)}
-          ${renderKpi('Дефицит', report.warehouse.totals.deficitQty, `субаренда ${report.warehouse.totals.subrentQty}`)}
+
+        <div class="v4-report-roadmap-grid">
+          ${renderManagementCard('Операционная сводка', 'Что происходит с проектами', [
+            `${report.projects.totalProjects} проектов в базе`,
+            `средняя готовность ${report.projects.readinessAverage}%`,
+            report.projects.upcoming[0] ? `ближайший: ${report.projects.upcoming[0].projectName}` : 'ближайших проектов пока нет'
+          ], 'заготовка')}
+          ${renderManagementCard('Финансы', 'Сметы, аренда, услуги, транспорт, субаренда', [
+            'выручка за период',
+            'скидки и итоги к оплате',
+            'маржинальность после ввода себестоимости'
+          ], 'скоро')}
+          ${renderManagementCard('Склад', 'Бронь, дефицит, субаренда, закупки', [
+            `${report.equipment.totalAvailableQty} доступно, шт/ед.`,
+            `${report.warehouse.totals.deficitQty} дефицит`,
+            `${report.warehouse.totals.subrentQty} субаренда`
+          ], 'заготовка')}
+          ${renderManagementCard('Клиенты', 'Повторные клиенты, контакты, история проектов', [
+            `${report.clients.totalClients} клиентов`,
+            `заполненность контактов ${report.clients.contactCoverage}%`,
+            'рейтинг и история появятся позже'
+          ], 'заготовка')}
+          ${renderManagementCard('Команда', 'Загрузка людей, назначения, смены', [
+            'назначенные на проекты',
+            'свободные / занятые даты',
+            'табель и роли появятся позже'
+          ], 'скоро')}
         </div>
+
+        <div class="v4-report-kpi-grid">
+          ${renderKpi('Проекты', report.projects.totalProjects, `готовность ${report.projects.readinessAverage}%`)}
+          ${renderKpi('Клиенты', report.clients.totalClients, `контакты ${report.clients.contactCoverage}%`)}
+          ${renderKpi('База оборудования', report.equipment.totalItems, `активных ${report.equipment.activeItems}`)}
+          ${renderKpi('Складской риск', report.warehouse.totals.deficitQty, `субаренда ${report.warehouse.totals.subrentQty}`)}
+        </div>
+
         <div class="v4-report-layout">
           <div class="v4-report-panel">
-            <h4>Рекомендации</h4>
+            <h4>Что требует внимания</h4>
             <div class="v4-mini-list">${report.recommendations.map(item => `<span>${escapeHtml(item)}</span>`).join('')}</div>
-            <h4>Статусы проектов</h4>
-            <div class="v4-report-status-list">${Object.entries(report.projects.byStatus).map(([status, count]) => `<span><b>${escapeHtml(status)}</b>${count}</span>`).join('') || '<span>Проектов пока нет</span>'}</div>
             <h4>Топ категорий оборудования</h4>
             <div class="v4-report-status-list">${report.equipment.byCategory.slice(0, 8).map(row => `<span><b>${escapeHtml(row.label)}</b>${row.rows}</span>`).join('') || '<span>База пуста</span>'}</div>
           </div>
           <div class="v4-report-panel">
+            <h4>Ближайшие проекты</h4>
             <div class="v4-table-wrap">
               <table class="v4-table v4-table--reports">
                 <thead><tr><th>Проект</th><th>Клиент</th><th>Дата</th><th>Статус</th></tr></thead>
                 <tbody>${report.projects.upcoming.map(row => `<tr><td>${escapeHtml(row.projectName)}</td><td>${escapeHtml(row.clientName)}</td><td>${escapeHtml(row.eventDate)}</td><td>${escapeHtml(row.status)}</td></tr>`).join('') || '<tr><td colspan="4">Ближайших проектов пока нет</td></tr>'}</tbody>
               </table>
             </div>
+            <h4>Складские риски по проектам</h4>
             <div class="v4-table-wrap">
               <table class="v4-table v4-table--reports">
-                <thead><tr><th>Складской проект</th><th>Статус склада</th><th>Резерв</th><th>Дефицит</th><th>Субаренда</th></tr></thead>
+                <thead><tr><th>Проект</th><th>Статус склада</th><th>Резерв</th><th>Дефицит</th><th>Субаренда</th></tr></thead>
                 <tbody>${report.warehouse.projects.map(row => `<tr><td>${escapeHtml(row.projectName)}</td><td>${escapeHtml(row.warehouseStatus)}</td><td>${row.reservedQty}</td><td>${row.deficitQty}</td><td>${row.subrentQty}</td></tr>`).join('') || '<tr><td colspan="5">Нет складских проектов</td></tr>'}</tbody>
               </table>
             </div>
           </div>
         </div>
+
+        <details class="v4-report-diagnostics">
+          <summary>Служебная диагностика и JSON для администратора</summary>
+          <div class="v4-report-diagnostics-grid">
+            <span><b>${report.healthScore}%</b><small>качество данных</small></span>
+            <span><b>${report.quality ? report.quality.issues : 0}</b><small>замечаний QA</small></span>
+            <span><b>${report.warehouse.totals.unmatchedRows}</b><small>не сопоставлено со складом</small></span>
+            <span><b>${money(report.equipment.rentalValue)}</b><small>потенциал аренды базы</small></span>
+          </div>
+        </details>
+
         <div class="v4-actions-row">
           <button type="button" class="btn-secondary" data-v4-report-copy>Копировать JSON</button>
           <button type="button" class="btn-secondary" data-v4-report-download>Скачать JSON</button>
@@ -267,8 +308,20 @@
     const copyBtn = root.querySelector('[data-v4-report-copy]');
     if (copyBtn) copyBtn.addEventListener('click', () => copyText(json));
     const downloadBtn = root.querySelector('[data-v4-report-download]');
-    if (downloadBtn) downloadBtn.addEventListener('click', () => downloadText('feg-operations-report.json', json, 'application/json'));
+    if (downloadBtn) downloadBtn.addEventListener('click', () => downloadText('packit-management-report.json', json, 'application/json'));
     return root;
+  }
+
+  function renderManagementCard(title, subtitle, rows, status) {
+    return `
+      <article class="v4-report-roadmap-card">
+        <div>
+          <b>${escapeHtml(title)}</b>
+          <small>${escapeHtml(subtitle)}</small>
+        </div>
+        <ul>${rows.map(row => `<li>${escapeHtml(row)}</li>`).join('')}</ul>
+        <span>${escapeHtml(status)}</span>
+      </article>`;
   }
 
   function renderKpi(title, value, note) {
