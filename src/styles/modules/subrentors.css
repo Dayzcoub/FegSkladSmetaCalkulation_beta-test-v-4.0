@@ -239,6 +239,10 @@ body.v4-only-body .v4-subrentors-directory .v4-subrentor-card-actions button {
   white-space: nowrap;
 }
 
+body.v4-only-body .v4-subrentors-directory .v4-doc-preview[hidden] {
+  display: none;
+}
+
 body.v4-only-body .v4-subrentors-directory .v4-doc-preview {
   min-height: 180px;
   padding: 12px;
