@@ -18,61 +18,31 @@ body.v4-only-body .packit-quick-config-area textarea:focus {
   box-shadow: 0 0 0 1px rgba(59,130,246,.22);
 }
 
-/* Quick calculators: checkbox must match the quiet system controls from other pages. */
+/* Quick calculators: use the same native checkbox behaviour as common pages. */
 body.v4-only-body .packit-quick-config-area input[type="checkbox"] {
-  -webkit-appearance: none;
-  appearance: none;
-  display: inline-grid;
-  place-items: center;
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-  min-height: 16px;
+  -webkit-appearance: auto;
+  appearance: auto;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  min-height: 14px;
   margin: 0;
-  border: 1px solid var(--line-medium);
-  border-radius: 4px;
-  background: var(--surface);
+  border: 0;
+  border-radius: 3px;
+  background: initial;
   box-shadow: none;
+  color-scheme: dark;
+  accent-color: var(--blue);
   cursor: pointer;
-  transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
-}
-
-body.v4-only-body .packit-quick-config-area input[type="checkbox"]::after {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: transparent;
-  transform: scale(.72);
-  transition: background 140ms ease, transform 140ms ease;
-}
-
-body.v4-only-body .packit-quick-config-area input[type="checkbox"]:hover {
-  border-color: var(--line-strong);
-  background: var(--surface-elevated);
-}
-
-body.v4-only-body .packit-quick-config-area input[type="checkbox"]:checked {
-  border-color: var(--blue-border);
-  background: var(--blue-soft);
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, .12);
-}
-
-body.v4-only-body .packit-quick-config-area input[type="checkbox"]:checked::after {
-  background: var(--blue);
-  transform: scale(1);
+  vertical-align: middle;
 }
 
 body.v4-only-body .packit-quick-config-area input[type="checkbox"]:focus,
 body.v4-only-body .packit-quick-config-area input[type="checkbox"]:focus-visible {
-  outline: none;
-  border-color: var(--blue-border);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, .16);
-}
-
-body.v4-only-body .packit-quick-config-area input[type="checkbox"]:not(:checked):focus,
-body.v4-only-body .packit-quick-config-area input[type="checkbox"]:not(:checked):focus-visible {
-  background: var(--surface);
+  outline: 1px solid var(--blue-border);
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
 body.v4-only-body .packit-quick-config-area label,
