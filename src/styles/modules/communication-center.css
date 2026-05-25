@@ -61,6 +61,12 @@ body.v4-only-body .v4-communication-notifications {
   background: var(--surface);
 }
 
+body.v4-only-body .v4-communication-thread {
+  display: flex;
+  min-height: 410px;
+  flex-direction: column;
+}
+
 body.v4-only-body .v4-communication-rooms .v4-kicker,
 body.v4-only-body .v4-communication-notifications .v4-kicker {
   margin-bottom: 8px;
@@ -81,9 +87,7 @@ body.v4-only-body .v4-communication-room {
   text-align: left;
 }
 
-body.v4-only-body .v4-communication-room:last-child {
-  margin-bottom: 0;
-}
+body.v4-only-body .v4-communication-room:last-child { margin-bottom: 0; }
 
 body.v4-only-body .v4-communication-room.active {
   border-color: var(--blue-border);
@@ -144,18 +148,40 @@ body.v4-only-body .v4-communication-meta {
 
 body.v4-only-body .v4-communication-messages {
   display: flex;
+  min-height: 220px;
   max-height: 430px;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 8px;
   overflow: auto;
-  padding: 0 4px 0 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+    var(--panel-2);
+  background-size: 28px 28px;
+}
+
+body.v4-only-body .v4-communication-messages > .v4-note {
+  display: flex;
+  min-height: 100%;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(15, 23, 42, .28);
+  color: var(--muted);
+  font-size: 12px;
 }
 
 body.v4-only-body .v4-communication-message {
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--panel-2);
+  background: var(--surface);
 }
 
 body.v4-only-body .v4-communication-message b {
@@ -209,9 +235,7 @@ body.v4-only-body .v4-communication-note {
   background: var(--panel-2);
 }
 
-body.v4-only-body .v4-communication-note:last-child {
-  margin-bottom: 0;
-}
+body.v4-only-body .v4-communication-note:last-child { margin-bottom: 0; }
 
 body.v4-only-body .v4-communication-note.unread {
   border-color: var(--blue-border);
@@ -236,9 +260,7 @@ body.v4-only-body .v4-communication-note button {
   padding-inline: 10px;
 }
 
-body.v4-only-body .v4-communication-push {
-  margin-top: 12px;
-}
+body.v4-only-body .v4-communication-push { margin-top: 12px; }
 
 body.v4-only-body .v4-communication-push span {
   display: block;
@@ -249,13 +271,8 @@ body.v4-only-body .v4-communication-push span {
 }
 
 @media (max-width: 1180px) {
-  body.v4-only-body .v4-communication-grid {
-    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-  }
-
-  body.v4-only-body .v4-communication-notifications {
-    grid-column: 1 / -1;
-  }
+  body.v4-only-body .v4-communication-grid { grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); }
+  body.v4-only-body .v4-communication-notifications { grid-column: 1 / -1; }
 }
 
 @media (max-width: 900px) {
@@ -267,17 +284,10 @@ body.v4-only-body .v4-communication-push span {
     align-items: stretch;
   }
 
-  body.v4-only-body .v4-communication-grid {
-    padding: 0 12px 12px;
-  }
-
-  body.v4-only-body .v4-communication-notifications {
-    grid-column: auto;
-  }
-
-  body.v4-only-body .v4-communication-messages {
-    max-height: none;
-  }
+  body.v4-only-body .v4-communication-grid { padding: 0 12px 12px; }
+  body.v4-only-body .v4-communication-notifications { grid-column: auto; }
+  body.v4-only-body .v4-communication-thread { min-height: auto; }
+  body.v4-only-body .v4-communication-messages { min-height: 240px; max-height: none; }
 }
 
 @media (max-width: 640px) {
@@ -288,7 +298,5 @@ body.v4-only-body .v4-communication-push span {
   }
 
   body.v4-only-body .v4-communication-composer .v4-actions button,
-  body.v4-only-body .v4-communication-push .v4-actions button {
-    width: 100%;
-  }
+  body.v4-only-body .v4-communication-push .v4-actions button { width: 100%; }
 }
