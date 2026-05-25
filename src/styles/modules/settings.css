@@ -1,5 +1,6 @@
-/* PACK.IT — Settings panel cleanup. Scope: Настройки only. */
+/* PACK.IT — Settings cleanup. Scope: Настройки only. */
 
+body.v4-only-body .v4-settings-center,
 body.v4-only-body [data-v4-settings-panel] {
   display: flex;
   flex-direction: column;
@@ -9,6 +10,7 @@ body.v4-only-body [data-v4-settings-panel] {
   background: var(--panel-2);
 }
 
+body.v4-only-body .v4-settings-center > .v4-section-head,
 body.v4-only-body [data-v4-settings-panel] > .v4-section-head {
   display: flex;
   align-items: flex-start;
@@ -19,6 +21,7 @@ body.v4-only-body [data-v4-settings-panel] > .v4-section-head {
   border-bottom: 1px solid var(--line);
 }
 
+body.v4-only-body .v4-settings-center > .v4-section-head h3,
 body.v4-only-body [data-v4-settings-panel] > .v4-section-head h3 {
   margin: 4px 0 6px;
   color: var(--text-strong);
@@ -27,13 +30,15 @@ body.v4-only-body [data-v4-settings-panel] > .v4-section-head h3 {
   letter-spacing: -0.02em;
 }
 
+body.v4-only-body .v4-settings-center > .v4-section-head p,
 body.v4-only-body [data-v4-settings-panel] > .v4-section-head p {
-  max-width: 820px;
+  max-width: 900px;
   margin: 0;
   font-size: 12px;
   line-height: 1.45;
 }
 
+body.v4-only-body .v4-settings-center > .v4-section-head .v4-actions,
 body.v4-only-body [data-v4-settings-panel] > .v4-section-head .v4-actions {
   display: flex;
   flex-wrap: wrap;
@@ -43,15 +48,16 @@ body.v4-only-body [data-v4-settings-panel] > .v4-section-head .v4-actions {
   flex-shrink: 0;
 }
 
+body.v4-only-body .v4-settings-center > .v4-section-head .v4-actions button,
 body.v4-only-body [data-v4-settings-panel] > .v4-section-head .v4-actions button {
   min-height: 34px;
   padding-inline: 12px;
 }
 
-body.v4-only-body [data-v4-settings-panel] .v4-settings-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+body.v4-only-body .v4-settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin: 0 14px;
   padding: 12px;
   border: 1px solid var(--line);
@@ -59,70 +65,99 @@ body.v4-only-body [data-v4-settings-panel] .v4-settings-grid {
   background: var(--surface);
 }
 
+body.v4-only-body .v4-settings-section:last-of-type {
+  margin-bottom: 14px;
+}
+
+body.v4-only-body .v4-settings-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+body.v4-only-body .v4-settings-section-head h4 {
+  margin: 0 0 4px;
+  color: var(--text-strong);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+body.v4-only-body .v4-settings-section-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+body.v4-only-body .v4-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+body.v4-only-body [data-v4-settings-panel] .v4-settings-grid {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+body.v4-only-body [data-v4-settings-panel] .v4-settings-grid::before {
+  content: none;
+}
+
+body.v4-only-body .v4-settings-grid-2,
 body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+body.v4-only-body .v4-settings-grid-3,
 body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-3 {
-  grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-body.v4-only-body [data-v4-settings-panel] .v4-settings-grid::before {
-  content: 'Workspace / параметры';
+body.v4-only-body .v4-settings-wide,
+body.v4-only-body [data-v4-settings-panel] .v4-settings-wide {
   grid-column: 1 / -1;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--line-soft);
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .06em;
-  text-transform: uppercase;
 }
 
-body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-2:nth-of-type(3)::before {
-  content: 'Документы и клиентские выгрузки';
-}
-
-body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-2:nth-of-type(4)::before {
-  content: 'Календарь и события';
-}
-
-body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-3:first-of-type::before {
-  content: 'Тема интерфейса';
-}
-
-body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-3:nth-of-type(5)::before {
-  content: 'Dev / локальные переключатели';
-}
-
+body.v4-only-body .v4-settings-center label,
 body.v4-only-body [data-v4-settings-panel] label {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   color: var(--muted);
   font-size: 11px;
   font-weight: 700;
   line-height: 1.25;
 }
 
+body.v4-only-body .v4-settings-center input,
+body.v4-only-body .v4-settings-center select,
+body.v4-only-body .v4-settings-center textarea,
 body.v4-only-body [data-v4-settings-panel] input,
 body.v4-only-body [data-v4-settings-panel] select,
 body.v4-only-body [data-v4-settings-panel] textarea {
   width: 100%;
+  min-width: 0;
   min-height: 36px;
 }
 
+body.v4-only-body .v4-settings-center textarea,
 body.v4-only-body [data-v4-settings-panel] textarea {
-  min-height: 112px;
+  min-height: 92px;
   resize: vertical;
 }
 
-body.v4-only-body [data-v4-settings-panel] .v4-settings-wide {
-  grid-column: 1 / -1;
-}
-
-body.v4-only-body [data-v4-settings-panel] .v4-note.v4-settings-wide {
+body.v4-only-body .v4-settings-center .v4-note,
+body.v4-only-body [data-v4-settings-panel] .v4-note {
+  display: flex;
+  align-items: center;
   min-height: 36px;
   padding: 10px 12px;
   border: 1px solid var(--line-soft);
@@ -133,8 +168,10 @@ body.v4-only-body [data-v4-settings-panel] .v4-note.v4-settings-wide {
   line-height: 1.4;
 }
 
+body.v4-only-body .v4-settings-center .v4-check,
 body.v4-only-body [data-v4-settings-panel] .v4-check {
-  min-height: 36px;
+  display: flex;
+  min-height: 38px;
   flex-direction: row;
   align-items: center;
   gap: 8px;
@@ -145,17 +182,59 @@ body.v4-only-body [data-v4-settings-panel] .v4-check {
   color: var(--text);
 }
 
+body.v4-only-body .v4-settings-center .v4-check input,
 body.v4-only-body [data-v4-settings-panel] .v4-check input {
   width: 16px;
   min-width: 16px;
   height: 16px;
   min-height: 16px;
+  flex: 0 0 auto;
 }
 
+body.v4-only-body .v4-settings-theme-section {
+  border-color: rgba(96,165,250,.22);
+}
+
+body.v4-only-body .v4-settings-dev-section {
+  margin-bottom: 0;
+}
+
+body.v4-only-body .v4-settings-dev-section summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+body.v4-only-body .v4-settings-dev-section summary::-webkit-details-marker {
+  display: none;
+}
+
+body.v4-only-body .v4-settings-dev-section summary b,
+body.v4-only-body .v4-settings-dev-section summary small {
+  display: block;
+}
+
+body.v4-only-body .v4-settings-dev-section summary b {
+  color: var(--text-strong);
+  font-size: 14px;
+}
+
+body.v4-only-body .v4-settings-dev-section summary small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+body.v4-only-body .v4-settings-output,
 body.v4-only-body [data-v4-settings-panel] .v4-doc-preview {
   display: block;
   width: auto;
   max-height: 420px;
+  min-height: 260px;
   margin: 0 14px 14px;
   overflow: auto;
   padding: 12px;
@@ -169,11 +248,15 @@ body.v4-only-body [data-v4-settings-panel] .v4-doc-preview {
   white-space: pre-wrap;
 }
 
+body.v4-only-body .v4-settings-output[hidden],
 body.v4-only-body [data-v4-settings-panel] .v4-doc-preview[hidden] {
   display: none;
 }
 
 @media (max-width: 1100px) {
+  body.v4-only-body .v4-settings-grid,
+  body.v4-only-body .v4-settings-grid-2,
+  body.v4-only-body .v4-settings-grid-3,
   body.v4-only-body [data-v4-settings-panel] .v4-settings-grid,
   body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-2,
   body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-3 {
@@ -181,29 +264,36 @@ body.v4-only-body [data-v4-settings-panel] .v4-doc-preview[hidden] {
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
+  body.v4-only-body .v4-settings-center > .v4-section-head,
   body.v4-only-body [data-v4-settings-panel] > .v4-section-head {
     flex-direction: column;
     align-items: stretch;
   }
 
+  body.v4-only-body .v4-settings-center > .v4-section-head .v4-actions,
   body.v4-only-body [data-v4-settings-panel] > .v4-section-head .v4-actions {
     justify-content: flex-start;
   }
+}
 
+@media (max-width: 640px) {
+  body.v4-only-body .v4-settings-grid,
+  body.v4-only-body .v4-settings-grid-2,
+  body.v4-only-body .v4-settings-grid-3,
   body.v4-only-body [data-v4-settings-panel] .v4-settings-grid,
   body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-2,
   body.v4-only-body [data-v4-settings-panel] .v4-settings-grid-3 {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 640px) {
+  body.v4-only-body .v4-settings-center > .v4-section-head .v4-actions,
   body.v4-only-body [data-v4-settings-panel] > .v4-section-head .v4-actions {
     flex-direction: column;
     align-items: stretch;
   }
 
+  body.v4-only-body .v4-settings-center > .v4-section-head .v4-actions button,
   body.v4-only-body [data-v4-settings-panel] > .v4-section-head .v4-actions button {
     width: 100%;
   }
