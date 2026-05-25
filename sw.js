@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_EQUIPMENT_CSS_REBUILD_2026_05_24';
-const CACHE_NAME = 'packit-equipment-css-rebuild-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-equipment-css-rebuild-2026-05-24';
+const CACHE_VERSION = 'PACKIT_SUBRENTORS_CLEANUP_2026_05_24';
+const CACHE_NAME = 'packit-subrentors-cleanup-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-subrentors-cleanup-2026-05-24';
 
 const CORE_ASSETS = [
   './',
@@ -29,6 +29,7 @@ const CORE_ASSETS = [
   './src/styles/modules/quote-client-dialog-final.css',
   './src/styles/modules/clients.css',
   './src/styles/modules/equipment.css',
+  './src/styles/modules/subrentors.css',
   './src/modules/index.js',
   './src/modules/FormatUtils.js',
   './src/modules/DomUtils.js',
