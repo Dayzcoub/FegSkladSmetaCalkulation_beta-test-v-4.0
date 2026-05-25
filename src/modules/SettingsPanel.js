@@ -14,42 +14,67 @@
     const appTheme = appSettings && appSettings.loadAppTheme ? appSettings.loadAppTheme() : 'dark';
     const user = currentUser() || {};
     root.innerHTML = `
-      <section class="v4-card v4-wide-card" data-v4-settings-panel>
+      <section class="v4-card v4-wide-card v4-settings-center" data-v4-settings-panel>
         <div class="v4-section-head">
-          <div><div class="v4-kicker">Settings</div><h3>Настройки workspace</h3><p class="v4-muted">Локальный слой профиля, документов, календаря и dev-переключателей. Позже переедет в Supabase.</p></div>
+          <div>
+            <div class="v4-kicker">Settings · workspace control</div>
+            <h3>Настройки workspace</h3>
+            <p class="v4-muted">Единое место для профиля компании, документов, календаря и dev-переключателей. Сейчас настройки хранятся локально, позже переедут в Supabase.</p>
+          </div>
           <div class="v4-actions"><button type="button" class="btn-secondary" data-v4-settings-export>JSON</button><button type="button" class="btn-secondary" data-v4-settings-reset>Сброс</button><button type="button" class="btn-primary" data-v4-settings-save>Сохранить</button></div>
         </div>
-        <div class="v4-settings-grid v4-settings-grid-3">
-          <label>Тема интерфейса<select data-app-theme><option value="dark"${appTheme === 'dark' ? ' selected' : ''}>Темная</option><option value="light"${appTheme === 'light' ? ' selected' : ''}>Светлая</option></select></label>
-          <div class="v4-note v4-settings-wide">Темная тема зафиксирована как основной рабочий стиль. Светлая тема сохраняет структуру, акцент #2F4F4F и технические цветовые маркеры схем.</div>
+
+        <div class="v4-settings-section v4-settings-theme-section">
+          <div class="v4-settings-section-head"><div><h4>Внешний вид</h4><p>Основная рабочая тема и будущая светлая тема.</p></div></div>
+          <div class="v4-settings-grid v4-settings-grid-3">
+            <label>Тема интерфейса<select data-app-theme><option value="dark"${appTheme === 'dark' ? ' selected' : ''}>Темная</option><option value="light"${appTheme === 'light' ? ' selected' : ''}>Светлая</option></select></label>
+            <div class="v4-note v4-settings-wide">Темная тема зафиксирована как основной рабочий стиль. Светлая тема должна сохранять структуру, акцент #2F4F4F и технические цветовые маркеры схем.</div>
+          </div>
         </div>
-        <div class="v4-settings-grid">
-          <label>Workspace ID<input data-setting="workspaceId" value="${escapeHtml(settings.workspaceId)}"></label>
-          <label>Название workspace<input data-setting="workspaceName" value="${escapeHtml(settings.workspaceName)}"></label>
-          <label>Компания<input data-setting="companyName" value="${escapeHtml(settings.companyName)}"></label>
-          <label>Ответственный<input data-setting="managerName" value="${escapeHtml(settings.managerName || user.displayName || '')}"></label>
-          <label>Email<input data-setting="managerEmail" value="${escapeHtml(settings.managerEmail || user.email || '')}"></label>
-          <label>Телефон<input data-setting="managerPhone" value="${escapeHtml(settings.managerPhone)}"></label>
+
+        <div class="v4-settings-section">
+          <div class="v4-settings-section-head"><div><h4>Профиль workspace</h4><p>Название пространства, компания и ответственный менеджер для документов и интеграций.</p></div></div>
+          <div class="v4-settings-grid">
+            <label>Workspace ID<input data-setting="workspaceId" value="${escapeHtml(settings.workspaceId)}"></label>
+            <label>Название workspace<input data-setting="workspaceName" value="${escapeHtml(settings.workspaceName)}"></label>
+            <label>Компания<input data-setting="companyName" value="${escapeHtml(settings.companyName)}"></label>
+            <label>Ответственный<input data-setting="managerName" value="${escapeHtml(settings.managerName || user.displayName || '')}"></label>
+            <label>Email<input data-setting="managerEmail" value="${escapeHtml(settings.managerEmail || user.email || '')}"></label>
+            <label>Телефон<input data-setting="managerPhone" value="${escapeHtml(settings.managerPhone)}"></label>
+          </div>
         </div>
-        <div class="v4-settings-grid v4-settings-grid-2">
-          <label>Заголовок КП<input data-setting="documents.customerProposalTitle" value="${escapeHtml(settings.documents.customerProposalTitle)}"></label>
-          <label>Формат экспорта<select data-setting="documents.defaultExportFormat"><option value="txt"${settings.documents.defaultExportFormat === 'txt' ? ' selected' : ''}>TXT</option><option value="json"${settings.documents.defaultExportFormat === 'json' ? ' selected' : ''}>JSON</option></select></label>
-          <label class="v4-check"><input type="checkbox" data-setting="documents.showWarehouseDetailsInCustomerProposal"${settings.documents.showWarehouseDetailsInCustomerProposal ? ' checked' : ''}> Складские детали в КП</label>
-          <label class="v4-check"><input type="checkbox" data-setting="documents.showPricesInTechnicalSheets"${settings.documents.showPricesInTechnicalSheets ? ' checked' : ''}> Цены в техлистах</label>
+
+        <div class="v4-settings-section">
+          <div class="v4-settings-section-head"><div><h4>КП и документы</h4><p>Клиентские предложения, техлисты и правила раскрытия складских/ценовых данных.</p></div></div>
+          <div class="v4-settings-grid v4-settings-grid-2">
+            <label>Заголовок КП<input data-setting="documents.customerProposalTitle" value="${escapeHtml(settings.documents.customerProposalTitle)}"></label>
+            <label>Формат экспорта<select data-setting="documents.defaultExportFormat"><option value="txt"${settings.documents.defaultExportFormat === 'txt' ? ' selected' : ''}>TXT</option><option value="json"${settings.documents.defaultExportFormat === 'json' ? ' selected' : ''}>JSON</option></select></label>
+            <label class="v4-check"><input type="checkbox" data-setting="documents.showWarehouseDetailsInCustomerProposal"${settings.documents.showWarehouseDetailsInCustomerProposal ? ' checked' : ''}> Складские детали в КП</label>
+            <label class="v4-check"><input type="checkbox" data-setting="documents.showPricesInTechnicalSheets"${settings.documents.showPricesInTechnicalSheets ? ' checked' : ''}> Цены в техлистах</label>
+          </div>
         </div>
-        <div class="v4-settings-grid v4-settings-grid-2">
-          <label>Календарь по умолчанию<input data-setting="calendar.defaultCalendarName" value="${escapeHtml(settings.calendar.defaultCalendarName)}"></label>
-          <label>Провайдер<select data-setting="calendar.provider"><option value="ics"${settings.calendar.provider === 'ics' ? ' selected' : ''}>ICS export</option><option value="google_future"${settings.calendar.provider === 'google_future' ? ' selected' : ''}>Google Calendar later</option></select></label>
-          <label class="v4-check"><input type="checkbox" data-setting="calendar.enabled"${settings.calendar.enabled ? ' checked' : ''}> Календарные черновики включены</label>
-          <label>Шаблон названия события<input data-setting="calendar.eventTitleTemplate" value="${escapeHtml(settings.calendar.eventTitleTemplate)}"></label>
-          <label class="v4-settings-wide">Шаблон описания события<textarea data-setting="calendar.eventDescriptionTemplate" rows="5">${escapeHtml(settings.calendar.eventDescriptionTemplate)}</textarea></label>
+
+        <div class="v4-settings-section">
+          <div class="v4-settings-section-head"><div><h4>Календарь и события</h4><p>Черновики событий, ICS-экспорт и шаблоны названий/описаний проекта.</p></div></div>
+          <div class="v4-settings-grid v4-settings-grid-2">
+            <label>Календарь по умолчанию<input data-setting="calendar.defaultCalendarName" value="${escapeHtml(settings.calendar.defaultCalendarName)}"></label>
+            <label>Провайдер<select data-setting="calendar.provider"><option value="ics"${settings.calendar.provider === 'ics' ? ' selected' : ''}>ICS export</option><option value="google_future"${settings.calendar.provider === 'google_future' ? ' selected' : ''}>Google Calendar later</option></select></label>
+            <label class="v4-check"><input type="checkbox" data-setting="calendar.enabled"${settings.calendar.enabled ? ' checked' : ''}> Календарные черновики включены</label>
+            <label>Шаблон названия события<input data-setting="calendar.eventTitleTemplate" value="${escapeHtml(settings.calendar.eventTitleTemplate)}"></label>
+            <label class="v4-settings-wide">Шаблон описания события<textarea data-setting="calendar.eventDescriptionTemplate" rows="5">${escapeHtml(settings.calendar.eventDescriptionTemplate)}</textarea></label>
+          </div>
         </div>
-        <div class="v4-settings-grid v4-settings-grid-3">
-          <label class="v4-check"><input type="checkbox" data-setting="dev.enableDemoAuth"${settings.dev.enableDemoAuth ? ' checked' : ''}> Demo Auth в dev</label>
-          <label class="v4-check"><input type="checkbox" data-setting="dev.allowLocalExports"${settings.dev.allowLocalExports ? ' checked' : ''}> Локальные экспорты</label>
-          <label class="v4-check"><input type="checkbox" data-setting="dev.showDebugJson"${settings.dev.showDebugJson ? ' checked' : ''}> Debug JSON</label>
-        </div>
-        <pre class="v4-doc-preview" data-v4-settings-output hidden></pre>
+
+        <details class="v4-settings-section v4-settings-dev-section" open>
+          <summary><span><b>Dev / служебные переключатели</b><small>Локальная разработка, debug JSON и экспортные режимы.</small></span></summary>
+          <div class="v4-settings-grid v4-settings-grid-3">
+            <label class="v4-check"><input type="checkbox" data-setting="dev.enableDemoAuth"${settings.dev.enableDemoAuth ? ' checked' : ''}> Demo Auth в dev</label>
+            <label class="v4-check"><input type="checkbox" data-setting="dev.allowLocalExports"${settings.dev.allowLocalExports ? ' checked' : ''}> Локальные экспорты</label>
+            <label class="v4-check"><input type="checkbox" data-setting="dev.showDebugJson"${settings.dev.showDebugJson ? ' checked' : ''}> Debug JSON</label>
+          </div>
+        </details>
+
+        <pre class="v4-doc-preview v4-settings-output" data-v4-settings-output hidden></pre>
       </section>`;
 
     root.querySelector('[data-v4-settings-save]').addEventListener('click', () => {
