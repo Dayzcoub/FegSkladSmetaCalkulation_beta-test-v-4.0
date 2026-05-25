@@ -1,0 +1,200 @@
+/* PACK.IT — final unified UI audit layer.
+   Loaded last. No business logic, no calculator math, no warehouse formulas. */
+
+body.v4-only-body {
+  --packit-final-section-gap: 12px;
+}
+
+body.v4-only-body .v4-card,
+body.v4-only-body .packit-card,
+body.v4-only-body .v4-section,
+body.v4-only-body .packit-section {
+  min-width: 0;
+}
+
+body.v4-only-body .v4-card-head,
+body.v4-only-body .v4-section-head,
+body.v4-only-body .packit-card-head,
+body.v4-only-body .packit-section-head {
+  min-width: 0;
+}
+
+body.v4-only-body .v4-card-head h1,
+body.v4-only-body .v4-card-head h2,
+body.v4-only-body .v4-card-head h3,
+body.v4-only-body .v4-section-head h1,
+body.v4-only-body .v4-section-head h2,
+body.v4-only-body .v4-section-head h3,
+body.v4-only-body .packit-card-head h1,
+body.v4-only-body .packit-card-head h2,
+body.v4-only-body .packit-card-head h3,
+body.v4-only-body .packit-section-head h1,
+body.v4-only-body .packit-section-head h2,
+body.v4-only-body .packit-section-head h3 {
+  overflow-wrap: anywhere;
+}
+
+body.v4-only-body .v4-kicker,
+body.v4-only-body .packit-kicker,
+body.v4-only-body [class*="kicker"] {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+body.v4-only-body .v4-actions,
+body.v4-only-body .v4-doc-actions,
+body.v4-only-body .packit-actions,
+body.v4-only-body [class*="actions"]:not(.v4-auth-actions):not(.packit-shell-actions) {
+  min-width: 0;
+}
+
+body.v4-only-body button,
+body.v4-only-body .btn,
+body.v4-only-body .v4-btn {
+  min-width: 0;
+}
+
+body.v4-only-body button:disabled,
+body.v4-only-body .btn:disabled,
+body.v4-only-body .v4-btn:disabled,
+body.v4-only-body button[disabled] {
+  opacity: .48;
+  cursor: not-allowed;
+}
+
+body.v4-only-body input,
+body.v4-only-body select,
+body.v4-only-body textarea {
+  max-width: 100%;
+}
+
+body.v4-only-body label {
+  min-width: 0;
+}
+
+body.v4-only-body table {
+  width: 100%;
+}
+
+body.v4-only-body th,
+body.v4-only-body td {
+  min-width: 0;
+}
+
+body.v4-only-body td,
+body.v4-only-body th,
+body.v4-only-body .v4-table-cell,
+body.v4-only-body .packit-table-cell {
+  overflow-wrap: anywhere;
+}
+
+body.v4-only-body .v4-table-wrap,
+body.v4-only-body .packit-table-wrap,
+body.v4-only-body [class*="table-wrap"] {
+  min-width: 0;
+  max-width: 100%;
+}
+
+body.v4-only-body .v4-empty,
+body.v4-only-body .packit-empty,
+body.v4-only-body .v4-note,
+body.v4-only-body .packit-note,
+body.v4-only-body .v4-help,
+body.v4-only-body .packit-help {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+body.v4-only-body pre,
+body.v4-only-body code {
+  max-width: 100%;
+}
+
+body.v4-only-body pre {
+  overflow: auto;
+}
+
+body.v4-only-body .v4-json-preview,
+body.v4-only-body .packit-json-preview,
+body.v4-only-body [class*="json-preview"],
+body.v4-only-body [class*="doc-output"] {
+  max-width: 100%;
+  overflow: auto;
+}
+
+body.v4-only-body .v4-pill,
+body.v4-only-body .packit-pill,
+body.v4-only-body .badge,
+body.v4-only-body [class*="badge"] {
+  max-width: 100%;
+}
+
+body.v4-only-body .v4-pill,
+body.v4-only-body .packit-pill,
+body.v4-only-body [class*="badge"] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.v4-only-body .v4-mini,
+body.v4-only-body .packit-mini,
+body.v4-only-body [class*="mini"] {
+  min-width: 0;
+}
+
+body.v4-only-body .v4-mini b,
+body.v4-only-body .v4-mini span,
+body.v4-only-body .packit-mini b,
+body.v4-only-body .packit-mini span {
+  min-width: 0;
+}
+
+body.v4-only-body .v4-modal,
+body.v4-only-body .packit-modal,
+body.v4-only-body [role="dialog"] {
+  max-width: calc(100vw - 32px);
+}
+
+body.v4-only-body .v4-modal-body,
+body.v4-only-body .packit-modal-body {
+  min-width: 0;
+}
+
+body.v4-only-body .v4-toolbar,
+body.v4-only-body .packit-toolbar,
+body.v4-only-body [class*="toolbar"] {
+  min-width: 0;
+}
+
+body.v4-only-body .v4-toolbar > *,
+body.v4-only-body .packit-toolbar > *,
+body.v4-only-body [class*="toolbar"] > * {
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  body.v4-only-body .v4-actions,
+  body.v4-only-body .v4-doc-actions,
+  body.v4-only-body .packit-actions,
+  body.v4-only-body [class*="actions"]:not(.v4-auth-actions):not(.packit-shell-actions) {
+    gap: 8px;
+  }
+
+  body.v4-only-body .v4-card-head,
+  body.v4-only-body .v4-section-head,
+  body.v4-only-body .packit-card-head,
+  body.v4-only-body .packit-section-head {
+    gap: 10px;
+  }
+
+  body.v4-only-body .v4-table-wrap,
+  body.v4-only-body .packit-table-wrap,
+  body.v4-only-body [class*="table-wrap"] {
+    overflow-x: auto;
+  }
+}
