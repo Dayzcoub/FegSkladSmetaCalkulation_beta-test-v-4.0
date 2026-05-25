@@ -1,0 +1,294 @@
+/* PACK.IT — Communication center cleanup. Scope: Chats / Notifications only. */
+
+body.v4-only-body .v4-communication-center {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+}
+
+body.v4-only-body .v4-communication-center > .v4-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+body.v4-only-body .v4-communication-center > .v4-card-head h3 {
+  margin: 4px 0 6px;
+  color: var(--text-strong);
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+body.v4-only-body .v4-communication-center > .v4-card-head p {
+  max-width: 800px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+body.v4-only-body .v4-communication-center .v4-bom-source-card {
+  min-width: 170px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-communication-grid {
+  display: grid;
+  grid-template-columns: minmax(230px, 290px) minmax(0, 1fr) minmax(260px, 340px);
+  gap: 12px;
+  align-items: start;
+  padding: 0 14px 14px;
+}
+
+body.v4-only-body .v4-communication-rooms,
+body.v4-only-body .v4-communication-thread,
+body.v4-only-body .v4-communication-notifications {
+  min-width: 0;
+  align-self: start;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-communication-rooms .v4-kicker,
+body.v4-only-body .v4-communication-notifications .v4-kicker {
+  margin-bottom: 8px;
+}
+
+body.v4-only-body .v4-communication-room {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-height: 40px;
+  margin: 0 0 7px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel-2);
+  text-align: left;
+}
+
+body.v4-only-body .v4-communication-room:last-child {
+  margin-bottom: 0;
+}
+
+body.v4-only-body .v4-communication-room.active {
+  border-color: var(--blue-border);
+  background: var(--blue-soft);
+  box-shadow: none;
+}
+
+body.v4-only-body .v4-communication-room b,
+body.v4-only-body .v4-communication-room span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.v4-only-body .v4-communication-room b {
+  color: var(--text-strong);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+body.v4-only-body .v4-communication-room span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-elevated);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+body.v4-only-body .v4-communication-thread > .v4-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 10px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+body.v4-only-body .v4-communication-thread h4 {
+  margin: 4px 0 0;
+  color: var(--text-strong);
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+body.v4-only-body .v4-communication-meta {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+body.v4-only-body .v4-communication-messages {
+  display: flex;
+  max-height: 430px;
+  flex-direction: column;
+  gap: 8px;
+  overflow: auto;
+  padding: 0 4px 0 0;
+}
+
+body.v4-only-body .v4-communication-message {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel-2);
+}
+
+body.v4-only-body .v4-communication-message b {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-strong);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+body.v4-only-body .v4-communication-message p {
+  margin: 0;
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+body.v4-only-body .v4-communication-composer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line-soft);
+}
+
+body.v4-only-body .v4-communication-composer textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+body.v4-only-body .v4-communication-composer .v4-actions,
+body.v4-only-body .v4-communication-push .v4-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 0;
+}
+
+body.v4-only-body .v4-communication-note {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel-2);
+}
+
+body.v4-only-body .v4-communication-note:last-child {
+  margin-bottom: 0;
+}
+
+body.v4-only-body .v4-communication-note.unread {
+  border-color: var(--blue-border);
+  background: var(--blue-soft);
+}
+
+body.v4-only-body .v4-communication-note b {
+  color: var(--text-strong);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+body.v4-only-body .v4-communication-note p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+body.v4-only-body .v4-communication-note button {
+  align-self: flex-start;
+  min-height: 28px;
+  padding-inline: 10px;
+}
+
+body.v4-only-body .v4-communication-push {
+  margin-top: 12px;
+}
+
+body.v4-only-body .v4-communication-push span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+@media (max-width: 1180px) {
+  body.v4-only-body .v4-communication-grid {
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  }
+
+  body.v4-only-body .v4-communication-notifications {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  body.v4-only-body .v4-communication-center > .v4-card-head,
+  body.v4-only-body .v4-communication-grid,
+  body.v4-only-body .v4-communication-thread > .v4-card-head {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.v4-only-body .v4-communication-grid {
+    padding: 0 12px 12px;
+  }
+
+  body.v4-only-body .v4-communication-notifications {
+    grid-column: auto;
+  }
+
+  body.v4-only-body .v4-communication-messages {
+    max-height: none;
+  }
+}
+
+@media (max-width: 640px) {
+  body.v4-only-body .v4-communication-composer .v4-actions,
+  body.v4-only-body .v4-communication-push .v4-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.v4-only-body .v4-communication-composer .v4-actions button,
+  body.v4-only-body .v4-communication-push .v4-actions button {
+    width: 100%;
+  }
+}
