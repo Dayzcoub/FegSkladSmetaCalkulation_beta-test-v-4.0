@@ -1,0 +1,114 @@
+/* PACK.IT — Admin form final pass. Loaded after admin.css/admin-polish.css. */
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form,
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form.v4-admin-user-form {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > .v4-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--muted);
+  text-align: left;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > .v4-grid-3,
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form.v4-admin-user-form > .v4-grid-3 {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > .v4-grid-2 {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form label {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form input,
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form select,
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > label {
+  width: 100%;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > button,
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form.v4-admin-user-form > button {
+  width: auto;
+  min-width: 220px;
+  align-self: flex-end;
+  justify-self: end;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell [data-v4-admin-bootstrap-form] > button {
+  width: 100%;
+  align-self: stretch;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell [data-v4-admin-bootstrap-form] > p {
+  margin: 0;
+}
+
+body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form:not(.v4-admin-user-form) > label:last-child {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1100px) {
+  body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > .v4-grid-3,
+  body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form.v4-admin-user-form > .v4-grid-3,
+  body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > .v4-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > .v4-grid-3,
+  body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form.v4-admin-user-form > .v4-grid-3,
+  body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > .v4-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form > button,
+  body.v4-only-body .v4-admin-control-center .v4-admin-shell .v4-admin-form.v4-admin-user-form > button {
+    width: 100%;
+    min-width: 0;
+    align-self: stretch;
+  }
+}
