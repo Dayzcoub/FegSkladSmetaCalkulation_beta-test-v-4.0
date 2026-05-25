@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_SUBRENTORS_CLEANUP_2026_05_24';
-const CACHE_NAME = 'packit-subrentors-cleanup-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-subrentors-cleanup-2026-05-24';
+const CACHE_VERSION = 'PACKIT_SUBRENTORS_PREVIEW_HIDE_2026_05_24';
+const CACHE_NAME = 'packit-subrentors-preview-hide-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-subrentors-preview-hide-2026-05-24';
 
 const CORE_ASSETS = [
   './',
