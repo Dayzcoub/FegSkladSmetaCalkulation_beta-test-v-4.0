@@ -1,0 +1,86 @@
+/* PACK.IT — quick calculators stabilization pass.
+   Final scoped pass after screenshots: keep layout inside viewport and keep canvases visible. */
+
+body.v4-only-body .packit-quick-shell{max-width:100%;overflow:hidden}
+body.v4-only-body .packit-quick-config-area{max-width:100%;overflow:hidden}
+
+/* Shared compact cards */
+body.v4-only-body .packit-quick-config-area .v4-field{gap:4px}
+body.v4-only-body .packit-quick-config-area .v4-field input,
+body.v4-only-body .packit-quick-config-area .v4-field select{min-height:30px;font-size:12px}
+body.v4-only-body .packit-quick-config-area .v4-kicker{font-size:10px;letter-spacing:.06em}
+body.v4-only-body .packit-quick-config-area h3,
+body.v4-only-body .packit-quick-config-area h4{line-height:1.12}
+body.v4-only-body .packit-quick-config-area .v4-muted{line-height:1.25}
+
+/* Stage: make the center a real canvas card and avoid extra vertical bloat. */
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage{grid-template-columns:292px minmax(560px,1fr) 260px;align-items:stretch}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-template-panel,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-summary]{align-self:stretch;max-height:590px;overflow:auto}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-canvas-wrap{display:flex;align-items:center;justify-content:center;min-height:590px;overflow:auto;padding:12px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-visual-stage-grid{margin:0;max-width:100%;min-height:470px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-summary] .v4-mini b{font-size:15px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-summary] .v4-mini span{font-size:10px}
+
+/* Truss: the nested truss layout must behave as one left/center/right workspace. */
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-structure-truss{grid-template-columns:300px minmax(620px,1fr) 240px;grid-template-rows:auto auto 1fr;align-items:stretch}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-template-panel{max-height:330px;overflow:auto;align-self:start}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-sidebar{max-height:430px;overflow:auto;align-self:start}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-workspace{display:flex;flex-direction:column;min-height:610px;align-self:stretch;overflow:hidden}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-field-wrap{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:520px;overflow:auto;padding:18px;background:#05080d}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-field{position:relative;flex:0 0 auto;margin:auto}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-workspace>p{margin:0;padding:8px 10px;border-top:1px solid var(--line);background:rgba(21,29,43,.55);font-size:11px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-panel{flex:0 0 auto;display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px;align-items:center;padding:8px 10px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-controls{display:grid;grid-template-columns:34px minmax(100px,1fr) 34px auto auto;gap:8px;align-items:center}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] [data-truss-summary]{max-height:610px;overflow:auto;align-self:stretch}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] [data-truss-summary] .v4-mini b{font-size:15px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] [data-truss-summary] .v4-mini span{font-size:10px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-group-body{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-group-body button{min-height:30px}
+
+/* LED: keep templates readable but prevent left side from making the whole canvas drift. */
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor{grid-template-columns:270px minmax(640px,1fr) 280px;align-items:stretch}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor>.v4-grid-3{max-height:600px;overflow:auto;align-self:start}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-workbench{grid-template-columns:220px minmax(0,1fr);align-self:stretch;min-height:600px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-side-panel{max-height:600px;overflow:auto}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-panel-block{padding:9px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-template-grid button{font-size:10px;min-height:30px;padding:5px 7px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-canvas-panel{display:flex;flex-direction:column;min-height:600px;align-self:stretch}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-grid-wrap{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:520px;overflow:auto;padding:14px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-grid{flex:0 0 auto;margin:auto}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result]{max-height:600px;overflow:auto;align-self:stretch}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] .v4-mini b{font-size:14px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] .v4-mini span{font-size:10px}
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] .v4-mini small{font-size:9px;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Bottom docs: quick page should not be dominated by export panels. */
+body.v4-only-body .packit-quick-bottom{grid-template-columns:minmax(0,1fr) minmax(260px,.68fr);min-height:0}
+body.v4-only-body .packit-quick-bottom .v4-card,
+body.v4-only-body .packit-quick-bottom [data-v4-quick-docs],
+body.v4-only-body .packit-quick-bottom .v4-bom-lazy{min-height:0}
+body.v4-only-body .packit-quick-bottom [data-v4-quick-docs] h3,
+body.v4-only-body .packit-quick-bottom .v4-bom-lazy h3{font-size:13px;margin-bottom:4px}
+body.v4-only-body .packit-quick-bottom [data-v4-quick-docs] p,
+body.v4-only-body .packit-quick-bottom .v4-bom-lazy p{font-size:11px;line-height:1.25;margin-bottom:6px}
+body.v4-only-body .packit-quick-bottom [data-v4-quick-docs] .v4-doc-actions{display:flex;flex-wrap:wrap}
+body.v4-only-body .packit-quick-bottom [data-v4-quick-docs] .v4-quick-doc-output{max-height:56px;min-height:36px}
+
+@media(max-width:1400px){
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage{grid-template-columns:280px minmax(480px,1fr) 250px}
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-structure-truss{grid-template-columns:280px minmax(520px,1fr) 230px}
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor{grid-template-columns:255px minmax(520px,1fr) 260px}
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-workbench{grid-template-columns:205px minmax(0,1fr)}
+}
+@media(max-width:1180px){
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage{grid-template-columns:270px minmax(360px,1fr);grid-template-areas:'toolbar toolbar' 'controls canvas' 'summary summary'}
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-structure-truss{grid-template-columns:270px minmax(360px,1fr);grid-template-areas:'toolbar toolbar' 'template canvas' 'sidebar canvas' 'summary summary'}
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor{grid-template-columns:250px minmax(360px,1fr);grid-template-areas:'head head' 'params workbench' 'result result'}
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-workbench{grid-template-columns:200px minmax(0,1fr)}
+}
+@media(max-width:900px){
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage{grid-template-columns:1fr;grid-template-areas:'toolbar' 'controls' 'canvas' 'summary'}
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-structure-truss{grid-template-columns:1fr;grid-template-areas:'toolbar' 'template' 'sidebar' 'canvas' 'summary'}
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor{grid-template-columns:1fr;grid-template-areas:'head' 'params' 'workbench' 'result'}
+ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-workbench{grid-template-columns:1fr}
+ body.v4-only-body .packit-quick-bottom{grid-template-columns:1fr}
+}
