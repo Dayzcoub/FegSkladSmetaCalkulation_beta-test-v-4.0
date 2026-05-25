@@ -31,7 +31,7 @@ body.v4-only-body .packit-quick-bottom{display:grid;grid-template-columns:minmax
 body.v4-only-body [data-v4-quick-docs],body.v4-only-body .v4-bom-lazy{min-width:0;height:100%;border-color:var(--line);background:rgba(21,29,43,.72)}
 body.v4-only-body [data-v4-quick-docs] .v4-doc-actions{justify-content:flex-start}
 body.v4-only-body [data-v4-quick-docs] .v4-quick-doc-output{max-height:180px}
-body.v4-only-body .packit-mdm-target{display:grid;grid-template-columns:260px minmax(360px,1fr)300px;gap:10px;min-height:520px;padding:10px}
+body.v4-only-body .packit-mdm-target{display:grid;grid-template-columns:260px minmax(360px,1fr) 300px;gap:10px;min-height:520px;padding:10px}
 body.v4-only-body .packit-mdm-target-library,body.v4-only-body .packit-mdm-target-viewer,body.v4-only-body .packit-mdm-target-side{display:flex;flex-direction:column;gap:10px;min-width:0}
 body.v4-only-body .packit-mdm-target-panel-head,body.v4-only-body .packit-mdm-target-card{border:1px solid var(--line);border-radius:var(--radius-md);background:rgba(21,29,43,.78)}
 body.v4-only-body .packit-mdm-target-panel-head{display:flex;align-items:center;justify-content:space-between;min-height:36px;padding:8px 10px;color:var(--text-strong)}
