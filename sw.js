@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'PACKIT_WAREHOUSE_CLEANUP_2026_05_24';
-const CACHE_NAME = 'packit-warehouse-cleanup-2026-05-24';
-const RUNTIME_CACHE = 'packit-runtime-warehouse-cleanup-2026-05-24';
+const CACHE_VERSION = 'PACKIT_SITE_CHECKLIST_CLEANUP_2026_05_24';
+const CACHE_NAME = 'packit-site-checklist-cleanup-2026-05-24';
+const RUNTIME_CACHE = 'packit-runtime-site-checklist-cleanup-2026-05-24';
 
 const CORE_ASSETS = [
   './',
@@ -31,6 +31,7 @@ const CORE_ASSETS = [
   './src/styles/modules/equipment.css',
   './src/styles/modules/warehouse.css',
   './src/styles/modules/subrentors.css',
+  './src/styles/modules/site-checklist.css',
   './src/modules/index.js',
   './src/modules/FormatUtils.js',
   './src/modules/DomUtils.js',
