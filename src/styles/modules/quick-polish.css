@@ -1,0 +1,264 @@
+/* PACK.IT — Quick calculation workspace final polish. Scope: Быстрый расчёт only. */
+
+body.v4-only-body .packit-quick-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.v4-only-body .packit-quick-shell::before {
+  content: 'TECH QUICK CALCULATORS\AБыстрый расчёт\AБыстрый технический хаб для сцены, ферм, LED и будущего 3D MDM. Работает отдельно от сметчика, без складских ограничений и клиентской сметы.';
+  display: block;
+  white-space: pre-line;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+body.v4-only-body .packit-quick-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+}
+
+body.v4-only-body .packit-quick-tab {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'icon name'
+    'icon desc';
+  align-items: center;
+  justify-content: stretch;
+  gap: 2px 10px;
+  min-height: 66px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+}
+
+body.v4-only-body .packit-quick-tab:hover {
+  border-color: var(--line-medium);
+  background: var(--surface-elevated);
+}
+
+body.v4-only-body .packit-quick-tab.active {
+  border-color: rgba(34,197,94,.42);
+  background: rgba(34,197,94,.07);
+  color: var(--text-strong);
+}
+
+body.v4-only-body .packit-quick-tab.active::after {
+  content: 'текущий';
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+body.v4-only-body .packit-quick-tab-icon {
+  grid-area: icon;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  background: var(--panel-2);
+  color: var(--text-strong);
+  font-size: 18px;
+  line-height: 1;
+}
+
+body.v4-only-body .packit-quick-tab-name {
+  grid-area: name;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.v4-only-body .packit-quick-tab-desc {
+  grid-area: desc;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.v4-only-body .packit-quick-tab[data-quick-kind="mdm"].active {
+  border-color: rgba(249,115,22,.52);
+  background: rgba(249,115,22,.08);
+}
+
+body.v4-only-body .packit-quick-body {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+}
+
+body.v4-only-body .packit-quick-config-area {
+  width: 100%;
+  min-width: 0;
+}
+
+body.v4-only-body .packit-quick-config-area > .v4-card,
+body.v4-only-body .packit-quick-config-area > section,
+body.v4-only-body .packit-quick-config-area > div:not(.v4-quick-modal-backdrop):not(.modal-backdrop) {
+  border-radius: var(--radius-lg);
+}
+
+body.v4-only-body .packit-quick-config-area .v4-quick-modal {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+  box-shadow: none;
+}
+
+body.v4-only-body .packit-quick-config-area .v4-quick-modal-head {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+body.v4-only-body .packit-quick-config-area .v4-quick-modal-head h3,
+body.v4-only-body .packit-quick-config-area .v4-quick-modal-head h4 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+body.v4-only-body .packit-quick-config-area .v4-quick-modal-body {
+  padding: 14px;
+  background: var(--panel-2);
+}
+
+body.v4-only-body .packit-quick-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+body.v4-only-body [data-v4-quick-docs],
+body.v4-only-body .v4-bom-lazy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+}
+
+body.v4-only-body [data-v4-quick-docs] h4,
+body.v4-only-body .v4-bom-lazy h4,
+body.v4-only-body .v4-bom-lazy h3 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+body.v4-only-body [data-v4-quick-docs] .v4-doc-actions,
+body.v4-only-body .v4-bom-lazy .v4-actions,
+body.v4-only-body .v4-bom-lazy .v4-doc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+body.v4-only-body [data-v4-quick-docs] .v4-doc-actions button,
+body.v4-only-body .v4-bom-lazy button {
+  min-height: 32px;
+  padding-inline: 12px;
+}
+
+body.v4-only-body [data-v4-quick-docs] .v4-quick-doc-output,
+body.v4-only-body .v4-bom-lazy pre,
+body.v4-only-body .v4-bom-lazy code {
+  max-height: 320px;
+  margin: 0;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  background: #070b10;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+body.v4-only-body .packit-mdm-placeholder {
+  min-height: 420px;
+  border: 1px dashed var(--line-medium);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+}
+
+@media (max-width: 1180px) {
+  body.v4-only-body .packit-quick-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  body.v4-only-body .packit-quick-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body .packit-quick-tab {
+    min-height: 58px;
+  }
+
+  body.v4-only-body .packit-quick-tab.active::after {
+    position: static;
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: start;
+  }
+
+  body.v4-only-body [data-v4-quick-docs] .v4-doc-actions,
+  body.v4-only-body .v4-bom-lazy .v4-actions,
+  body.v4-only-body .v4-bom-lazy .v4-doc-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.v4-only-body [data-v4-quick-docs] .v4-doc-actions button,
+  body.v4-only-body .v4-bom-lazy button {
+    width: 100%;
+  }
+}
