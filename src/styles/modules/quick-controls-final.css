@@ -1,0 +1,47 @@
+/* PACK.IT — Quick calculator inner controls final pass. */
+
+body.v4-only-body .packit-quick-config-area input,
+body.v4-only-body .packit-quick-config-area select,
+body.v4-only-body .packit-quick-config-area textarea {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-strong);
+}
+
+body.v4-only-body .packit-quick-config-area input:focus,
+body.v4-only-body .packit-quick-config-area select:focus,
+body.v4-only-body .packit-quick-config-area textarea:focus {
+  border-color: var(--blue-border);
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(59,130,246,.22);
+}
+
+body.v4-only-body .packit-quick-config-area label,
+body.v4-only-body .packit-quick-config-area .v4-field label,
+body.v4-only-body .packit-quick-config-area .form-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+body.v4-only-body .packit-quick-config-area button:not(.packit-quick-tab) {
+  min-height: 32px;
+  border-radius: var(--radius-md);
+}
+
+body.v4-only-body .packit-quick-config-area .v4-note,
+body.v4-only-body .packit-quick-config-area .v4-help,
+body.v4-only-body .packit-quick-config-area .v4-empty {
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+body.v4-only-body .packit-quick-config-area .v4-card,
+body.v4-only-body .packit-quick-config-area .v4-panel,
+body.v4-only-body .packit-quick-config-area .v4-subpanel {
+  border-color: var(--line);
+}
