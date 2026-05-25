@@ -46,7 +46,8 @@ body.v4-only-body .v4-communication-grid {
   display: grid;
   grid-template-columns: minmax(230px, 290px) minmax(0, 1fr) minmax(260px, 340px);
   gap: 12px;
-  align-items: start;
+  align-items: stretch;
+  min-height: 590px;
   padding: 0 14px 14px;
 }
 
@@ -54,16 +55,23 @@ body.v4-only-body .v4-communication-rooms,
 body.v4-only-body .v4-communication-thread,
 body.v4-only-body .v4-communication-notifications {
   min-width: 0;
-  align-self: start;
+  align-self: stretch;
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--surface);
 }
 
+body.v4-only-body .v4-communication-rooms,
+body.v4-only-body .v4-communication-notifications {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
 body.v4-only-body .v4-communication-thread {
   display: flex;
-  min-height: 410px;
+  min-height: 0;
   flex-direction: column;
 }
 
@@ -148,8 +156,7 @@ body.v4-only-body .v4-communication-meta {
 
 body.v4-only-body .v4-communication-messages {
   display: flex;
-  min-height: 220px;
-  max-height: 430px;
+  min-height: 0;
   flex: 1 1 auto;
   flex-direction: column;
   gap: 8px;
@@ -203,6 +210,7 @@ body.v4-only-body .v4-communication-message p {
 
 body.v4-only-body .v4-communication-composer {
   display: flex;
+  flex: 0 0 auto;
   flex-direction: column;
   gap: 8px;
   margin-top: 12px;
@@ -260,7 +268,10 @@ body.v4-only-body .v4-communication-note button {
   padding-inline: 10px;
 }
 
-body.v4-only-body .v4-communication-push { margin-top: 12px; }
+body.v4-only-body .v4-communication-push {
+  margin-top: auto;
+  padding-top: 10px;
+}
 
 body.v4-only-body .v4-communication-push span {
   display: block;
@@ -284,10 +295,14 @@ body.v4-only-body .v4-communication-push span {
     align-items: stretch;
   }
 
-  body.v4-only-body .v4-communication-grid { padding: 0 12px 12px; }
+  body.v4-only-body .v4-communication-grid {
+    min-height: 0;
+    padding: 0 12px 12px;
+  }
+
   body.v4-only-body .v4-communication-notifications { grid-column: auto; }
-  body.v4-only-body .v4-communication-thread { min-height: auto; }
-  body.v4-only-body .v4-communication-messages { min-height: 240px; max-height: none; }
+  body.v4-only-body .v4-communication-thread { min-height: 520px; }
+  body.v4-only-body .v4-communication-messages { min-height: 240px; }
 }
 
 @media (max-width: 640px) {
