@@ -129,7 +129,7 @@
   }
 
   function renderDocumentSourcePanel(sources, selected) {
-    return '<div class="v4-doc-source-panel"><div class="v4-doc-source-head"><div><div class="v4-kicker">Источник документов</div><h4>' + escapeHtml(selected.title || 'Документы проекта') + '</h4><p class="v4-muted">Документы формируются по выбранному проекту или активному черновику.</p></div><label class="v4-doc-source-select"><span>Проект / черновик</span><select data-doc-source-select>' + sources.map(source => '<option value="' + escapeAttr(source.id) + '"' + (source.id === selected.id ? ' selected' : '') + '>' + escapeHtml(source.title) + ' · ' + escapeHtml(source.clientName) + '</option>').join('') + '</select></label></div><div class="v4-doc-source-meta"><span><b>' + escapeHtml(selected.clientName || '—') + '</b><small>клиент</small></span><span><b>' + escapeHtml(selected.venueName || '—') + '</b><small>площадка</small></span><span><b>' + escapeHtml(selected.eventDate || '—') + '</b><small>дата</small></span><span><b>' + escapeHtml(selected.status || 'draft') + '</b><small>статус</small></span><span><b>' + escapeHtml(selected.sourceLabel || 'источник') + '</b><small>тип источника</small></span></div></div>';
+    return '<div class="v4-doc-source-panel"><div class="v4-doc-source-head"><div><div class="v4-kicker">Источник документов</div><h4>Выбранный проект: ' + escapeHtml(selected.title || 'Без названия') + '</h4><p class="v4-muted">Документы ниже собраны из этого проекта/черновика.</p></div><label class="v4-doc-source-select"><span>Проект / черновик</span><select data-doc-source-select>' + sources.map(source => '<option value="' + escapeAttr(source.id) + '"' + (source.id === selected.id ? ' selected' : '') + '>' + escapeHtml(source.title) + ' · ' + escapeHtml(source.clientName) + '</option>').join('') + '</select></label></div><div class="v4-doc-source-meta"><span><b>' + escapeHtml(selected.clientName || '—') + '</b><small>клиент</small></span><span><b>' + escapeHtml(selected.venueName || '—') + '</b><small>площадка</small></span><span><b>' + escapeHtml(selected.eventDate || '—') + '</b><small>дата</small></span><span><b>' + escapeHtml(selected.status || 'draft') + '</b><small>статус</small></span><span><b>' + escapeHtml(selected.sourceLabel || 'источник') + '</b><small>тип источника</small></span></div></div>';
   }
 
   function readDocumentSourceId() {
@@ -187,7 +187,7 @@
   function escapeHtml(value) { return String(value == null ? '' : value).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[c])); }
   function escapeAttr(value) { return escapeHtml(value); }
 
-  ROOT.PackitShellBranding = { version: '1.4.0', applyShellBranding, installDocumentSourceSelector, init };
+  ROOT.PackitShellBranding = { version: '1.4.1', applyShellBranding, installDocumentSourceSelector, init };
 
   if (GLOBAL.document) {
     if (GLOBAL.document.readyState === 'loading') GLOBAL.document.addEventListener('DOMContentLoaded', init);
