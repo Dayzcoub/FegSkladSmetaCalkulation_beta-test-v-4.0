@@ -1,0 +1,467 @@
+/* =============================================================================
+   PACK.IT — Site checklist cleanup
+   Scope: Чек-лист площадки only.
+   No checklist data or business logic changes.
+   ============================================================================= */
+
+body.v4-only-body .v4-site-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.v4-only-body .v4-site-checklist > .v4-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head h3 {
+  margin: 4px 0 6px;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head .v4-muted {
+  max-width: 780px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head .v4-auth-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head .v4-auth-actions button {
+  min-height: 32px;
+  padding-inline: 12px;
+}
+
+body.v4-only-body .v4-site-checklist-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+body.v4-only-body .v4-site-checklist-list {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+}
+
+body.v4-only-body .v4-site-checklist-list h4 {
+  margin: 0 0 2px;
+  color: var(--text-strong);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+body.v4-only-body .v4-site-checklist-row {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+body.v4-only-body .v4-site-checklist-row:hover {
+  border-color: var(--line-medium);
+  background: var(--surface-elevated);
+}
+
+body.v4-only-body .v4-site-checklist-row.is-active {
+  border-color: var(--blue-border);
+  background: var(--blue-soft);
+}
+
+body.v4-only-body .v4-site-checklist-row b,
+body.v4-only-body .v4-site-checklist-row span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.v4-only-body .v4-site-checklist-row b {
+  color: var(--text-strong);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+body.v4-only-body .v4-site-checklist-row span {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+body.v4-only-body .v4-site-checklist-list > .btn-secondary {
+  min-height: 32px;
+  margin-top: 2px;
+}
+
+body.v4-only-body .v4-site-checklist-main {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.v4-only-body .v4-site-section {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+}
+
+body.v4-only-body .v4-site-section > h4,
+body.v4-only-body .v4-site-section .v4-card-head--compact h4 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+body.v4-only-body .v4-site-section .v4-card-head--compact {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+body.v4-only-body .v4-site-section .v4-card-head--compact .v4-muted {
+  max-width: 760px;
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+body.v4-only-body .v4-site-section .v4-card-head--compact .v4-auth-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+body.v4-only-body .v4-site-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+body.v4-only-body .v4-site-grid .v4-field {
+  min-width: 0;
+  margin: 0;
+}
+
+body.v4-only-body .v4-site-grid .v4-site-field--wide {
+  grid-column: span 3;
+}
+
+body.v4-only-body .v4-site-grid input,
+body.v4-only-body .v4-site-grid textarea {
+  width: 100%;
+}
+
+body.v4-only-body .v4-site-grid textarea {
+  min-height: 78px;
+  resize: vertical;
+}
+
+body.v4-only-body .v4-site-scheme {
+  position: relative;
+  min-height: 320px;
+  overflow: hidden;
+  border: 1px dashed var(--line-medium);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    var(--surface);
+  background-size: 32px 32px;
+  cursor: crosshair;
+}
+
+body.v4-only-body .v4-site-scheme::before {
+  content: 'План площадки / клик для метки';
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  color: var(--muted-2);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+body.v4-only-body .v4-site-scheme[aria-disabled="true"] {
+  cursor: default;
+}
+
+body.v4-only-body .v4-site-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 180px;
+  min-height: 30px;
+  padding: 4px 8px 4px 4px;
+  border: 1px solid var(--warning-border);
+  border-radius: 999px;
+  background: var(--warning-bg);
+  color: var(--warning-text);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+}
+
+body.v4-only-body .v4-site-marker b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  background: var(--warning);
+  color: #111827;
+  font-size: 11px;
+  line-height: 1;
+}
+
+body.v4-only-body .v4-site-marker span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+body.v4-only-body .v4-site-marker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+body.v4-only-body .v4-site-marker-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 2fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-site-marker-row b,
+body.v4-only-body .v4-site-marker-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.v4-only-body .v4-site-marker-row b {
+  color: var(--text-strong);
+  font-size: 12px;
+}
+
+body.v4-only-body .v4-site-marker-row span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+body.v4-only-body .v4-file-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+body.v4-only-body .v4-file-button input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+body.v4-only-body .v4-site-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+body.v4-only-body .v4-site-photo-grid > .v4-muted {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-site-photo {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+body.v4-only-body .v4-site-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--bg);
+}
+
+body.v4-only-body .v4-site-photo figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+}
+
+body.v4-only-body .v4-site-photo figcaption b,
+body.v4-only-body .v4-site-photo figcaption span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.v4-only-body .v4-site-photo figcaption b {
+  color: var(--text-strong);
+  font-size: 12px;
+}
+
+body.v4-only-body .v4-site-photo figcaption span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+body.v4-only-body .v4-site-photo figcaption button {
+  align-self: flex-end;
+  min-height: 26px;
+}
+
+body.v4-only-body .v4-site-checklist .v4-json-preview[hidden] {
+  display: none;
+}
+
+body.v4-only-body .v4-site-checklist .v4-json-preview {
+  min-height: 180px;
+  max-height: 360px;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@media (max-width: 1100px) {
+  body.v4-only-body .v4-site-checklist-layout {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body .v4-site-checklist-list {
+    max-height: 320px;
+    overflow: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head,
+  body.v4-only-body .v4-site-section .v4-card-head--compact {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head .v4-auth-actions,
+  body.v4-only-body .v4-site-section .v4-card-head--compact .v4-auth-actions {
+    justify-content: flex-start;
+  }
+
+  body.v4-only-body .v4-site-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.v4-only-body .v4-site-grid .v4-site-field--wide {
+    grid-column: auto;
+  }
+
+  body.v4-only-body .v4-site-marker-row {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  body.v4-only-body .v4-site-marker-row button {
+    justify-self: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head .v4-auth-actions,
+  body.v4-only-body .v4-site-section .v4-card-head--compact .v4-auth-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head .v4-auth-actions button,
+  body.v4-only-body .v4-site-section .v4-card-head--compact .v4-auth-actions button,
+  body.v4-only-body .v4-file-button {
+    width: 100%;
+  }
+
+  body.v4-only-body .v4-site-scheme {
+    min-height: 240px;
+  }
+}
