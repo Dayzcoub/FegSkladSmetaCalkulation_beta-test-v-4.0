@@ -1,3 +1,5 @@
+@import './communication-center.css';
+
 /* PACK.IT — Command center cleanup. Scope: Поиск / Команды only. */
 
 body.v4-only-body .v4-command-center {
