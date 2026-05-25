@@ -56,12 +56,14 @@ body.v4-only-body .v4-site-checklist > .v4-card > .v4-card-head .v4-auth-actions
 
 body.v4-only-body .v4-site-checklist-layout {
   display: grid;
-  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
   gap: 12px;
   align-items: start;
 }
 
 body.v4-only-body .v4-site-checklist-list {
+  position: sticky;
+  top: 12px;
   display: flex;
   min-width: 0;
   flex-direction: column;
@@ -192,7 +194,7 @@ body.v4-only-body .v4-site-grid .v4-field {
 }
 
 body.v4-only-body .v4-site-grid .v4-site-field--wide {
-  grid-column: span 3;
+  grid-column: span 1;
 }
 
 body.v4-only-body .v4-site-grid input,
@@ -201,13 +203,13 @@ body.v4-only-body .v4-site-grid textarea {
 }
 
 body.v4-only-body .v4-site-grid textarea {
-  min-height: 78px;
+  min-height: 64px;
   resize: vertical;
 }
 
 body.v4-only-body .v4-site-scheme {
   position: relative;
-  min-height: 320px;
+  min-height: 300px;
   overflow: hidden;
   border: 1px dashed var(--line-medium);
   border-radius: var(--radius-lg);
@@ -413,6 +415,7 @@ body.v4-only-body .v4-site-checklist .v4-json-preview {
   }
 
   body.v4-only-body .v4-site-checklist-list {
+    position: static;
     max-height: 320px;
     overflow: auto;
   }
@@ -436,6 +439,10 @@ body.v4-only-body .v4-site-checklist .v4-json-preview {
 
   body.v4-only-body .v4-site-grid .v4-site-field--wide {
     grid-column: auto;
+  }
+
+  body.v4-only-body .v4-site-grid textarea {
+    min-height: 78px;
   }
 
   body.v4-only-body .v4-site-marker-row {
