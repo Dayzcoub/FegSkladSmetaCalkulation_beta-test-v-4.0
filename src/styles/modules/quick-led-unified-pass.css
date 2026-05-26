@@ -144,6 +144,29 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-l
   box-shadow:0 0 0 2px rgba(59,130,246,.15);
 }
 
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor > .v4-grid-3 > .v4-field:has([data-led="legType"]):has([data-led="mountMode"]){
+  grid-template-rows:auto 36px auto 36px;
+  align-content:start;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor > .v4-grid-3 > .v4-field:has([data-led="legType"]):has([data-led="mountMode"]) > span:first-child{
+  order:3;
+  margin-top:4px;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor > .v4-grid-3 > .v4-field:has([data-led="legType"]):has([data-led="mountMode"]) > [data-led="legType"]{
+  order:4;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor > .v4-grid-3 > .v4-field:has([data-led="legType"]):has([data-led="mountMode"]) > .v4-field-subspan{
+  order:1;
+  margin-top:0;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-constructor > .v4-grid-3 > .v4-field:has([data-led="legType"]):has([data-led="mountMode"]) > [data-led="mountMode"]{
+  order:2;
+}
+
 body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-panel-block .v4-actions{
   display:grid;
   grid-template-columns:1fr 1fr;
