@@ -4,7 +4,7 @@
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.0.0-quick-led-summary-repair';
+  const VERSION = '1.1.0-quick-led-summary-repair';
   let raf = 0;
 
   function escapeHtml(value) {
@@ -22,9 +22,35 @@
   function formatKg(value) { return `${toNumber(value, 0).toFixed(2)} кг`; }
   function formatKw(value) { return `${toNumber(value, 0).toFixed(2)} кВт`; }
 
+  function findStateOwner(calcRoot) {
+    let node = calcRoot;
+    while (node && node !== document.body) {
+      if (node._v4LedState) return node;
+      node = node.parentElement;
+    }
+    return calcRoot;
+  }
+
+  function readField(calcRoot, key) {
+    const el = calcRoot && calcRoot.querySelector ? calcRoot.querySelector(`[data-led="${key}"]`) : null;
+    return el ? el.value : '';
+  }
+
   function buildPayload(calcRoot) {
-    const state = calcRoot && calcRoot._v4LedState;
-    const base = state && state.base ? state.base : {};
+    const owner = findStateOwner(calcRoot);
+    const state = owner && owner._v4LedState;
+    const base = Object.assign({}, state && state.base ? state.base : {}, {
+      widthM: readField(calcRoot, 'widthM') || (state && state.base && state.base.widthM),
+      heightM: readField(calcRoot, 'heightM') || (state && state.base && state.base.heightM),
+      format: readField(calcRoot, 'format') || (state && state.base && state.base.format),
+      pitch: readField(calcRoot, 'pitch') || (state && state.base && state.base.pitch),
+      cabinetWeightKg: readField(calcRoot, 'cabinetWeightKg') || (state && state.base && state.base.cabinetWeightKg),
+      cabinetPowerW: readField(calcRoot, 'cabinetPowerW') || (state && state.base && state.base.cabinetPowerW),
+      cabinetStartupPowerW: readField(calcRoot, 'cabinetStartupPowerW') || (state && state.base && state.base.cabinetStartupPowerW),
+      legType: readField(calcRoot, 'legType') || (state && state.base && state.base.legType),
+      legCount: readField(calcRoot, 'legCount') || (state && state.base && state.base.legCount),
+      mountMode: readField(calcRoot, 'mountMode') || (state && state.base && state.base.mountMode)
+    });
     return Object.assign({}, base, {
       layoutBlocks: (state && Array.isArray(state.parts) ? state.parts : []).map(part => ({
         id: part.id,
@@ -38,9 +64,9 @@
 
   function calculate(calcRoot) {
     const calc = ROOT.LedCalculator;
-    if (!calc || typeof calc.calculateLed !== 'function') return null;
+    if (!calc || typeof calc.calculateLedLayout !== 'function') return null;
     try {
-      return calc.calculateLed(buildPayload(calcRoot));
+      return calc.calculateLedLayout(buildPayload(calcRoot));
     } catch (error) {
       console.warn('[PACK.IT][quick-led-summary] calculate failed', error);
       return null;
@@ -122,6 +148,7 @@
     schedule(document);
     window.setTimeout(() => schedule(document), 120);
     window.setTimeout(() => schedule(document), 500);
+    window.setTimeout(() => schedule(document), 1200);
   }
 
   ROOT.QuickLedSummaryRepair = { VERSION, init, renderAll };
