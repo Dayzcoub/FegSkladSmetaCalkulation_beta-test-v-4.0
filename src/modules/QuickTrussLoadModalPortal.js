@@ -1,14 +1,15 @@
 // PACK.IT — quick truss load modal viewport portal.
-// Visual-only helper: moves #blockLoadModal to document.body while open and hard-centers it in viewport.
+// Visual-only helper: turns #blockLoadModal into viewport overlay and wraps its content into a centered dialog.
 (function () {
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.0.1-quick-truss-load-modal-hard-center';
+  const VERSION = '1.1.0-quick-truss-load-modal-overlay-dialog';
   let pending = 0;
   let placeholder = null;
   let modal = null;
-  let centerTimer = 0;
+
+  const OVERLAY_PROPS = ['position', 'z-index', 'top', 'left', 'right', 'bottom', 'transform', 'margin', 'display', 'width', 'max-width', 'height', 'max-height', 'overflow', 'box-sizing', 'padding', 'align-items', 'justify-content', 'background'];
 
   function findModal() {
     return document.getElementById('blockLoadModal');
@@ -31,30 +32,40 @@
     });
   }
 
-  function hardCenter(el) {
-    if (!el) return;
-    setImportant(el, 'position', 'fixed');
-    setImportant(el, 'z-index', '10080');
-    setImportant(el, 'top', '50%');
-    setImportant(el, 'left', '50%');
-    setImportant(el, 'right', 'auto');
-    setImportant(el, 'bottom', 'auto');
-    setImportant(el, 'transform', 'translate(-50%, -50%)');
-    setImportant(el, 'margin', '0');
-    setImportant(el, 'display', 'block');
-    setImportant(el, 'width', 'min(1040px, calc(100vw - 48px))');
-    setImportant(el, 'max-width', 'calc(100vw - 48px)');
-    setImportant(el, 'height', 'auto');
-    setImportant(el, 'max-height', 'calc(100vh - 48px)');
-    setImportant(el, 'overflow', 'auto');
-    setImportant(el, 'box-sizing', 'border-box');
-    el.dataset.packitHardCentered = 'true';
+  function ensureDialog(el) {
+    if (!el) return null;
+    let dialog = Array.from(el.children || []).find(child => child.classList && child.classList.contains('packit-block-load-dialog'));
+    if (dialog) return dialog;
+    dialog = document.createElement('div');
+    dialog.className = 'packit-block-load-dialog';
+    while (el.firstChild) dialog.appendChild(el.firstChild);
+    el.appendChild(dialog);
+    return dialog;
   }
 
-  function clearHardCenter(el) {
-    if (!el || el.dataset.packitHardCentered !== 'true') return;
-    clearImportant(el, ['position', 'z-index', 'top', 'left', 'right', 'bottom', 'transform', 'margin', 'display', 'width', 'max-width', 'height', 'max-height', 'overflow', 'box-sizing']);
-    delete el.dataset.packitHardCentered;
+  function applyOverlay(el) {
+    if (!el) return;
+    ensureDialog(el);
+    setImportant(el, 'position', 'fixed');
+    setImportant(el, 'z-index', '10080');
+    setImportant(el, 'top', '0');
+    setImportant(el, 'left', '0');
+    setImportant(el, 'right', '0');
+    setImportant(el, 'bottom', '0');
+    setImportant(el, 'transform', 'none');
+    setImportant(el, 'margin', '0');
+    setImportant(el, 'display', 'flex');
+    setImportant(el, 'width', '100vw');
+    setImportant(el, 'max-width', '100vw');
+    setImportant(el, 'height', '100vh');
+    setImportant(el, 'max-height', '100vh');
+    setImportant(el, 'overflow', 'auto');
+    setImportant(el, 'box-sizing', 'border-box');
+    setImportant(el, 'padding', '24px');
+    setImportant(el, 'align-items', 'center');
+    setImportant(el, 'justify-content', 'center');
+    setImportant(el, 'background', 'rgba(0,0,0,.72)');
+    el.dataset.packitOverlayDialog = 'true';
   }
 
   function mountToBody(el) {
@@ -65,14 +76,14 @@
       document.body.appendChild(el);
       el.dataset.packitPortalMounted = 'true';
     }
-    hardCenter(el);
+    applyOverlay(el);
     document.documentElement.classList.add('packit-block-load-modal-open');
     document.body.classList.add('packit-block-load-modal-open');
   }
 
   function restoreFromBody(el) {
     if (!el) return;
-    clearHardCenter(el);
+    clearImportant(el, OVERLAY_PROPS);
     document.documentElement.classList.remove('packit-block-load-modal-open');
     document.body.classList.remove('packit-block-load-modal-open');
     if (el.dataset.packitPortalMounted !== 'true') return;
@@ -81,6 +92,7 @@
       placeholder.parentNode.removeChild(placeholder);
     }
     delete el.dataset.packitPortalMounted;
+    delete el.dataset.packitOverlayDialog;
     placeholder = null;
   }
 
@@ -98,7 +110,6 @@
   }
 
   function burstCentering() {
-    window.clearTimeout(centerTimer);
     schedule();
     [0, 40, 120, 260, 520].forEach(delay => window.setTimeout(schedule, delay));
   }
@@ -124,7 +135,7 @@
     bind();
   }
 
-  ROOT.QuickTrussLoadModalPortal = { VERSION, init, sync, hardCenter };
+  ROOT.QuickTrussLoadModalPortal = { VERSION, init, sync, ensureDialog, applyOverlay };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
 })();
