@@ -1,0 +1,67 @@
+/* PACK.IT — quick truss template accordions. Visual-only. */
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion{
+  overflow:hidden;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  min-height:38px;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  background:rgba(30,41,59,.72);
+  cursor:pointer;
+  user-select:none;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion-head:hover{
+  border-color:var(--blue-line);
+  background:rgba(30,41,59,.92);
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion-head b,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion-head span:not(.packit-truss-template-chevron){
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-chevron{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:22px;
+  height:22px;
+  border:1px solid var(--line);
+  border-radius:var(--radius-sm);
+  color:var(--blue-text);
+  background:rgba(59,130,246,.08);
+  transition:transform .16s ease;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion.is-open .packit-truss-template-chevron{
+  transform:rotate(180deg);
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion.is-collapsed .v4-grid-2,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion.is-collapsed .v4-grid-4,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion.is-collapsed .v4-truss-stool-grid,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion.is-collapsed .v4-template-actions,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion.is-collapsed > small,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion.is-collapsed > p{
+  display:none;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion.is-open{
+  display:grid;
+  gap:8px;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-truss-template-accordion.is-collapsed{
+  padding-bottom:0;
+}
