@@ -128,7 +128,17 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .pack
   line-height:1.1 !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion.is-collapsed > .v4-field{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion-body{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:7px !important;
+  width:100% !important;
+  min-width:0 !important;
+  padding:0 !important;
+  box-sizing:border-box !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion-body[hidden]{
   display:none !important;
 }
 
@@ -142,8 +152,12 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .pack
   border-bottom:1px solid var(--line) !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion.is-open > .v4-field{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion.is-open .packit-led-params-accordion-body > .v4-field{
   display:grid !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion.is-collapsed{
+  padding:0 !important;
 }
 
 @media(max-width:1180px){
