@@ -1,63 +1,18 @@
 /* PACK.IT — quick truss load modal polish.
-   Scope: #blockLoadModal only. Visual pass, no load calculation changes. */
+   Scope: #blockLoadModal only. Visual-only; no load calculations, no DOM portal. */
+
+body.v4-only-body #blockLoadModal{
+  box-sizing:border-box;
+}
 
 body.v4-only-body #blockLoadModal.open{
-  position:fixed !important;
-  z-index:10080 !important;
-  inset:0 !important;
-  transform:none !important;
-  margin:0 !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  width:100vw !important;
-  max-width:100vw !important;
-  height:100vh !important;
-  max-height:100vh !important;
-  overflow:auto !important;
-  padding:24px !important;
-  box-sizing:border-box !important;
-  border:0 !important;
-  border-radius:0 !important;
-  background:rgba(0,0,0,.72) !important;
-  box-shadow:none !important;
-  backdrop-filter:blur(2px) !important;
-}
-
-body.v4-only-body #blockLoadModal.open::before{
-  content:none !important;
-  display:none !important;
-}
-
-body.v4-only-body #blockLoadModal .packit-block-load-dialog{
-  position:relative !important;
-  width:min(1040px,calc(100vw - 48px)) !important;
-  max-width:calc(100vw - 48px) !important;
-  max-height:calc(100vh - 48px) !important;
-  overflow:auto !important;
-  padding:18px 18px 16px !important;
-  border:1px solid var(--line-medium) !important;
-  border-radius:14px !important;
-  background:linear-gradient(180deg,rgba(27,38,58,.98),rgba(15,22,34,.98)) !important;
-  box-shadow:0 28px 80px rgba(0,0,0,.56), inset 0 1px 0 rgba(255,255,255,.035) !important;
-  box-sizing:border-box !important;
-}
-
-body.v4-only-body #blockLoadModal .modal-content,
-body.v4-only-body #blockLoadModal .v4-modal-content,
-body.v4-only-body #blockLoadModal .v4-dialog,
-body.v4-only-body #blockLoadModal > div:not(.packit-block-load-dialog){
-  position:static !important;
-  width:auto !important;
-  max-width:none !important;
-  max-height:none !important;
-  margin:0 !important;
-  overflow:visible !important;
-  border:0 !important;
-  border-radius:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  padding:0 !important;
+  max-width:min(1040px,calc(100vw - 32px));
+  max-height:calc(100vh - 32px);
+  overflow:auto;
+  border:1px solid var(--line-medium);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(27,38,58,.98),rgba(15,22,34,.98));
+  box-shadow:0 28px 80px rgba(0,0,0,.56), inset 0 1px 0 rgba(255,255,255,.035);
 }
 
 body.v4-only-body #blockLoadModal h3,
@@ -85,24 +40,21 @@ body.v4-only-body #blockLoadModal button[title*="Закрыть"],
 body.v4-only-body #blockLoadModal .modal-close,
 body.v4-only-body #blockLoadModal .v4-modal-close,
 body.v4-only-body #blockLoadModal .v4-close{
-  position:absolute !important;
-  top:12px !important;
-  right:12px !important;
-  width:34px !important;
-  height:34px !important;
-  min-width:34px !important;
-  min-height:34px !important;
-  padding:0 !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  border:1px solid var(--blue-line) !important;
-  border-radius:10px !important;
-  background:rgba(59,130,246,.12) !important;
-  color:var(--text-strong) !important;
-  font-size:0 !important;
-  line-height:1 !important;
-  box-shadow:none !important;
+  width:34px;
+  height:34px;
+  min-width:34px;
+  min-height:34px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--blue-line);
+  border-radius:10px;
+  background:rgba(59,130,246,.12);
+  color:var(--text-strong);
+  font-size:0;
+  line-height:1;
+  box-shadow:none;
 }
 
 body.v4-only-body #blockLoadModal button[aria-label*="Закрыть"]::before,
@@ -288,13 +240,8 @@ body.v4-only-body #blockLoadModal .block-load-note{
 
 @media(max-width:900px){
   body.v4-only-body #blockLoadModal.open{
-    padding:12px !important;
-  }
-  body.v4-only-body #blockLoadModal .packit-block-load-dialog{
-    width:calc(100vw - 24px) !important;
-    max-width:calc(100vw - 24px) !important;
-    max-height:calc(100vh - 24px) !important;
-    padding:14px !important;
+    max-width:calc(100vw - 16px);
+    max-height:calc(100vh - 16px);
   }
   body.v4-only-body #blockLoadModal .v4-grid-2,
   body.v4-only-body #blockLoadModal .v4-grid-3,
