@@ -1,0 +1,87 @@
+/* PACK.IT — quick LED right summary restore.
+   Last loaded visual override. No calculations, BOM, PDF or backend changes. */
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result]{
+  grid-area:result !important;
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:240px !important;
+  align-self:stretch !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] .v4-summary-strip{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:0 !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:100% !important;
+  border:1px solid var(--line) !important;
+  border-radius:var(--radius-lg) !important;
+  background:var(--surface) !important;
+  overflow:hidden !important;
+  box-sizing:border-box !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] .v4-summary-strip > div{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  align-content:center !important;
+  min-height:64px !important;
+  padding:12px 14px !important;
+  border:0 !important;
+  border-bottom:1px solid var(--line) !important;
+  background:transparent !important;
+  box-sizing:border-box !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] .v4-summary-strip > div:last-child{
+  border-bottom:0 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] .v4-summary-strip b{
+  display:block !important;
+  color:var(--text-strong) !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  line-height:1.15 !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] .v4-summary-strip span{
+  display:block !important;
+  margin-top:4px !important;
+  color:var(--muted) !important;
+  font-size:9.5px !important;
+  font-weight:850 !important;
+  letter-spacing:.04em !important;
+  line-height:1.15 !important;
+  text-transform:uppercase !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] > .v4-card,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] > .v4-table-scroll,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] > button{
+  display:none !important;
+}
+
+@media(max-width:1180px){
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result]{
+    max-width:220px !important;
+  }
+}
+
+@media(max-width:900px){
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result]{
+    max-width:none !important;
+  }
+}
