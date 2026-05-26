@@ -1,0 +1,268 @@
+/* PACK.IT — quick truss load modal polish.
+   Scope: #blockLoadModal only. Visual pass, no load calculation changes. */
+
+body.v4-only-body #blockLoadModal.open{
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:24px 16px;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(2px);
+}
+
+body.v4-only-body #blockLoadModal .modal-content,
+body.v4-only-body #blockLoadModal .v4-modal-content,
+body.v4-only-body #blockLoadModal .v4-dialog,
+body.v4-only-body #blockLoadModal > div{
+  position:relative;
+  width:min(1040px,calc(100vw - 32px));
+  max-height:calc(100vh - 48px);
+  overflow:auto;
+  border:1px solid var(--line-medium);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(27,38,58,.98),rgba(15,22,34,.98));
+  box-shadow:0 28px 80px rgba(0,0,0,.56), inset 0 1px 0 rgba(255,255,255,.035);
+  padding:18px 18px 16px;
+}
+
+body.v4-only-body #blockLoadModal h3,
+body.v4-only-body #blockLoadModal h4,
+body.v4-only-body #blockLoadModal .modal-title{
+  margin:0 52px 4px 0;
+  color:var(--text-strong);
+  font-size:16px;
+  font-weight:900;
+  line-height:1.15;
+}
+
+body.v4-only-body #blockLoadModal .v4-kicker,
+body.v4-only-body #blockLoadModal .modal-subtitle{
+  margin:0 52px 14px 0;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+body.v4-only-body #blockLoadModal button[aria-label*="Закрыть"],
+body.v4-only-body #blockLoadModal button[title*="Закрыть"],
+body.v4-only-body #blockLoadModal .modal-close,
+body.v4-only-body #blockLoadModal .v4-modal-close,
+body.v4-only-body #blockLoadModal .v4-close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:34px;
+  height:34px;
+  min-width:34px;
+  min-height:34px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--blue-line);
+  border-radius:10px;
+  background:rgba(59,130,246,.12);
+  color:var(--text-strong);
+  font-size:0;
+  line-height:1;
+  box-shadow:none;
+}
+
+body.v4-only-body #blockLoadModal button[aria-label*="Закрыть"]::before,
+body.v4-only-body #blockLoadModal button[title*="Закрыть"]::before,
+body.v4-only-body #blockLoadModal .modal-close::before,
+body.v4-only-body #blockLoadModal .v4-modal-close::before,
+body.v4-only-body #blockLoadModal .v4-close::before{
+  content:'×';
+  font-size:24px;
+  font-weight:500;
+  line-height:1;
+}
+
+body.v4-only-body #blockLoadModal button[aria-label*="Закрыть"]:hover,
+body.v4-only-body #blockLoadModal button[title*="Закрыть"]:hover,
+body.v4-only-body #blockLoadModal .modal-close:hover,
+body.v4-only-body #blockLoadModal .v4-modal-close:hover,
+body.v4-only-body #blockLoadModal .v4-close:hover{
+  border-color:var(--blue);
+  background:rgba(59,130,246,.18);
+}
+
+body.v4-only-body #blockLoadModal .v4-grid-2,
+body.v4-only-body #blockLoadModal .v4-grid-3,
+body.v4-only-body #blockLoadModal .v4-grid-4,
+body.v4-only-body #blockLoadModal form{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px 12px;
+  margin-bottom:14px;
+}
+
+body.v4-only-body #blockLoadModal .v4-field,
+body.v4-only-body #blockLoadModal label{
+  display:grid;
+  gap:5px;
+  min-width:0;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+
+body.v4-only-body #blockLoadModal input,
+body.v4-only-body #blockLoadModal select{
+  width:100%;
+  min-height:34px;
+  padding:0 10px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(15,23,42,.78);
+  color:var(--text-strong);
+  font-size:12px;
+  font-weight:800;
+  outline:none;
+}
+
+body.v4-only-body #blockLoadModal input:focus,
+body.v4-only-body #blockLoadModal select:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 2px rgba(59,130,246,.15);
+}
+
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary{
+  display:grid;
+  gap:12px;
+  margin-top:8px;
+}
+
+body.v4-only-body #blockLoadModal .v4-truss-load-header{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  min-height:42px;
+  padding:9px 12px;
+  border:1px solid var(--line-medium);
+  border-radius:10px;
+  background:rgba(15,23,42,.7);
+}
+
+body.v4-only-body #blockLoadModal .v4-truss-load-header b{
+  min-width:0;
+  color:var(--text-strong);
+  font-size:13px;
+  font-weight:900;
+  line-height:1.15;
+}
+
+body.v4-only-body #blockLoadModal .v4-truss-load-header span{
+  min-width:0;
+  color:var(--muted);
+  font-size:10.5px;
+  font-weight:800;
+  text-align:right;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.ok .v4-truss-load-header{
+  border-color:rgba(34,197,94,.78);
+  background:linear-gradient(180deg,rgba(34,197,94,.17),rgba(15,23,42,.72));
+}
+
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.ok .v4-truss-load-header b{color:#dcfce7}
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.ok .v4-truss-load-header span{color:#bbf7d0}
+
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.risk .v4-truss-load-header{
+  border-color:rgba(245,158,11,.82);
+  background:linear-gradient(180deg,rgba(245,158,11,.17),rgba(15,23,42,.72));
+}
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.risk .v4-truss-load-header b{color:#fef3c7}
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.risk .v4-truss-load-header span{color:#fde68a}
+
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.bad .v4-truss-load-header{
+  border-color:rgba(239,68,68,.9);
+  background:linear-gradient(180deg,rgba(239,68,68,.2),rgba(15,23,42,.72));
+}
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.bad .v4-truss-load-header b{color:#fee2e2}
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.bad .v4-truss-load-header span{color:#fecaca}
+
+body.v4-only-body #blockLoadModal .block-load-sections{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+body.v4-only-body #blockLoadModal .block-load-section{
+  min-width:0;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:rgba(15,23,42,.46);
+}
+
+body.v4-only-body #blockLoadModal .block-load-section h5{
+  margin:0 0 10px;
+  color:#fb923c;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.03em;
+  text-transform:none;
+}
+
+body.v4-only-body #blockLoadModal .block-load-grid{
+  display:grid;
+  grid-template-columns:minmax(120px,.82fr) minmax(0,1fr);
+  gap:8px 12px;
+  align-items:start;
+}
+
+body.v4-only-body #blockLoadModal .block-load-grid > div:nth-child(odd){
+  min-width:0;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:700;
+  line-height:1.28;
+}
+
+body.v4-only-body #blockLoadModal .block-load-grid > div:nth-child(even){
+  min-width:0;
+  color:var(--text-strong);
+  font-size:11px;
+  font-weight:850;
+  line-height:1.28;
+  overflow-wrap:anywhere;
+}
+
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.ok .block-load-grid > div:nth-child(even){color:#22c55e}
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.risk .block-load-grid > div:nth-child(even){color:#f59e0b}
+body.v4-only-body #blockLoadModal .v4-truss-v3-load-summary.bad .block-load-grid > div:nth-child(even){color:#f87171}
+
+body.v4-only-body #blockLoadModal .block-load-note{
+  margin-top:0;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:rgba(15,23,42,.42);
+  color:var(--muted);
+  font-size:10.5px;
+  line-height:1.45;
+}
+
+@media(max-width:900px){
+  body.v4-only-body #blockLoadModal.open{padding:12px 8px}
+  body.v4-only-body #blockLoadModal .modal-content,
+  body.v4-only-body #blockLoadModal .v4-modal-content,
+  body.v4-only-body #blockLoadModal .v4-dialog,
+  body.v4-only-body #blockLoadModal > div{width:calc(100vw - 16px);max-height:calc(100vh - 24px);padding:14px}
+  body.v4-only-body #blockLoadModal .v4-grid-2,
+  body.v4-only-body #blockLoadModal .v4-grid-3,
+  body.v4-only-body #blockLoadModal .v4-grid-4,
+  body.v4-only-body #blockLoadModal form,
+  body.v4-only-body #blockLoadModal .block-load-sections{grid-template-columns:1fr}
+  body.v4-only-body #blockLoadModal .v4-truss-load-header{grid-template-columns:1fr}
+  body.v4-only-body #blockLoadModal .v4-truss-load-header span{text-align:left}
+}
