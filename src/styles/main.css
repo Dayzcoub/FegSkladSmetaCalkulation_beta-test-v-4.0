@@ -31,6 +31,7 @@
 @import './modules/quick-target-workspace.css';
 @import './modules/quick-target-stabilize.css';
 @import './modules/quick-truss-fix-pass.css';
+@import './modules/quick-truss-accordions.css';
 @import './modules/summary-kpi.css';
 @import './modules/auth.css';
 @import './modules/wizard.css';
