@@ -219,6 +219,57 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-l
   border-radius:var(--radius-lg);
 }
 
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-panel-accordion{
+  gap:0;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-panel-accordion .v4-kicker{
+  margin-bottom:4px;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-panel-accordion-head{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:34px;
+  margin:0;
+  padding:0 2px 0 0;
+  cursor:pointer;
+  user-select:none;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-panel-chevron{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:22px;
+  height:22px;
+  min-width:22px;
+  border:1px solid var(--line);
+  border-radius:7px;
+  background:var(--panel-2);
+  color:var(--muted);
+  font-size:11px;
+  line-height:1;
+  transition:transform .16s ease,border-color .16s ease,color .16s ease;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-panel-accordion.is-open .packit-led-panel-chevron{
+  transform:rotate(180deg);
+  border-color:var(--blue-line);
+  color:var(--blue-text);
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-panel-accordion.is-collapsed > :not(.v4-kicker):not(.packit-led-panel-accordion-head){
+  display:none !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-panel-accordion.is-open{
+  gap:10px;
+}
+
 @media(max-width:1180px){
   body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-workbench{
     grid-template-columns:minmax(220px,280px) minmax(0,1fr);
