@@ -1,0 +1,164 @@
+/* PACK.IT — quick truss targeted fix pass.
+   Scope: truss quick UI only. Fixes clipped library buttons, stool action, zoom bar and load indicator. */
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-sidebar{
+  padding:10px;
+  overflow:auto;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-library{
+  display:grid;
+  gap:8px;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-group,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-library-group,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] [data-truss-library] > div{
+  overflow:visible;
+  padding-bottom:10px;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-group-body,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-library-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  overflow:visible;
+  padding-bottom:2px;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] [data-truss-type],
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-library button{
+  min-height:38px;
+  height:auto;
+  padding:8px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1.15;
+  overflow:visible;
+  white-space:nowrap;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-template-panel .v4-template-actions button,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] [data-truss-template-action="stool"]{
+  min-height:34px;
+  height:auto;
+  padding:8px 10px;
+  line-height:1.15;
+  white-space:normal;
+  overflow:visible;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-template-card{
+  overflow:visible;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-template-card .v4-field{
+  min-width:0;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-panel{
+  display:grid;
+  grid-template-columns:120px minmax(0,1fr);
+  align-items:center;
+  gap:12px;
+  min-height:58px;
+  padding:10px 12px;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-panel > div:first-child{
+  display:grid;
+  gap:2px;
+  min-width:0;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-controls{
+  display:grid;
+  grid-template-columns:40px minmax(160px,1fr) 40px 108px 74px;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-controls .v4-icon-btn,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-controls button{
+  min-height:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 10px;
+  line-height:1;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-controls input[type="range"]{
+  width:100%;
+  min-width:0;
+  margin:0;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-autofit{
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin:0;
+  white-space:nowrap;
+  color:var(--muted);
+  font-size:11px;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-structure-toolbar{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(260px,430px);
+  gap:12px;
+  align-items:center;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-structure-toolbar-actions,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-load-toolbar{
+  min-width:0;
+  justify-self:end;
+  width:100%;
+  max-width:430px;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-load-indicator{
+  width:100%;
+  min-height:46px;
+  padding:8px 12px;
+  display:grid;
+  grid-template-columns:1fr;
+  justify-items:start;
+  align-items:center;
+  gap:2px;
+  text-align:left;
+  line-height:1.2;
+  overflow:hidden;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-load-indicator b,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-load-indicator span{
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+@media(max-width:1180px){
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-structure-toolbar{
+    grid-template-columns:1fr;
+  }
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-structure-toolbar-actions,
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-load-toolbar{
+    justify-self:stretch;
+    max-width:none;
+  }
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-panel{
+    grid-template-columns:1fr;
+  }
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-controls{
+    grid-template-columns:40px minmax(120px,1fr) 40px 1fr auto;
+  }
+}
