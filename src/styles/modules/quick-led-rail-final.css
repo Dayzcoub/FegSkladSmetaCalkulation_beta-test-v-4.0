@@ -1,0 +1,165 @@
+/* PACK.IT — quick LED rail final pass.
+   Applies after DOM helper groups params + side panels into .packit-led-control-rail. */
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor{
+  display:grid !important;
+  grid-template-columns:240px minmax(640px,1fr) 240px !important;
+  grid-template-areas:
+    "head head head"
+    "rail canvas result" !important;
+  gap:12px !important;
+  align-items:start !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .v4-kicker,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > h3,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > p.v4-muted{
+  grid-column:1 / -1 !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail{
+  grid-area:rail !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:8px !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:240px !important;
+  align-self:start !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  overflow:visible !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail > .v4-grid-3{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:7px !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:240px !important;
+  padding:10px !important;
+  border:1px solid var(--line) !important;
+  border-radius:var(--radius-lg) !important;
+  background:var(--surface) !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail > .v4-grid-3 > .v4-field{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:5px !important;
+  width:100% !important;
+  min-width:0 !important;
+  font-size:9.5px !important;
+  line-height:1.12 !important;
+  color:var(--muted) !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail > .v4-grid-3 > .v4-field span{
+  display:block !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail > .v4-grid-3 > .v4-field input,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail > .v4-grid-3 > .v4-field select{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  min-height:32px !important;
+  height:32px !important;
+  padding:0 9px !important;
+  box-sizing:border-box !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail > .v4-led-side-panel{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:8px !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:240px !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-control-rail .v4-led-panel-block{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:240px !important;
+  box-sizing:border-box !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .v4-led-workbench{
+  grid-area:canvas !important;
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+  overflow:visible !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .v4-led-workbench > .v4-led-side-panel{
+  display:none !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-canvas-panel{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  box-sizing:border-box !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .v4-led-grid-wrap{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  box-sizing:border-box !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result]{
+  grid-area:result !important;
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:240px !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result] .v4-summary-strip{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:0 !important;
+  border:1px solid var(--line) !important;
+  border-radius:var(--radius-lg) !important;
+  background:var(--surface) !important;
+  overflow:hidden !important;
+}
+
+@media(max-width:1180px){
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor{
+    grid-template-columns:220px minmax(460px,1fr) 220px !important;
+  }
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail,
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail > .v4-grid-3,
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result]{
+    max-width:220px !important;
+  }
+}
+
+@media(max-width:900px){
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor{
+    grid-template-columns:1fr !important;
+    grid-template-areas:"head" "rail" "canvas" "result" !important;
+  }
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail,
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .packit-led-control-rail > .v4-grid-3,
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result]{
+    max-width:none !important;
+  }
+}
