@@ -21,7 +21,7 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] [da
 body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-group-body,
 body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-library-grid{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:8px;
   overflow:visible;
   padding-bottom:2px;
@@ -29,15 +29,16 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4
 
 body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] [data-truss-type],
 body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-library button{
-  min-height:38px;
+  min-height:36px;
   height:auto;
-  padding:8px 10px;
+  padding:7px 8px;
   display:flex;
   align-items:center;
   justify-content:center;
-  line-height:1.15;
+  line-height:1.1;
   overflow:visible;
   white-space:nowrap;
+  font-size:11px;
 }
 
 body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-template-panel .v4-template-actions button,
@@ -160,5 +161,9 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4
   }
   body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-zoom-controls{
     grid-template-columns:40px minmax(120px,1fr) 40px 1fr auto;
+  }
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-group-body,
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .v4-truss-library-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
   }
 }
