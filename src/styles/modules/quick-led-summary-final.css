@@ -84,6 +84,68 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data
   display:none !important;
 }
 
+/* Quick LED params accordion: the parameters block is now the first compact rail section. */
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion{
+  padding:0 !important;
+  gap:0 !important;
+  border:1px solid var(--line) !important;
+  border-radius:var(--radius-lg) !important;
+  background:var(--surface) !important;
+  overflow:hidden !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion-head{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  min-height:42px !important;
+  padding:8px 10px !important;
+  cursor:pointer !important;
+  user-select:none !important;
+  border:0 !important;
+  background:rgba(15,23,42,.28) !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion-head span:first-child{
+  display:grid !important;
+  gap:2px !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion-head small{
+  color:var(--muted) !important;
+  font-size:9px !important;
+  font-weight:850 !important;
+  letter-spacing:.07em !important;
+  line-height:1 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion-head b{
+  color:var(--text-strong) !important;
+  font-size:12px !important;
+  font-weight:900 !important;
+  line-height:1.1 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion.is-collapsed > .v4-field{
+  display:none !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion.is-open{
+  padding:0 10px 10px !important;
+  gap:7px !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion.is-open > .packit-led-params-accordion-head{
+  margin:0 -10px 2px !important;
+  border-bottom:1px solid var(--line) !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] .packit-led-params-accordion.is-open > .v4-field{
+  display:grid !important;
+}
+
 @media(max-width:1180px){
   body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="led"] [data-led-result]{
     max-width:220px !important;
