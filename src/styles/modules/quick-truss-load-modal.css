@@ -90,12 +90,23 @@ body.v4-only-body .v4-truss-load-dialog .v4-kicker{
 body.v4-only-body .v4-truss-load-dialog .v4-grid-3{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-auto-rows:minmax(52px,auto);
   gap:10px 12px;
+  align-items:start;
   margin:0;
+}
+
+body.v4-only-body .v4-truss-load-dialog .v4-grid-3 > .v4-field{
+  height:100%;
+}
+
+body.v4-only-body .v4-truss-load-dialog .v4-grid-3 > .v4-field:nth-child(7){
+  grid-column:1 / 2;
 }
 
 body.v4-only-body .v4-truss-load-dialog .v4-field{
   display:grid;
+  grid-template-rows:13px 34px minmax(0,auto);
   gap:5px;
   min-width:0;
   color:var(--muted);
@@ -105,6 +116,7 @@ body.v4-only-body .v4-truss-load-dialog .v4-field{
 }
 
 body.v4-only-body .v4-truss-load-dialog .v4-field small{
+  min-height:12px;
   color:var(--muted);
   font-size:9.5px;
   font-weight:700;
@@ -114,7 +126,9 @@ body.v4-only-body .v4-truss-load-dialog .v4-field small{
 body.v4-only-body .v4-truss-load-dialog input,
 body.v4-only-body .v4-truss-load-dialog select{
   width:100%;
+  height:34px;
   min-height:34px;
+  max-height:34px;
   padding:0 10px;
   border:1px solid var(--line);
   border-radius:8px;
@@ -269,6 +283,13 @@ body.v4-only-body .v4-truss-load-dialog .block-load-note{
   body.v4-only-body .v4-truss-load-dialog .v4-grid-3,
   body.v4-only-body .v4-truss-load-dialog .block-load-sections{
     grid-template-columns:1fr;
+    grid-auto-rows:auto;
+  }
+  body.v4-only-body .v4-truss-load-dialog .v4-grid-3 > .v4-field:nth-child(7){
+    grid-column:auto;
+  }
+  body.v4-only-body .v4-truss-load-dialog .v4-field{
+    grid-template-rows:auto 34px auto;
   }
   body.v4-only-body .v4-truss-load-dialog .v4-truss-load-header{
     grid-template-columns:1fr;
