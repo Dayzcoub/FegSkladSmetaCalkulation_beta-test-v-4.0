@@ -1,0 +1,366 @@
+/* PACK.IT — Quote Wizard constructors visual parity with Quick calculators.
+   Visual only. Keeps QuoteWizard data mounts, bind buttons, subrent and section logic intact. */
+
+body.v4-only-body .v4-quote-form[data-quote-active-step="stage"],
+body.v4-only-body .v4-quote-form[data-quote-active-step="truss"],
+body.v4-only-body .v4-quote-form[data-quote-active-step="led"]{
+  padding:10px !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+}
+
+body.v4-only-body .v4-quote-form[data-quote-active-step="stage"] > .v4-step-check-card,
+body.v4-only-body .v4-quote-form[data-quote-active-step="truss"] > .v4-step-check-card,
+body.v4-only-body .v4-quote-form[data-quote-active-step="led"] > .v4-step-check-card{
+  margin:0 0 8px !important;
+  padding:8px 10px !important;
+  border:1px solid var(--line) !important;
+  border-radius:var(--radius-lg) !important;
+  background:rgba(15,23,42,.36) !important;
+}
+
+body.v4-only-body [data-quote-stage-panel],
+body.v4-only-body [data-quote-truss-panel],
+body.v4-only-body [data-quote-led-panel]{
+  display:grid !important;
+  gap:10px !important;
+  padding:10px !important;
+  border:1px solid var(--line) !important;
+  border-radius:var(--radius-lg) !important;
+  background:linear-gradient(180deg, rgba(20,29,45,.96), rgba(13,20,32,.96)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+body.v4-only-body [data-quote-stage-panel] > .v4-quote-step-intro,
+body.v4-only-body [data-quote-truss-panel] > .v4-quote-step-intro,
+body.v4-only-body [data-quote-led-panel] > .v4-quote-step-intro{
+  margin:0 !important;
+  padding:8px 10px !important;
+  border:1px solid rgba(51,65,85,.72) !important;
+  border-radius:var(--radius-md) !important;
+  background:rgba(15,23,42,.38) !important;
+  color:var(--muted) !important;
+  font-size:11px !important;
+  line-height:1.25 !important;
+}
+
+body.v4-only-body [data-quote-stage-panel] > .v4-quote-step-intro p,
+body.v4-only-body [data-quote-truss-panel] > .v4-quote-step-intro p,
+body.v4-only-body [data-quote-led-panel] > .v4-quote-step-intro p{
+  margin:0 !important;
+  font-size:11px !important;
+  line-height:1.25 !important;
+}
+
+body.v4-only-body [data-quote-structure-visual],
+body.v4-only-body [data-quote-led-constructor]{
+  display:block !important;
+  min-width:0 !important;
+  width:100% !important;
+}
+
+/* Keep subrent controls, but make them compact like a quick side panel. */
+body.v4-only-body [data-quote-stage-panel] > .v4-linked-subrent-override,
+body.v4-only-body [data-quote-led-panel] > .v4-linked-subrent-override{
+  padding:8px 10px !important;
+  gap:8px !important;
+  border-radius:var(--radius-md) !important;
+  background:rgba(251,146,60,.075) !important;
+  border:1px dashed rgba(251,146,60,.34) !important;
+}
+
+body.v4-only-body [data-quote-stage-panel] .v4-linked-subrent-override .v4-equipment-editor-check,
+body.v4-only-body [data-quote-led-panel] .v4-linked-subrent-override .v4-equipment-editor-check{
+  display:grid !important;
+  grid-template-columns:16px minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:8px !important;
+  min-width:0 !important;
+  color:var(--text-strong) !important;
+  font-size:11px !important;
+  line-height:1.15 !important;
+}
+
+body.v4-only-body [data-quote-stage-panel] .v4-linked-subrent-override input[type="checkbox"],
+body.v4-only-body [data-quote-led-panel] .v4-linked-subrent-override input[type="checkbox"]{
+  width:16px !important;
+  height:16px !important;
+  min-width:16px !important;
+  margin:0 !important;
+}
+
+body.v4-only-body [data-quote-stage-panel] .v4-subrent-row-5,
+body.v4-only-body [data-quote-led-panel] .v4-subrent-row-5{
+  display:grid !important;
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  gap:8px !important;
+}
+
+body.v4-only-body [data-quote-stage-panel] .v4-subrent-row-supplier,
+body.v4-only-body [data-quote-led-panel] .v4-subrent-row-supplier{
+  display:grid !important;
+  grid-template-columns:minmax(160px,1.2fr) auto minmax(180px,1fr) !important;
+  gap:8px !important;
+  align-items:end !important;
+}
+
+/* Embedded stage constructor inside quote: same quick workspace rhythm, but keeps quote mount. */
+body.v4-only-body [data-quote-structure-visual="stage"] .v4-structure-stage.v4-stage-polish{
+  display:grid !important;
+  grid-template-columns:260px minmax(420px,1fr) 220px !important;
+  grid-template-areas:
+    "toolbar toolbar toolbar"
+    "controls canvas summary" !important;
+  gap:10px !important;
+  align-items:start !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="stage"] .v4-structure-toolbar{
+  grid-area:toolbar !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="stage"] .v4-stage-template-panel{
+  grid-area:controls !important;
+  min-width:0 !important;
+  max-height:560px !important;
+  padding:10px !important;
+  overflow:auto !important;
+  scrollbar-gutter:stable !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="stage"] .v4-stage-canvas-wrap{
+  grid-area:canvas !important;
+  min-width:0 !important;
+  min-height:500px !important;
+  border-radius:var(--radius-lg) !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary]{
+  grid-area:summary !important;
+  min-width:0 !important;
+  max-height:560px !important;
+  overflow:auto !important;
+  padding:8px !important;
+  border:1px solid var(--line) !important;
+  border-radius:var(--radius-md) !important;
+  background:rgba(21,29,43,.72) !important;
+}
+
+/* Embedded truss constructor inside quote: match quick truss proportions. */
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-structure-truss,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-truss-constructor,
+body.v4-only-body [data-quote-structure-visual="truss"] [data-truss-constructor]{
+  min-width:0 !important;
+  width:100% !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-structure-truss{
+  display:grid !important;
+  grid-template-columns:260px minmax(520px,1fr) 220px !important;
+  gap:10px !important;
+  align-items:start !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-truss-template-panel,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-truss-control-rail,
+body.v4-only-body [data-quote-structure-visual="truss"] [data-truss-control-rail]{
+  min-width:0 !important;
+  max-height:620px !important;
+  overflow:auto !important;
+  scrollbar-gutter:stable !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-truss-canvas-wrap,
+body.v4-only-body [data-quote-structure-visual="truss"] [data-truss-canvas-wrap]{
+  min-width:0 !important;
+  min-height:520px !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="truss"] [data-truss-summary],
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-truss-summary{
+  min-width:0 !important;
+  max-height:620px !important;
+  overflow:auto !important;
+}
+
+/* Embedded LED constructor inside quote: reuse quick LED visual contract. */
+body.v4-only-body [data-quote-led-panel] [data-quote-led-constructor] .v4-led-constructor{
+  display:grid !important;
+  grid-template-columns:240px minmax(520px,1fr) 220px !important;
+  grid-template-areas:"controls canvas result" !important;
+  gap:10px !important;
+  align-items:start !important;
+  min-width:0 !important;
+  width:100% !important;
+}
+
+body.v4-only-body [data-quote-led-panel] [data-led-control-rail]{
+  grid-area:controls !important;
+  min-width:0 !important;
+  max-height:620px !important;
+  overflow:auto !important;
+  scrollbar-gutter:stable !important;
+}
+
+body.v4-only-body [data-quote-led-panel] .v4-led-workbench,
+body.v4-only-body [data-quote-led-panel] .v4-led-canvas-panel{
+  grid-area:canvas !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body [data-quote-led-panel] .v4-led-canvas-panel{
+  min-height:520px !important;
+}
+
+body.v4-only-body [data-quote-led-panel] [data-led-result]{
+  grid-area:result !important;
+  min-width:0 !important;
+  max-height:620px !important;
+  overflow:auto !important;
+}
+
+/* Compact side summaries for quote constructors, same as quick cards. */
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary] .v4-summary-grid,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-strip,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-grid,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-strip,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-grid{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:0 !important;
+  width:100% !important;
+  min-width:0 !important;
+  border:1px solid var(--line) !important;
+  border-radius:var(--radius-lg) !important;
+  background:linear-gradient(180deg, rgba(21,31,48,.98), rgba(15,23,36,.98)) !important;
+  overflow:hidden !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary] .v4-mini,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-strip > div,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-grid > div,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-strip > div,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-grid > div{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  align-content:center !important;
+  min-height:40px !important;
+  padding:6px 10px !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(51,65,85,.72) !important;
+  background:transparent !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary] .v4-mini:last-child,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-strip > div:last-child,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-grid > div:last-child,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-strip > div:last-child,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-grid > div:last-child{
+  border-bottom:0 !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary] .v4-mini b,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-strip b,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-grid b,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-strip b,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-grid b{
+  display:block !important;
+  color:var(--text-strong) !important;
+  font-size:11.75px !important;
+  font-weight:900 !important;
+  line-height:1.08 !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary] .v4-mini span,
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary] .v4-mini small,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-strip span,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-summary-grid span,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-strip span,
+body.v4-only-body [data-quote-led-panel] [data-led-result] .v4-summary-grid span{
+  display:block !important;
+  margin-top:3px !important;
+  color:var(--muted) !important;
+  font-size:7.6px !important;
+  font-weight:850 !important;
+  letter-spacing:.02em !important;
+  line-height:1.05 !important;
+  text-transform:uppercase !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+/* Hide heavy diagnostic blocks inside the upper constructor; quote/BOM remains below via QuoteWizard logic. */
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary] .v4-table-scroll,
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary] .v4-table-wrap,
+body.v4-only-body [data-quote-structure-visual="stage"] [data-stage-summary] .v4-note,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-table-scroll,
+body.v4-only-body [data-quote-structure-visual="truss"] .v4-table-wrap,
+body.v4-only-body [data-quote-led-panel] [data-led-result] > .v4-card,
+body.v4-only-body [data-quote-led-panel] [data-led-result] > .v4-table-scroll{
+  display:none !important;
+}
+
+/* Below-constructor configured quote snapshot: compact and less dominant. */
+body.v4-only-body [data-quote-stage-panel] > .v4-note,
+body.v4-only-body [data-quote-truss-panel] > .v4-note,
+body.v4-only-body [data-quote-led-panel] > .v4-note{
+  padding:8px 10px !important;
+  font-size:10.5px !important;
+  line-height:1.25 !important;
+  border-radius:var(--radius-md) !important;
+}
+
+body.v4-only-body [data-quote-stage-panel] > .v4-summary-grid,
+body.v4-only-body [data-quote-truss-panel] > .v4-summary-grid,
+body.v4-only-body [data-quote-led-panel] > .v4-summary-grid{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:8px !important;
+  padding:0 !important;
+}
+
+body.v4-only-body [data-quote-stage-panel] > .v4-summary-grid .v4-mini,
+body.v4-only-body [data-quote-truss-panel] > .v4-summary-grid .v4-mini,
+body.v4-only-body [data-quote-led-panel] > .v4-summary-grid .v4-mini{
+  min-height:46px !important;
+  padding:8px 10px !important;
+  border:1px solid var(--line) !important;
+  border-radius:var(--radius-md) !important;
+  background:rgba(15,23,42,.52) !important;
+}
+
+@media(max-width:1180px){
+  body.v4-only-body [data-quote-structure-visual="stage"] .v4-structure-stage.v4-stage-polish,
+  body.v4-only-body [data-quote-structure-visual="truss"] .v4-structure-truss,
+  body.v4-only-body [data-quote-led-panel] [data-quote-led-constructor] .v4-led-constructor{
+    grid-template-columns:minmax(220px,260px) minmax(420px,1fr) 200px !important;
+  }
+}
+
+@media(max-width:900px){
+  body.v4-only-body [data-quote-structure-visual="stage"] .v4-structure-stage.v4-stage-polish,
+  body.v4-only-body [data-quote-structure-visual="truss"] .v4-structure-truss,
+  body.v4-only-body [data-quote-led-panel] [data-quote-led-constructor] .v4-led-constructor{
+    grid-template-columns:minmax(0,1fr) !important;
+    grid-template-areas:none !important;
+  }
+  body.v4-only-body [data-quote-stage-panel] .v4-subrent-row-5,
+  body.v4-only-body [data-quote-led-panel] .v4-subrent-row-5,
+  body.v4-only-body [data-quote-stage-panel] .v4-subrent-row-supplier,
+  body.v4-only-body [data-quote-led-panel] .v4-subrent-row-supplier,
+  body.v4-only-body [data-quote-stage-panel] > .v4-summary-grid,
+  body.v4-only-body [data-quote-truss-panel] > .v4-summary-grid,
+  body.v4-only-body [data-quote-led-panel] > .v4-summary-grid{
+    grid-template-columns:minmax(0,1fr) !important;
+  }
+}
