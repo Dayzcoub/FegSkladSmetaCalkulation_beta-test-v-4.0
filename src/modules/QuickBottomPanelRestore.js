@@ -4,8 +4,18 @@
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.0.0-quick-bottom-panel-restore';
+  const VERSION = '1.1.0-quick-bottom-panel-restore';
   let raf = 0;
+
+  function closestPage(shell) {
+    return shell && shell.closest ? (shell.closest('.packit-page') || shell.closest('.packit-shell') || document) : document;
+  }
+
+  function findExisting(page, selector, bottom) {
+    if (!page || !page.querySelectorAll) return null;
+    const nodes = Array.from(page.querySelectorAll(selector));
+    return nodes.find(node => node && node !== bottom && !node.closest('.v4-quick-modal-backdrop')) || null;
+  }
 
   function placeBottom(shell) {
     if (!shell || !shell.querySelector) return;
@@ -21,9 +31,10 @@
       tabs.insertAdjacentElement('afterend', bottom);
     }
 
-    const docs = shell.querySelector('[data-v4-quick-docs]');
-    const bom = shell.querySelector('[data-v4-bom-inspector]');
-    const visual = shell.querySelector('[data-v4-quick-visual-preview]');
+    const page = closestPage(shell);
+    const docs = findExisting(page, '[data-v4-quick-docs]', bottom);
+    const bom = findExisting(page, '[data-v4-bom-inspector]', bottom);
+    const visual = findExisting(page, '[data-v4-quick-visual-preview]', bottom);
 
     if (docs && docs.parentElement !== bottom) bottom.appendChild(docs);
     if (bom && bom.parentElement !== bottom) bottom.appendChild(bom);
@@ -31,6 +42,8 @@
       visual.setAttribute('data-packit-quick-visual-parked', 'true');
       visual.hidden = true;
     }
+
+    bottom.toggleAttribute('data-packit-restored-bottom-empty', !bottom.children.length);
   }
 
   function restoreAll(root) {
@@ -61,6 +74,7 @@
     schedule(document);
     window.setTimeout(() => schedule(document), 120);
     window.setTimeout(() => schedule(document), 500);
+    window.setTimeout(() => schedule(document), 1200);
   }
 
   ROOT.QuickBottomPanelRestore = { VERSION, init, restoreAll };
