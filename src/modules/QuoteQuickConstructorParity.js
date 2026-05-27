@@ -5,7 +5,7 @@
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.0.0-quote-quick-constructor-parity';
+  const VERSION = '1.1.0-quote-quick-constructor-parity-truss-subrent-accordion';
   let raf = 0;
 
   function setQuickShell(panel, kind) {
@@ -124,6 +124,35 @@
     });
   }
 
+  function ensureTrussSubrentAccordion(panel) {
+    if (!panel || !panel.querySelector) return;
+    panel.querySelectorAll('.v4-truss-subrent-panel').forEach(block => {
+      block.classList.add('packit-truss-subrent-accordion');
+      if (block.dataset.packitTrussSubrentAccordionReady === 'true') return;
+      block.dataset.packitTrussSubrentAccordionReady = 'true';
+      block.classList.add('is-collapsed');
+
+      const rowCount = block.querySelectorAll('[data-truss-subrent-row]').length;
+      const head = document.createElement('button');
+      head.type = 'button';
+      head.className = 'packit-truss-subrent-accordion-head';
+      head.setAttribute('aria-expanded', 'false');
+      head.innerHTML = `<span><small>SUBRENT</small><b>Добор ферм${rowCount ? ' · ' + rowCount : ''}</b></span><span class="packit-led-panel-chevron" aria-hidden="true">▾</span>`;
+      block.insertBefore(head, block.firstChild);
+
+      const toggle = () => {
+        const open = block.classList.contains('is-collapsed');
+        block.classList.toggle('is-collapsed', !open);
+        block.classList.toggle('is-open', open);
+        head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      };
+      head.addEventListener('click', event => {
+        event.preventDefault();
+        toggle();
+      });
+    });
+  }
+
   function adaptLed(panel) {
     setQuickShell(panel, 'led');
     const calc = panel.querySelector('[data-led-calculator].v4-led-constructor');
@@ -148,6 +177,7 @@
 
   function adaptTruss(panel) {
     setQuickShell(panel, 'truss');
+    ensureTrussSubrentAccordion(panel);
   }
 
   function run() {
