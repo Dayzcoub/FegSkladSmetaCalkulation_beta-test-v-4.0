@@ -4,7 +4,7 @@
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.3.0-quick-bottom-panel-restore';
+  const VERSION = '1.4.0-quick-bottom-panel-restore';
   let raf = 0;
 
   function escapeHtml(value) {
@@ -204,6 +204,10 @@
     const pixels = `${result.totalPixelsX || 0}×${result.totalPixelsY || 0}`;
     const aspect = result.aspectRatioLabel || '—';
     const rows = Array.isArray(result.bomPreview) ? result.bomPreview : [];
+    const powerLinks = result.powerLinks || 0;
+    const rj45Links = result.rj45Links || 0;
+    const powerconSchuko = result.powerconSchukoCables || 0;
+    const perCable = result.powerconSchukoWattsPerCable || result.powerconSchukoPerCable || 3400;
 
     if (tab === 'экспорт') {
       live.hidden = true;
@@ -222,7 +226,7 @@
     }
 
     if (tab === 'кабели') {
-      live.innerHTML = `<section class="packit-led-bottom-panel"><div class="v4-kicker">Cables</div><h4>Кабельная часть</h4><div class="packit-led-bottom-cards"><article><b>${result.powerconSchukoCables || 0} шт</b><span>PowerCON–Schuko</span></article><article><b>${result.signalCableCount || 0} шт</b><span>сигнальные линии</span></article><article><b>${result.powerLineCount || 0} линий</b><span>линии питания</span></article><article><b>${result.receiverCardCount || 0} шт</b><span>приёмные карты</span></article></div></section>`;
+      live.innerHTML = `<section class="packit-led-bottom-panel"><div class="v4-kicker">Cables</div><h4>Кабельная часть</h4><div class="packit-led-bottom-cards"><article><b>${powerconSchuko} шт</b><span>PowerCON–Schuko ввод</span></article><article><b>${powerLinks} шт</b><span>LED power link 220</span></article><article><b>${rj45Links} шт</b><span>RJ45 signal link</span></article><article><b>${perCable} Вт</b><span>лимит на вводную линию</span></article></div></section>`;
       return;
     }
 
@@ -232,11 +236,11 @@
     }
 
     if (tab === 'json') {
-      live.innerHTML = `<section class="packit-led-bottom-panel"><div class="v4-kicker">JSON</div><h4>Диагностика LED state</h4><pre class="packit-led-bottom-json">${escapeHtml(JSON.stringify({ constructionCount, cabinetCount, actualWidthM: result.actualWidthM, actualHeightM: result.actualHeightM, totalWeightKg: result.totalWeightKg, totalPowerKw: powerKw }, null, 2))}</pre></section>`;
+      live.innerHTML = `<section class="packit-led-bottom-panel"><div class="v4-kicker">JSON</div><h4>Диагностика LED state</h4><pre class="packit-led-bottom-json">${escapeHtml(JSON.stringify({ constructionCount, cabinetCount, actualWidthM: result.actualWidthM, actualHeightM: result.actualHeightM, totalWeightKg: result.totalWeightKg, totalPowerKw: powerKw, powerLinks, rj45Links, powerconSchukoCables: powerconSchuko }, null, 2))}</pre></section>`;
       return;
     }
 
-    live.innerHTML = `<section class="packit-led-bottom-panel"><div class="v4-kicker">Summary</div><h4>Живая сводка LED-экрана</h4><div class="packit-led-bottom-cards"><article><b>${formatM(result.actualWidthM)}×${formatM(result.actualHeightM)} м</b><span>фактический габарит</span></article><article><b>${constructionCount} шт</b><span>конструкции</span></article><article><b>${cabinetCount} шт</b><span>кабинеты</span></article><article><b>${pixels}</b><span>пиксели</span></article><article><b>${formatKg(result.totalWeightKg)}</b><span>общий вес</span></article><article><b>${formatKw(powerKw)}</b><span>макс. мощность</span></article><article><b>${result.hangingBarCount || 0} / ${result.legCount || 0}</b><span>подвесы / ноги</span></article><article><b>готов</b><span>LED → общий BOM</span></article></div></section>`;
+    live.innerHTML = `<section class="packit-led-bottom-panel"><div class="v4-kicker">Summary</div><h4>Живая сводка LED-экрана</h4><div class="packit-led-bottom-cards"><article><b>${formatM(result.actualWidthM)}×${formatM(result.actualHeightM)} м</b><span>фактический габарит</span></article><article><b>${constructionCount} шт</b><span>конструкции</span></article><article><b>${cabinetCount} шт</b><span>кабинеты</span></article><article><b>${pixels}</b><span>пиксели</span></article><article><b>${formatKg(result.totalWeightKg)}</b><span>общий вес</span></article><article><b>${formatKw(powerKw)}</b><span>макс. мощность</span></article><article><b>${result.hangingBarCount || 0} / ${result.legCount || 0}</b><span>подвесы / ноги</span></article><article><b>${powerLinks} / ${rj45Links}</b><span>220 / RJ45 линки</span></article></div></section>`;
   }
 
   function routeBottom(shell, bottom, tabs) {
