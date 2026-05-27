@@ -5,7 +5,7 @@
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.2.0-quote-quick-constructor-parity-led-subrent-load-close';
+  const VERSION = '1.3.0-quote-quick-constructor-parity-force-truss-subrent-collapsed';
   let raf = 0;
 
   function setQuickShell(panel, kind) {
@@ -145,32 +145,41 @@
     });
   }
 
+  function setTrussSubrentAccordionOpen(block, head, open) {
+    block.classList.toggle('is-open', !!open);
+    block.classList.toggle('is-collapsed', !open);
+    block.dataset.packitTrussSubrentUserState = open ? 'open' : 'collapsed';
+    if (head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
   function ensureTrussSubrentAccordion(panel) {
     if (!panel || !panel.querySelector) return;
     panel.querySelectorAll('.v4-truss-subrent-panel').forEach(block => {
       block.classList.add('packit-truss-subrent-accordion');
-      if (block.dataset.packitTrussSubrentAccordionReady === 'true') return;
-      block.dataset.packitTrussSubrentAccordionReady = 'true';
-      block.classList.add('is-collapsed');
 
-      const rowCount = block.querySelectorAll('[data-truss-subrent-row]').length;
-      const head = document.createElement('button');
-      head.type = 'button';
-      head.className = 'packit-truss-subrent-accordion-head';
-      head.setAttribute('aria-expanded', 'false');
-      head.innerHTML = `<span><small>SUBRENT</small><b>Добор ферм${rowCount ? ' · ' + rowCount : ''}</b></span><span class="packit-led-panel-chevron" aria-hidden="true">▾</span>`;
-      block.insertBefore(head, block.firstChild);
+      let head = block.querySelector(':scope > .packit-truss-subrent-accordion-head');
+      if (!head) {
+        const rowCount = block.querySelectorAll('[data-truss-subrent-row]').length;
+        head = document.createElement('button');
+        head.type = 'button';
+        head.className = 'packit-truss-subrent-accordion-head';
+        head.innerHTML = `<span><small>SUBRENT</small><b>Добор ферм${rowCount ? ' · ' + rowCount : ''}</b></span><span class="packit-led-panel-chevron" aria-hidden="true">▾</span>`;
+        block.insertBefore(head, block.firstChild);
+      }
 
-      const toggle = () => {
-        const open = block.classList.contains('is-collapsed');
-        block.classList.toggle('is-collapsed', !open);
-        block.classList.toggle('is-open', open);
-        head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      };
-      head.addEventListener('click', event => {
-        event.preventDefault();
-        toggle();
-      });
+      if (block.dataset.packitTrussSubrentAccordionReady !== 'true') {
+        block.dataset.packitTrussSubrentAccordionReady = 'true';
+        setTrussSubrentAccordionOpen(block, head, false);
+        head.addEventListener('click', event => {
+          event.preventDefault();
+          const open = !block.classList.contains('is-open');
+          setTrussSubrentAccordionOpen(block, head, open);
+        });
+      } else if (block.dataset.packitTrussSubrentUserState !== 'open') {
+        setTrussSubrentAccordionOpen(block, head, false);
+      } else {
+        setTrussSubrentAccordionOpen(block, head, true);
+      }
     });
   }
 
