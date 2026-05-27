@@ -1,0 +1,139 @@
+/* PACK.IT — quick Stage/Truss bottom live panels.
+   Visual only. Mirrors LED bottom card style for stage and truss. */
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-stage-truss-bottom-live,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-stage-truss-bottom-live{
+  width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-panel,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-panel{
+  display:grid !important;
+  gap:10px !important;
+  width:100% !important;
+  min-width:0 !important;
+  padding:14px !important;
+  border:1px solid var(--line) !important;
+  border-radius:0 0 var(--radius-lg) var(--radius-lg) !important;
+  background:linear-gradient(180deg, rgba(16,24,38,.96), rgba(12,18,30,.96)) !important;
+  box-sizing:border-box !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-panel h4,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-panel h4{
+  margin:0 !important;
+  color:var(--text-strong) !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  line-height:1.15 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-cards,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-cards{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:8px !important;
+  width:100% !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-cards article,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-cards article{
+  display:grid !important;
+  align-content:center !important;
+  min-height:58px !important;
+  padding:10px 12px !important;
+  border:1px solid rgba(51,65,85,.9) !important;
+  border-radius:10px !important;
+  background:rgba(15,23,42,.62) !important;
+  box-sizing:border-box !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-cards b,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-cards b{
+  display:block !important;
+  color:var(--text-strong) !important;
+  font-size:15px !important;
+  font-weight:900 !important;
+  line-height:1.1 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-cards span,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-cards span{
+  display:block !important;
+  margin-top:5px !important;
+  color:var(--muted) !important;
+  font-size:9px !important;
+  font-weight:850 !important;
+  letter-spacing:.035em !important;
+  line-height:1.1 !important;
+  text-transform:uppercase !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-table,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-table{
+  overflow:auto !important;
+  border:1px solid var(--line) !important;
+  border-radius:10px !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-table table,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-table table{
+  width:100% !important;
+  border-collapse:collapse !important;
+  font-size:12px !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-table th,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-table td,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-table th,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-table td{
+  padding:9px 10px !important;
+  border-bottom:1px solid rgba(51,65,85,.72) !important;
+  text-align:left !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-table th,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-table th{
+  color:var(--muted) !important;
+  font-size:9px !important;
+  font-weight:850 !important;
+  letter-spacing:.045em !important;
+  text-transform:uppercase !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-json,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-json{
+  min-height:120px !important;
+  margin:0 !important;
+  padding:12px !important;
+  border:1px solid var(--line) !important;
+  border-radius:10px !important;
+  background:#05070a !important;
+  color:var(--text) !important;
+  white-space:pre-wrap !important;
+  overflow:auto !important;
+}
+
+@media(max-width:1180px){
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-cards,
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-cards{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+
+@media(max-width:900px){
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-led-bottom-cards,
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="truss"] .packit-led-bottom-cards{
+    grid-template-columns:minmax(0,1fr) !important;
+  }
+}
