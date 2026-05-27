@@ -1,101 +1,178 @@
 /* PACK.IT — quick Stage side panels final polish.
-   Visual only: compact left rail controls and right summary typography. */
+   Visual only: exact selectors from V4StructureVisualConfigurator stage markup. */
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-quick-body{
-  align-items:start !important;
-}
-
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-packit-stage-control-rail],
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .packit-stage-control-rail,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-control-rail,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-sidebar,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-left{
+/* LEFT RAIL: compact, readable, no clipped buttons/labels. */
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-template-panel{
   min-width:0 !important;
+  max-width:100% !important;
+  padding:10px !important;
   overflow:auto !important;
   scrollbar-gutter:stable !important;
-}
-
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-controls,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-panel,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-sidebar .v4-card,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-control-rail .v4-card{
-  min-width:0 !important;
-  max-width:100% !important;
   box-sizing:border-box !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-sidebar *,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-control-rail *,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-packit-stage-control-rail] *{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-template-panel *,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] *{
   box-sizing:border-box !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-field,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] label{
-  min-width:0 !important;
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-truss-template-head{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:6px !important;
+  margin-bottom:8px !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] label,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-field > span,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-field > small{
-  font-size:10px !important;
-  line-height:1.15 !important;
-  max-width:100% !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-}
-
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] input,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] select,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] textarea{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-draw-pill{
   width:100% !important;
   min-width:0 !important;
-  height:34px !important;
-  padding:7px 9px !important;
-  font-size:12px !important;
-  line-height:1.1 !important;
+  height:30px !important;
+  padding:6px 8px !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:10.5px !important;
+  line-height:1 !important;
+  text-align:center !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] textarea{
-  height:auto !important;
-  min-height:58px !important;
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-kicker{
+  font-size:9px !important;
+  line-height:1.05 !important;
+  letter-spacing:.055em !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] button{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-controls-layout,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-secondary-layout{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:8px !important;
   min-width:0 !important;
-  max-width:100% !important;
-  font-size:11px !important;
-  line-height:1.12 !important;
-  white-space:normal !important;
+  width:100% !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-segmented,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-button-grid,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-preset-grid{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-control-stack,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-tool-box,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-draw-help,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-frame-auto-card{
+  min-width:0 !important;
+  width:100% !important;
+  max-width:100% !important;
+  padding:9px !important;
+  border-radius:10px !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-field{
+  display:grid !important;
+  gap:5px !important;
+  min-width:0 !important;
+  width:100% !important;
+  margin:0 !important;
+  color:var(--text-strong) !important;
+  font-size:10px !important;
+  line-height:1.15 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-field + .v4-field{
+  margin-top:7px !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-field > small,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-muted,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-frame-note,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-draw-help{
+  font-size:9.5px !important;
+  line-height:1.28 !important;
+  color:var(--muted) !important;
+  overflow-wrap:anywhere !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-field input:not([type="checkbox"]),
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-field select{
+  width:100% !important;
+  min-width:0 !important;
+  height:32px !important;
+  padding:6px 8px !important;
+  font-size:11.5px !important;
+  line-height:1.1 !important;
+  border-radius:7px !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-check{
+  display:grid !important;
+  grid-template-columns:16px minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:8px !important;
+  width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:8px 9px !important;
+  font-size:10px !important;
+  line-height:1.15 !important;
+  color:var(--muted) !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-check input[type="checkbox"]{
+  width:16px !important;
+  height:16px !important;
+  min-width:16px !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-frame-auto-card span,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-tool-box > span{
+  display:block !important;
+  color:var(--muted) !important;
+  font-size:9px !important;
+  font-weight:850 !important;
+  letter-spacing:.045em !important;
+  text-transform:uppercase !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-frame-auto-card b{
+  display:block !important;
+  margin-top:3px !important;
+  color:var(--text-strong) !important;
+  font-size:11.5px !important;
+  line-height:1.1 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-tool-buttons,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-template-actions{
   display:grid !important;
   grid-template-columns:repeat(2,minmax(0,1fr)) !important;
   gap:6px !important;
-  min-width:0 !important;
-}
-
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-segmented > *,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-button-grid > *,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-preset-grid > *{
-  min-width:0 !important;
   width:100% !important;
+  min-width:0 !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-muted,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] p{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-template-actions small,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-clear-action{
+  grid-column:1 / -1 !important;
+}
+
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-stage-tool-buttons button,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish .v4-template-actions button{
+  width:100% !important;
+  min-width:0 !important;
+  height:32px !important;
+  padding:6px 8px !important;
   font-size:10.5px !important;
-  line-height:1.32 !important;
+  line-height:1.05 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
 }
 
-/* Stage right summary: same compact readability as LED. */
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-result],
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-result="stage"],
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-summary,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .stage-summary{
+/* RIGHT STAGE SUMMARY: exact selector generated by renderStageState(). */
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary]{
   grid-area:result !important;
   display:block !important;
   width:100% !important;
@@ -105,13 +182,10 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .st
   overflow:visible !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-result] .v4-summary-strip,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-result="stage"] .v4-summary-strip,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-summary .v4-summary-strip,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .stage-summary .v4-summary-strip{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] .v4-summary-grid{
   display:grid !important;
   grid-template-columns:minmax(0,1fr) !important;
-  grid-auto-rows:minmax(42px,auto) !important;
+  grid-auto-rows:minmax(40px,auto) !important;
   align-content:start !important;
   gap:0 !important;
   width:100% !important;
@@ -126,15 +200,12 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .st
   box-sizing:border-box !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-result] .v4-summary-strip > div,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-result="stage"] .v4-summary-strip > div,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-summary .v4-summary-strip > div,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .stage-summary .v4-summary-strip > div{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] .v4-mini{
   display:grid !important;
   grid-template-columns:minmax(0,1fr) !important;
   align-content:center !important;
-  min-height:42px !important;
-  padding:7px 12px !important;
+  min-height:40px !important;
+  padding:6px 10px !important;
   border:0 !important;
   border-bottom:1px solid rgba(51,65,85,.72) !important;
   background:transparent !important;
@@ -142,20 +213,14 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .st
   min-width:0 !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-result] .v4-summary-strip > div:last-child,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-result="stage"] .v4-summary-strip > div:last-child,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-summary .v4-summary-strip > div:last-child,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .stage-summary .v4-summary-strip > div:last-child{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] .v4-mini:last-child{
   border-bottom:0 !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-result] .v4-summary-strip b,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-result="stage"] .v4-summary-strip b,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-summary .v4-summary-strip b,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .stage-summary .v4-summary-strip b{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] .v4-mini b{
   display:block !important;
   color:var(--text-strong) !important;
-  font-size:12px !important;
+  font-size:11.75px !important;
   font-weight:900 !important;
   line-height:1.08 !important;
   min-width:0 !important;
@@ -164,16 +229,14 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .st
   white-space:nowrap !important;
 }
 
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-result] .v4-summary-strip span,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-result="stage"] .v4-summary-strip span,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-summary .v4-summary-strip span,
-body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .stage-summary .v4-summary-strip span{
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] .v4-mini span,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] .v4-mini small{
   display:block !important;
   margin-top:3px !important;
   color:var(--muted) !important;
-  font-size:7.8px !important;
+  font-size:7.5px !important;
   font-weight:850 !important;
-  letter-spacing:.035em !important;
+  letter-spacing:.025em !important;
   line-height:1.05 !important;
   text-transform:uppercase !important;
   min-width:0 !important;
@@ -182,11 +245,14 @@ body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .st
   white-space:nowrap !important;
 }
 
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] .v4-note,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] .v4-table-scroll,
+body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary] .quick-pdf-actions{
+  display:none !important;
+}
+
 @media(max-width:1180px){
-  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-stage-result],
-  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] [data-result="stage"],
-  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-stage-summary,
-  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .stage-summary{
+  body.v4-only-body .packit-quick-shell[data-packit-quick-target-kind="stage"] .v4-structure-stage.v4-stage-polish [data-stage-summary]{
     max-width:220px !important;
   }
 }
