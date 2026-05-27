@@ -1,0 +1,188 @@
+/* PACK.IT — Quote constructor parity polish.
+   Last-mile visual fixes for quote Stage/Truss/LED after QuoteQuickConstructorParity DOM adapter.
+   Visual only: no calculation, BOM, warehouse, PDF, draft or backend changes. */
+
+/* Quote constructor panels should feel like quick workspaces, not old wizard forms. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="stage"],
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"],
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"]{
+  gap:8px !important;
+  padding:8px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity > .v4-quote-step-intro{
+  min-height:34px !important;
+  padding:8px 10px !important;
+}
+
+/* LED quote: keep the quick LED composition compact inside the wizard. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor{
+  padding:8px !important;
+  gap:10px !important;
+  grid-template-columns:240px minmax(540px,1fr) 220px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > .v4-kicker,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > h3,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > p.v4-muted{
+  margin:0 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor > p.v4-muted{
+  font-size:11px !important;
+  line-height:1.25 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"] .v4-led-canvas-panel{
+  min-height:430px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"] .v4-led-grid-wrap{
+  min-height:360px !important;
+}
+
+/* Truss quote: subrent belongs to an expandable tool inside summary, not an always-open right form. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .packit-truss-subrent-accordion{
+  display:block !important;
+  margin-top:8px !important;
+  border:1px solid rgba(251,146,60,.28) !important;
+  border-radius:var(--radius-lg) !important;
+  background:rgba(251,146,60,.055) !important;
+  overflow:hidden !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .packit-truss-subrent-accordion-head{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:8px !important;
+  width:100% !important;
+  min-height:38px !important;
+  padding:8px 10px !important;
+  border:0 !important;
+  background:rgba(15,23,42,.42) !important;
+  color:var(--text-strong) !important;
+  cursor:pointer !important;
+  text-align:left !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .packit-truss-subrent-accordion-head span:first-child{
+  display:grid !important;
+  gap:2px !important;
+  min-width:0 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .packit-truss-subrent-accordion-head small{
+  color:var(--muted) !important;
+  font-size:8px !important;
+  font-weight:850 !important;
+  letter-spacing:.07em !important;
+  line-height:1 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .packit-truss-subrent-accordion-head b{
+  color:var(--text-strong) !important;
+  font-size:11px !important;
+  font-weight:900 !important;
+  line-height:1.08 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .packit-truss-subrent-accordion.is-collapsed > :not(.packit-truss-subrent-accordion-head){
+  display:none !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .packit-truss-subrent-accordion.is-open > .packit-truss-subrent-accordion-head{
+  border-bottom:1px solid rgba(251,146,60,.24) !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .packit-truss-subrent-accordion .v4-note{
+  margin:8px !important;
+  padding:8px !important;
+  font-size:9.5px !important;
+  line-height:1.25 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-row{
+  margin:8px !important;
+  padding:8px !important;
+  border:1px solid rgba(51,65,85,.72) !important;
+  border-radius:10px !important;
+  background:rgba(15,23,42,.46) !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-main,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-prices{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:6px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-meta b,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-meta small{
+  display:block !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-meta b{
+  font-size:10px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-meta small{
+  color:var(--muted) !important;
+  font-size:8px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-row .v4-field{
+  display:grid !important;
+  gap:4px !important;
+  font-size:8.5px !important;
+  color:var(--muted) !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-row input,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-row select,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-subrent-row button{
+  width:100% !important;
+  min-width:0 !important;
+  height:28px !important;
+  padding:4px 7px !important;
+  font-size:9.5px !important;
+}
+
+/* In quote constructors, heavy right-column internal tables should stay hidden in the upper workspace. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] .v4-truss-final-kit,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] .v4-truss-template-warnings,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] > .v4-note:not(.v4-step-warn){
+  display:none !important;
+}
+
+/* Stage quote: match quick stage density without changing stage drawing logic. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="stage"] .v4-structure-stage{
+  padding:8px !important;
+  gap:10px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="stage"] .v4-stage-canvas-wrap{
+  min-height:430px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="stage"] .v4-visual-stage-grid{
+  min-height:360px !important;
+}
+
+@media(max-width:1180px){
+  body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor{
+    grid-template-columns:220px minmax(420px,1fr) 210px !important;
+  }
+}
+
+@media(max-width:900px){
+  body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="led"] [data-led-calculator].v4-led-constructor{
+    grid-template-columns:1fr !important;
+  }
+}
