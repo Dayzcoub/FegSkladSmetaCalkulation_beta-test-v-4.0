@@ -5,7 +5,7 @@
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.1.0-quote-quick-constructor-parity-truss-subrent-accordion';
+  const VERSION = '1.2.0-quote-quick-constructor-parity-led-subrent-load-close';
   let raf = 0;
 
   function setQuickShell(panel, kind) {
@@ -75,6 +75,27 @@
     } else {
       body.hidden = params.classList.contains('is-collapsed');
     }
+  }
+
+  function syncLedSubrentVisibility(panel) {
+    if (!panel || !panel.querySelector) return;
+    panel.querySelectorAll('[data-quote-led-subrent-block]').forEach(block => {
+      const cb = block.querySelector('[data-quote-led-subrent-enabled]');
+      const fields = block.querySelector('[data-quote-led-subrent-fields]');
+      const enabled = !!(cb && cb.checked);
+      block.classList.toggle('is-enabled', enabled);
+      if (fields) {
+        fields.hidden = !enabled;
+        fields.style.display = enabled ? '' : 'none';
+      }
+      if (cb && cb.dataset.packitLedSubrentToggleReady !== 'true') {
+        cb.dataset.packitLedSubrentToggleReady = 'true';
+        cb.addEventListener('change', () => {
+          syncLedSubrentVisibility(panel);
+          window.setTimeout(() => syncLedSubrentVisibility(panel), 0);
+        });
+      }
+    });
   }
 
   function panelTitle(panel) {
@@ -155,6 +176,7 @@
 
   function adaptLed(panel) {
     setQuickShell(panel, 'led');
+    syncLedSubrentVisibility(panel);
     const calc = panel.querySelector('[data-led-calculator].v4-led-constructor');
     if (!calc) return;
     const params = getDirectLedParams(calc);
@@ -186,6 +208,39 @@
     document.querySelectorAll('[data-quote-led-panel]').forEach(adaptLed);
   }
 
+  function closeLoadModal(modal) {
+    if (!modal) return false;
+    try { if (typeof modal.close === 'function' && modal.open) modal.close(); } catch (_) {}
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.removeAttribute('open');
+    return true;
+  }
+
+  function bindLoadModalCloseGuard() {
+    if (document.body.__packitQuoteLoadCloseGuard) return;
+    document.body.__packitQuoteLoadCloseGuard = true;
+    document.addEventListener('click', event => {
+      const target = event.target;
+      if (!target || !target.closest) return;
+      const modal = target.closest('#blockLoadModal, .block-load-modal, .v4-truss-load-dialog, [data-truss-load-dialog]');
+      if (!modal) return;
+      const button = target.closest('button, [role="button"]');
+      const text = button ? String(button.textContent || button.getAttribute('aria-label') || button.title || '').trim().toLowerCase() : '';
+      const isClose = !!(button && (text === '×' || text === 'x' || text.includes('закры') || text.includes('close') || button.matches('[data-truss-load-close],[data-close],[data-modal-close]')));
+      if (target === modal || isClose) {
+        event.preventDefault();
+        event.stopPropagation();
+        closeLoadModal(modal);
+      }
+    }, true);
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      const modal = document.querySelector('#blockLoadModal.open, .block-load-modal.open, .v4-truss-load-dialog[open], .v4-truss-load-dialog.open, [data-truss-load-dialog][open], [data-truss-load-dialog].open');
+      if (modal) closeLoadModal(modal);
+    }, true);
+  }
+
   function schedule() {
     if (raf) return;
     raf = window.requestAnimationFrame ? window.requestAnimationFrame(() => { raf = 0; run(); }) : window.setTimeout(() => { raf = 0; run(); }, 16);
@@ -194,8 +249,9 @@
   function init() {
     if (!document.body || document.body.__packitQuoteQuickConstructorParity) return;
     document.body.__packitQuoteQuickConstructorParity = true;
+    bindLoadModalCloseGuard();
     const observer = new MutationObserver(schedule);
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-quote-active-step', 'class'] });
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-quote-active-step', 'class', 'checked', 'style'] });
     ['click', 'input', 'change'].forEach(type => document.addEventListener(type, event => {
       if (event.target && event.target.closest && event.target.closest('[data-quote-stage-panel],[data-quote-truss-panel],[data-quote-led-panel],[data-quote-step-target],[data-quote-next],[data-quote-prev]')) {
         window.setTimeout(schedule, 0);
