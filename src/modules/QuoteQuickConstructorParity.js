@@ -5,7 +5,7 @@
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.4.0-quote-quick-constructor-parity-truss-subrent-bottom-host';
+  const VERSION = '1.5.0-quote-quick-constructor-parity-truss-subrentor-add-guard';
   let raf = 0;
 
   function setQuickShell(panel, kind) {
@@ -205,6 +205,51 @@
     });
   }
 
+  function insertSupplierOption(select, saved) {
+    if (!select || !saved) return;
+    const id = String(saved.id || saved.value || saved.name || '').trim();
+    const name = String(saved.name || saved.title || id || '').trim();
+    if (!id) return;
+    const exists = Array.from(select.options || []).some(option => String(option.value) === id);
+    if (!exists) {
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = name || id;
+      select.appendChild(option);
+    }
+    select.value = id;
+    ['input', 'change'].forEach(type => select.dispatchEvent(new Event(type, { bubbles: true })));
+  }
+
+  function bindTrussSubrentorAddGuard() {
+    if (document.body.__packitQuoteTrussSubrentorAddGuard) return;
+    document.body.__packitQuoteTrussSubrentorAddGuard = true;
+    document.addEventListener('click', event => {
+      const target = event.target;
+      if (!target || !target.closest) return;
+      const host = target.closest('[data-packit-truss-subrent-bottom-host]');
+      if (!host) return;
+      const button = target.closest('button');
+      if (!button || button.classList.contains('packit-truss-subrent-accordion-head')) return;
+      const label = String(button.textContent || '').toLowerCase();
+      if (!label.includes('добав')) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      if (!ROOT.SubrentorsDirectoryUI || !ROOT.SubrentorsDirectoryUI.openSubrentorModal) {
+        if (window.console && console.warn) console.warn('SubrentorsDirectoryUI.openSubrentorModal is not available');
+        return;
+      }
+      const row = button.closest('[data-truss-subrent-row], .v4-truss-subrent-row') || host;
+      ROOT.SubrentorsDirectoryUI.openSubrentorModal({
+        onSave: saved => {
+          const select = row.querySelector('select') || host.querySelector('select');
+          insertSupplierOption(select, saved);
+        }
+      });
+    }, true);
+  }
+
   function adaptLed(panel) {
     setQuickShell(panel, 'led');
     syncLedSubrentVisibility(panel);
@@ -281,6 +326,7 @@
     if (!document.body || document.body.__packitQuoteQuickConstructorParity) return;
     document.body.__packitQuoteQuickConstructorParity = true;
     bindLoadModalCloseGuard();
+    bindTrussSubrentorAddGuard();
     const observer = new MutationObserver(schedule);
     observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-quote-active-step', 'class', 'checked', 'style'] });
     ['click', 'input', 'change'].forEach(type => document.addEventListener(type, event => {
