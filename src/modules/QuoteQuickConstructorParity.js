@@ -5,7 +5,7 @@
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.3.0-quote-quick-constructor-parity-force-truss-subrent-collapsed';
+  const VERSION = '1.4.0-quote-quick-constructor-parity-truss-subrent-bottom-host';
   let raf = 0;
 
   function setQuickShell(panel, kind) {
@@ -152,10 +152,32 @@
     if (head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
+  function ensureTrussSubrentBottomHost(panel) {
+    if (!panel || !panel.querySelector) return null;
+    let host = panel.querySelector(':scope > [data-packit-truss-subrent-bottom-host]');
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'packit-truss-subrent-bottom-host';
+      host.setAttribute('data-packit-truss-subrent-bottom-host', 'true');
+    }
+
+    const directSummary = panel.querySelector(':scope > .v4-summary-grid');
+    const directNote = panel.querySelector(':scope > .v4-note');
+    const anchor = directSummary || directNote;
+    if (anchor && anchor.parentElement === panel) {
+      if (host.parentElement !== panel || host.previousElementSibling !== anchor) anchor.insertAdjacentElement('afterend', host);
+    } else if (host.parentElement !== panel) {
+      panel.appendChild(host);
+    }
+    return host;
+  }
+
   function ensureTrussSubrentAccordion(panel) {
     if (!panel || !panel.querySelector) return;
+    const host = ensureTrussSubrentBottomHost(panel);
     panel.querySelectorAll('.v4-truss-subrent-panel').forEach(block => {
       block.classList.add('packit-truss-subrent-accordion');
+      if (host && block.parentElement !== host) host.appendChild(block);
 
       let head = block.querySelector(':scope > .packit-truss-subrent-accordion-head');
       if (!head) {
