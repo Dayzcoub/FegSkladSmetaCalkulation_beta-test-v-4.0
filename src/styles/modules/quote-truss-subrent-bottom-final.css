@@ -182,6 +182,63 @@ body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="trus
   background:linear-gradient(180deg, rgba(37,50,75,.98), rgba(25,38,59,.98)) !important;
 }
 
+/* Final density/alignment pass: make rows read like a compact work table. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-note{
+  margin:6px 8px !important;
+  padding:6px 8px !important;
+  font-size:9.5px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-row,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host [data-truss-subrent-row]{
+  grid-template-columns:minmax(285px,.95fr) 78px minmax(260px,1.15fr) 108px 116px !important;
+  column-gap:7px !important;
+  row-gap:4px !important;
+  margin:6px 8px !important;
+  padding:7px 8px !important;
+  border-radius:9px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-meta{
+  padding-top:1px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-meta b{
+  font-size:10.5px !important;
+  line-height:1.12 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-meta small{
+  margin-top:2px !important;
+  font-size:8px !important;
+  line-height:1.16 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-field{
+  gap:3px !important;
+  font-size:8px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host input,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host select,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host button:not(.packit-truss-subrent-accordion-head){
+  height:28px !important;
+  min-height:28px !important;
+  padding:4px 8px !important;
+  font-size:10px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-prices > .v4-field:nth-of-type(2){
+  grid-column:3 / 5 !important;
+  grid-row:2 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-prices > .v4-field:nth-of-type(2) input{
+  height:26px !important;
+  min-height:26px !important;
+  font-size:9.5px !important;
+}
+
 @media(max-width:1180px){
   body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-row,
   body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host [data-truss-subrent-row]{
