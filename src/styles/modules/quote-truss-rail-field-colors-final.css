@@ -1,0 +1,59 @@
+/* PACK.IT — final color pass for quote truss rail fields.
+   Visual only. Fixes black/native-looking inputs in portal/table truss controls. */
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-template-panel input,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-template-panel select,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-template-panel textarea,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-control-rail input,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-control-rail select,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-control-rail textarea,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-control-rail] input,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-control-rail] select,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-control-rail] textarea{
+  background:#111a2b !important;
+  background-color:#111a2b !important;
+  border-color:#334155 !important;
+  color:#f8fafc !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045), 0 1px 0 rgba(0,0,0,.18) !important;
+  -webkit-text-fill-color:#f8fafc !important;
+  caret-color:#3b82f6 !important;
+  color-scheme:dark !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-template-panel input:hover,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-template-panel select:hover,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-control-rail input:hover,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-control-rail select:hover,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-control-rail] input:hover,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-control-rail] select:hover{
+  background:#142033 !important;
+  background-color:#142033 !important;
+  border-color:#475569 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-template-panel input:focus,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-template-panel select:focus,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-control-rail input:focus,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-control-rail select:focus,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-control-rail] input:focus,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-control-rail] select:focus{
+  background:#162238 !important;
+  background-color:#162238 !important;
+  border-color:#3b82f6 !important;
+  box-shadow:0 0 0 2px rgba(59,130,246,.24), inset 0 1px 0 rgba(255,255,255,.055) !important;
+  outline:none !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-template-panel input::placeholder,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-control-rail input::placeholder,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-control-rail] input::placeholder{
+  color:#8ea4c3 !important;
+  -webkit-text-fill-color:#8ea4c3 !important;
+}
+
+/* Keep browser number spinners from looking like light/native blocks. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] input[type="number"]::-webkit-inner-spin-button,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] input[type="number"]::-webkit-outer-spin-button{
+  opacity:.35 !important;
+  filter:invert(1) brightness(1.15) !important;
+}
