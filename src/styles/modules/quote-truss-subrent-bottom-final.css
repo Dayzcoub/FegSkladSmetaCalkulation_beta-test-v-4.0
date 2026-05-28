@@ -1,0 +1,185 @@
+/* PACK.IT — final readable bottom subrent block for quote truss step.
+   Visual only. The original subrent DOM is moved by QuoteQuickConstructorParity; handlers and data stay intact. */
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host{
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  margin:8px 0 0 !important;
+  padding:0 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host:empty{
+  display:none !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .packit-truss-subrent-accordion{
+  width:100% !important;
+  max-height:none !important;
+  min-height:0 !important;
+  margin:0 !important;
+  border:1px solid rgba(251,146,60,.34) !important;
+  border-radius:12px !important;
+  background:linear-gradient(180deg, rgba(30,41,59,.86), rgba(15,23,42,.92)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important;
+  overflow:hidden !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .packit-truss-subrent-accordion-head{
+  min-height:42px !important;
+  padding:9px 12px !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(251,146,60,.2) !important;
+  background:linear-gradient(180deg, rgba(38,52,76,.72), rgba(23,34,52,.76)) !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .packit-truss-subrent-accordion-head small{
+  color:#f59e0b !important;
+  font-size:8.5px !important;
+  font-weight:900 !important;
+  letter-spacing:.08em !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .packit-truss-subrent-accordion-head b{
+  color:#f8fafc !important;
+  font-size:12px !important;
+  font-weight:900 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .packit-truss-subrent-accordion.is-collapsed{
+  max-height:42px !important;
+  min-height:42px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .packit-truss-subrent-accordion.is-open{
+  max-height:none !important;
+  overflow:visible !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .packit-truss-subrent-accordion.is-open > .packit-truss-subrent-accordion-head{
+  position:relative !important;
+  top:auto !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-note{
+  margin:10px 12px !important;
+  padding:8px 10px !important;
+  border:1px solid rgba(51,65,85,.75) !important;
+  border-radius:10px !important;
+  background:rgba(15,23,42,.56) !important;
+  color:#9fb1cf !important;
+  font-size:10.5px !important;
+  line-height:1.35 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-row,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host [data-truss-subrent-row]{
+  display:grid !important;
+  grid-template-columns:minmax(230px,.95fr) minmax(0,1.45fr) minmax(180px,.7fr) !important;
+  gap:10px !important;
+  align-items:start !important;
+  margin:10px 12px !important;
+  padding:12px !important;
+  border:1px solid rgba(71,85,105,.78) !important;
+  border-radius:12px !important;
+  background:linear-gradient(180deg, rgba(20,30,46,.96), rgba(15,23,42,.96)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-meta{
+  min-width:0 !important;
+  padding:0 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-meta b{
+  display:block !important;
+  color:#f8fafc !important;
+  font-size:11.5px !important;
+  font-weight:900 !important;
+  line-height:1.18 !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-meta small{
+  display:block !important;
+  margin-top:4px !important;
+  color:#8ea4c3 !important;
+  font-size:9.2px !important;
+  font-weight:750 !important;
+  line-height:1.25 !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-main{
+  display:grid !important;
+  grid-template-columns:minmax(90px,.35fr) minmax(180px,1fr) !important;
+  gap:8px !important;
+  align-items:end !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-prices{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:8px !important;
+  align-items:end !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-field{
+  display:grid !important;
+  gap:5px !important;
+  color:#8ea4c3 !important;
+  font-size:9px !important;
+  font-weight:800 !important;
+  line-height:1.1 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host input,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host select{
+  width:100% !important;
+  min-width:0 !important;
+  height:34px !important;
+  padding:7px 9px !important;
+  border:1px solid #334155 !important;
+  border-radius:8px !important;
+  background:#111a2b !important;
+  color:#f8fafc !important;
+  -webkit-text-fill-color:#f8fafc !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04) !important;
+  font-size:11px !important;
+  font-weight:850 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host input:focus,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host select:focus{
+  border-color:#3b82f6 !important;
+  box-shadow:0 0 0 2px rgba(59,130,246,.22), inset 0 1px 0 rgba(255,255,255,.05) !important;
+  outline:none !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host button:not(.packit-truss-subrent-accordion-head){
+  min-height:34px !important;
+  padding:7px 12px !important;
+  border:1px solid rgba(71,85,105,.9) !important;
+  border-radius:8px !important;
+  background:linear-gradient(180deg, rgba(30,41,59,.95), rgba(20,30,46,.95)) !important;
+  color:#f8fafc !important;
+  font-size:10.5px !important;
+  font-weight:900 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host button:not(.packit-truss-subrent-accordion-head):hover{
+  border-color:rgba(96,165,250,.85) !important;
+  background:linear-gradient(180deg, rgba(37,50,75,.98), rgba(25,38,59,.98)) !important;
+}
+
+@media(max-width:900px){
+  body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-row,
+  body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host [data-truss-subrent-row],
+  body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] > .packit-truss-subrent-bottom-host .v4-truss-subrent-main{
+    grid-template-columns:minmax(0,1fr) !important;
+  }
+}
