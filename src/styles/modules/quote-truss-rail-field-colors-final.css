@@ -51,9 +51,17 @@ body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="trus
   -webkit-text-fill-color:#8ea4c3 !important;
 }
 
-/* Keep browser number spinners from looking like light/native blocks. */
+/* Hide browser number spinners: they look like alien native controls in the dark rail. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] input[type="number"]{
+  appearance:textfield !important;
+  -moz-appearance:textfield !important;
+}
+
 body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] input[type="number"]::-webkit-inner-spin-button,
 body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] input[type="number"]::-webkit-outer-spin-button{
-  opacity:.35 !important;
-  filter:invert(1) brightness(1.15) !important;
+  -webkit-appearance:none !important;
+  appearance:none !important;
+  margin:0 !important;
+  opacity:0 !important;
+  display:none !important;
 }
