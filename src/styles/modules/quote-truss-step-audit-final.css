@@ -1,0 +1,137 @@
+/* PACK.IT — quote truss step final visual audit.
+   Visual-only polish for quote wizard truss step after quick-constructor parity.
+   Do not change calculations, BOM, warehouse, subrent or navigation logic. */
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"]{
+  background:linear-gradient(180deg, rgba(30,41,59,.82), rgba(15,23,42,.92)) !important;
+  border-color:rgba(51,65,85,.86) !important;
+}
+
+/* Keep the truss workspace readable and close to the quick calculator proportions. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-structure-truss,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-constructor,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-constructor]{
+  gap:10px !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-workbench,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-workbench]{
+  grid-template-columns:260px minmax(520px,1fr) 190px !important;
+  gap:10px !important;
+  align-items:stretch !important;
+}
+
+/* Load check card: success should not become a neon block. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-load-card,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-load-summary],
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-load-summary]{
+  min-height:42px !important;
+  padding:9px 12px !important;
+  border-radius:10px !important;
+  border:1px solid rgba(34,197,94,.42) !important;
+  background:linear-gradient(180deg, rgba(20,83,45,.18), rgba(15,23,42,.76)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04), 0 0 0 1px rgba(15,23,42,.35) !important;
+  color:#d8ffe8 !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-load-card *,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-load-summary] *,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-load-summary] *{
+  color:inherit !important;
+  text-shadow:none !important;
+}
+
+/* Right compact summary: readable, not a squeezed technical list. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary],
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-summary,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-side-summary{
+  padding:10px !important;
+  border-radius:12px !important;
+  background:rgba(15,23,42,.45) !important;
+  border:1px solid rgba(51,65,85,.78) !important;
+  overflow:auto !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] .v4-kpi,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] .v4-summary-card,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] .v4-metric,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-side-summary .v4-kpi,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-side-summary .v4-summary-card,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-side-summary .v4-metric{
+  min-height:42px !important;
+  padding:8px 10px !important;
+  border-radius:9px !important;
+  background:rgba(30,41,59,.55) !important;
+  border:1px solid rgba(51,65,85,.72) !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] b,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] strong,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-side-summary b,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-side-summary strong{
+  font-size:12px !important;
+  line-height:1.1 !important;
+  color:#f8fafc !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] small,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-summary] span,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-side-summary small,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-side-summary span{
+  line-height:1.15 !important;
+}
+
+/* Canvas panel should not feel like it is floating in an oversized empty well. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-canvas-panel,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .truss-block-constructor,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-canvas-panel]{
+  border-radius:12px !important;
+  border-color:rgba(51,65,85,.78) !important;
+  background:rgba(2,6,12,.86) !important;
+}
+
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-canvas-panel .v4-muted,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .truss-block-constructor .v4-muted{
+  font-size:9.5px !important;
+  line-height:1.25 !important;
+}
+
+/* Bottom accordion headers: same compact language as the rest of quote wizard. */
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .packit-truss-subrent-bottom-host .packit-truss-subrent-accordion-head{
+  min-height:36px !important;
+  padding:7px 10px !important;
+}
+
+/* Lower BOM table: slightly more consistent with summary cards. */
+body.v4-only-body [data-quote-truss-panel] table,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] table{
+  border-color:rgba(51,65,85,.82) !important;
+}
+
+body.v4-only-body [data-quote-truss-panel] table th,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] table th{
+  color:#8ea4c3 !important;
+  font-size:9px !important;
+  letter-spacing:.055em !important;
+  text-transform:uppercase !important;
+}
+
+body.v4-only-body [data-quote-truss-panel] table td,
+body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] table td{
+  padding-top:8px !important;
+  padding-bottom:8px !important;
+}
+
+@media(max-width:1180px){
+  body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-workbench,
+  body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-workbench]{
+    grid-template-columns:240px minmax(420px,1fr) 180px !important;
+  }
+}
+
+@media(max-width:900px){
+  body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] .v4-truss-workbench,
+  body.v4-only-body .packit-quote-quick-parity[data-packit-quick-target-kind="truss"] [data-truss-workbench]{
+    grid-template-columns:1fr !important;
+  }
+}
