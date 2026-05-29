@@ -6,7 +6,7 @@
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
 
-  const SHARED_BOM_BRIDGE_VERSION = '3.17.38-quick-ideal-aware';
+  const SHARED_BOM_BRIDGE_VERSION = '3.17.39-section-subrent-rows';
   const SECTION_ORDER = Object.freeze(['stage', 'truss', 'led', 'equipment']);
   const SECTION_TITLES = Object.freeze({
     stage: 'Сцена',
@@ -136,6 +136,19 @@
     return normalized;
   }
 
+  function normalizeSubrentRows(section, sectionKey) {
+    const key = toText(sectionKey || section && section.type || 'equipment') || 'equipment';
+    const rows = Array.isArray(section && section.subrentRows) ? section.subrentRows : [];
+    return rows.map(row => normalizeBomRow(Object.assign({}, row || {}, {
+      sectionKey: row && (row.sectionKey || row.section_key) || key,
+      sectionTitle: row && (row.sectionTitle || row.section_title) || sectionTitle(key, section),
+      sourceType: 'subrent',
+      sourceSystem: row && (row.sourceSystem || row.source_system) || 'quote_truss_subrent_bottom',
+      subrentQty: row && (row.subrentQty == null ? row.qty : row.subrentQty),
+      deficitQty: row && (row.deficitQty == null ? row.qty : row.deficitQty)
+    }), { sectionKey: key, section })).filter(row => row.qty > 0 && row.supplierName && row.subrentPrice > 0);
+  }
+
   function collectSectionBomRows(section, sectionKey, options) {
     const opts = options || {};
     if (!section) return [];
@@ -145,9 +158,11 @@
       : Array.isArray(section.items)
         ? section.items
         : [];
-    return rawRows
+    const rows = rawRows
       .map(row => normalizeBomRow(row, { sectionKey: key, section }))
       .filter(row => opts.includeZeroRows || row.qty > 0 || row.weightKg > 0 || row.powerW > 0 || row.startupPowerW > 0);
+    if (opts.includeSectionSubrentRows === false) return rows;
+    return rows.concat(normalizeSubrentRows(section, key));
   }
 
   function collectQuoteBomRows(quote, options) {
@@ -490,6 +505,7 @@
     SECTION_ORDER,
     SECTION_TITLES,
     normalizeBomRow,
+    normalizeSubrentRows,
     collectSectionBomRows,
     collectQuoteBomRows,
     aggregateBomRows,
