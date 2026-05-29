@@ -1,13 +1,15 @@
 // PACK.IT — Quote Truss subrent section bridge.
-// Logic bridge only: when the quote wizard binds the truss section, copy the bottom
-// "Добор ферм" rows into sections.truss.bomRows as sourceType=subrent so final
-// summary, warehouse deficit/subrent lists and documents can see them.
+// Logic bridge only: when the quote wizard binds the truss section, copy only FILLED
+// bottom "Добор ферм" rows into sections.truss.subrentRows.
+// Important: do NOT append these rows to sections.truss.bomRows, otherwise the truss
+// step position table duplicates the constructor BOM. Final summary/subrent documents
+// must read sections.truss.subrentRows separately.
 (function () {
   'use strict';
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
-  const VERSION = '1.0.0-quote-truss-subrent-section-bridge';
+  const VERSION = '1.1.0-quote-truss-subrent-section-bridge-filled-only';
 
   function toText(value) { return String(value == null ? '' : value).trim(); }
   function toNumber(value, fallback) {
@@ -52,9 +54,13 @@
     const select = field && field.querySelector('select') || row.querySelector('select');
     if (!select) return { supplierId: '', supplierName: '' };
     const option = select.options && select.selectedIndex >= 0 ? select.options[select.selectedIndex] : null;
+    const supplierId = toText(select.value);
+    const supplierName = toText(option && option.textContent) || supplierId;
+    const lowerName = supplierName.toLowerCase();
+    const isPlaceholder = !supplierId || lowerName.includes('выбрать') || lowerName.includes('субарендатор');
     return {
-      supplierId: toText(select.value),
-      supplierName: toText(option && option.textContent) || toText(select.value)
+      supplierId: isPlaceholder ? '' : supplierId,
+      supplierName: isPlaceholder ? '' : supplierName
     };
   }
 
@@ -70,12 +76,16 @@
     const subrentPrice = nonNegative(valueOfField(subrentPriceField), 0);
     const clientPriceRaw = valueOfField(clientPriceField);
     const clientPrice = nonNegative(clientPriceRaw, subrentPrice || 0);
+
+    // Critical contract: empty rows are deficit hints only. They must NOT go to final summary.
+    // A row is filled only after the user chose a real subrentor and entered a positive price.
+    if (!supplier.supplierName || subrentPrice <= 0) return null;
+
     const margin = Math.max(0, (clientPrice || 0) - (subrentPrice || 0)) * qty;
-    const noteParts = [meta.note];
-    if (supplier.supplierName) noteParts.push(`субаренда: ${supplier.supplierName}`);
+    const noteParts = [meta.note, `субаренда: ${supplier.supplierName}`];
 
     return {
-      id: `quote-truss-subrent:${meta.code || index}:${index}`,
+      id: `quote-truss-subrent:${meta.code || index}:${supplier.supplierId || supplier.supplierName}:${index}`,
       itemId: '',
       code: meta.code || `TRUSS-SUBRENT-${index + 1}`,
       name: meta.title || 'Позиция субаренды ферм',
@@ -96,11 +106,14 @@
       powerW: 0,
       startupPowerW: 0,
       trussPart: 'subrent',
+      uiHidden: true,
+      hiddenFromSectionBom: true,
       note: noteParts.filter(Boolean).join('; '),
       meta: {
         bridgeVersion: VERSION,
         source: 'quote-truss-bottom-subrent-form',
-        rowIndex: index
+        rowIndex: index,
+        uiHidden: true
       }
     };
   }
@@ -123,16 +136,22 @@
   }
 
   function attachRowsToSection(section, rows) {
-    if (!section || !Array.isArray(rows) || !rows.length) return section;
+    if (!section) return section;
     const next = clone(section) || {};
-    const ownRows = removeBridgeRows(next.bomRows || []);
-    const subrentTotal = rows.reduce((sum, row) => sum + nonNegative(row.clientPrice || row.subrentPrice, 0) * nonNegative(row.qty, 0), 0);
-    next.bomRows = ownRows.concat(rows);
-    next.items = Array.isArray(next.items) && next.items.length ? next.items : next.bomRows.slice();
-    next.subrentRows = rows;
+    const cleanBomRows = removeBridgeRows(next.bomRows || []);
+    const cleanItems = removeBridgeRows(next.items || []);
+    const cleanRows = Array.isArray(rows) ? rows : [];
+    const subrentTotal = cleanRows.reduce((sum, row) => sum + nonNegative(row.clientPrice || row.subrentPrice, 0) * nonNegative(row.qty, 0), 0);
+
+    // Keep constructor BOM clean. Subrent rows live in a separate section field.
+    next.bomRows = cleanBomRows;
+    next.items = Array.isArray(next.items) && next.items.length ? cleanItems : cleanBomRows.slice();
+    next.subrentRows = cleanRows;
     next.subrentTotal = subrentTotal;
     next.subrentOverride = false;
-    next.summary = [toText(next.summary), rows.length ? `субаренда ${rows.length} поз.` : ''].filter(Boolean).join(' · ');
+
+    const baseSummary = toText(next.summary).replace(/\s*·\s*субаренда\s+\d+\s+поз\./i, '');
+    next.summary = [baseSummary, cleanRows.length ? `субаренда ${cleanRows.length} поз.` : ''].filter(Boolean).join(' · ');
     next.rental = nonNegative(next.rental, 0) + subrentTotal;
     next.updatedAt = new Date().toISOString();
     return next;
@@ -146,8 +165,8 @@
     binder.bindTrussSection = function patchedBindTrussSection(draft, source, overrides) {
       let next = original(draft, source, overrides);
       try {
+        if (!next || !next.sections || !next.sections.truss) return next;
         const rows = collectRows(document);
-        if (!rows.length || !next || !next.sections || !next.sections.truss) return next;
         const sections = Object.assign({}, next.sections || {});
         sections.truss = attachRowsToSection(sections.truss, rows);
         if (ROOT.QuoteModel && ROOT.QuoteModel.mergeQuotePatch) {
