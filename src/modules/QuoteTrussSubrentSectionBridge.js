@@ -1,6 +1,6 @@
 // PACK.IT — Quote Truss subrent section bridge.
 // Logic bridge only: when the quote wizard binds or saves the truss section, copy only FILLED
-// bottom "Добор ферм" rows into sections.truss.subrentRows.
+// bottom "Добор ферм" rows into sections.truss.subrentRows and seed the truss input.
 // Important: do NOT append these rows to sections.truss.bomRows, otherwise the truss
 // step position table duplicates the constructor BOM. Final summary/subrent documents
 // must read sections.truss.subrentRows separately.
@@ -9,7 +9,7 @@
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
-  const VERSION = '1.3.0-quote-truss-subrent-section-bridge-save-persist';
+  const VERSION = '1.4.0-quote-truss-subrent-input-seed';
 
   function toText(value) { return String(value == null ? '' : value).trim(); }
   function toNumber(value, fallback) {
@@ -45,7 +45,7 @@
     const meta = row.querySelector('.v4-truss-subrent-meta') || row;
     const title = toText((meta.querySelector('b, strong') || {}).textContent) || 'Позиция субаренды ферм';
     const small = toText((meta.querySelector('small') || {}).textContent);
-    const code = toText((small.split('·')[0] || '').trim()) || title;
+    const code = toText(row.getAttribute('data-truss-subrent-code')) || toText((small.split('·')[0] || '').trim()) || title;
     return { title, code, note: small };
   }
 
@@ -78,14 +78,15 @@
     // A row is filled only after the user chose a real subrentor and entered a positive price.
     if (!supplierName || subrentPrice <= 0) return null;
 
+    const itemId = toText(row.itemId || row.item_id);
     const code = toText(row.code || row.sku || row.itemCode || row.item_code || row.key || row.trussPart || row.truss_part) || `TRUSS-SUBRENT-${index + 1}`;
     const name = toText(row.name || row.title || row.itemName || row.item_name) || 'Позиция субаренды ферм';
     const note = [toText(row.note), `субаренда: ${supplierName}`].filter(Boolean).join('; ');
     const margin = Math.max(0, (clientPrice || 0) - (subrentPrice || 0)) * qty;
 
     return {
-      id: toText(row.id) || `quote-truss-subrent:${code}:${supplierId || supplierName}:${index}`,
-      itemId: toText(row.itemId || row.item_id),
+      id: toText(row.id) || `quote-truss-subrent:${itemId || code}:${supplierId || supplierName}:${index}`,
+      itemId,
       code,
       name,
       qty,
@@ -124,9 +125,12 @@
     const clientPriceField = findField(row, ['клиент/ед', 'клиент', 'цена клиенту']);
     const supplier = selectedSupplier(row);
     const clientPriceRaw = valueOfField(clientPriceField);
+    const itemId = row.getAttribute('data-truss-subrent-item-id') || '';
+    const code = row.getAttribute('data-truss-subrent-code') || meta.code || `TRUSS-SUBRENT-${index + 1}`;
     return normalizeSubrentRow({
-      id: `quote-truss-subrent:${meta.code || index}:${supplier.supplierId || supplier.supplierName}:${index}`,
-      code: meta.code || `TRUSS-SUBRENT-${index + 1}`,
+      id: `quote-truss-subrent:${itemId || code}:${supplier.supplierId || supplier.supplierName}:${index}`,
+      itemId,
+      code,
       name: meta.title || 'Позиция субаренды ферм',
       qty: valueOfField(qtyField),
       supplierId: supplier.supplierId,
@@ -151,11 +155,13 @@
           ? src.state.subrentAssignments
           : Array.isArray(section && section.subrentRows)
             ? section.subrentRows
-            : Array.isArray(sectionInput.subrentAssignments)
-              ? sectionInput.subrentAssignments
-              : Array.isArray(sectionState.subrentAssignments)
-                ? sectionState.subrentAssignments
-                : [];
+            : Array.isArray(sectionInput.subrentRows)
+              ? sectionInput.subrentRows
+              : Array.isArray(sectionInput.subrentAssignments)
+                ? sectionInput.subrentAssignments
+                : Array.isArray(sectionState.subrentAssignments)
+                  ? sectionState.subrentAssignments
+                  : [];
     return list.map((row, index) => normalizeSubrentRow(row, index, { sourceMode: 'source' })).filter(Boolean);
   }
 
@@ -172,7 +178,7 @@
     const primary = domRows.length ? domRows : sourceRows;
     const byKey = new Map();
     primary.forEach(row => {
-      const key = [row.code, row.supplierId || row.supplierName, row.qty, row.subrentPrice].join('|');
+      const key = [row.itemId || row.code, row.supplierId || row.supplierName, row.qty, row.subrentPrice].join('|');
       byKey.set(key, row);
     });
     return Array.from(byKey.values());
@@ -188,7 +194,7 @@
 
   function toAssignment(row) {
     return {
-      key: toText(row.code || row.itemId || row.trussPart),
+      key: toText(row.itemId || row.code || row.trussPart),
       itemId: toText(row.itemId),
       code: toText(row.code),
       trussPart: toText(row.trussPart || 'subrent'),
@@ -201,13 +207,23 @@
     };
   }
 
+  function seedInputWithRows(input, rows) {
+    const cleanRows = Array.isArray(rows) ? rows : [];
+    const assignments = cleanRows.map(toAssignment);
+    const nextInput = Object.assign({}, input || {}, {
+      subrentRows: cleanRows,
+      subrentAssignments: assignments
+    });
+    nextInput.state = Object.assign({}, nextInput.state || {}, { subrentAssignments: assignments });
+    return nextInput;
+  }
+
   function attachRowsToSection(section, rows) {
     if (!section) return section;
     const next = clone(section) || {};
     const cleanBomRows = removeBridgeRows(next.bomRows || []);
     const cleanItems = removeBridgeRows(next.items || []);
     const cleanRows = Array.isArray(rows) ? rows : [];
-    const assignments = cleanRows.map(toAssignment);
     const subrentTotal = cleanRows.reduce((sum, row) => sum + nonNegative(row.clientPrice || row.subrentPrice, 0) * nonNegative(row.qty, 0), 0);
     const previousSubrentTotal = nonNegative(next.subrentTotal, 0);
 
@@ -217,13 +233,7 @@
     next.subrentRows = cleanRows;
     next.subrentTotal = subrentTotal;
     next.subrentOverride = false;
-
-    // Persist values back into the constructor seed so going Next/Back or re-rendering keeps fields filled.
-    next.input = Object.assign({}, next.input || {}, {
-      subrentRows: cleanRows,
-      subrentAssignments: assignments,
-      state: Object.assign({}, next.input && next.input.state || {}, { subrentAssignments: assignments })
-    });
+    next.input = seedInputWithRows(next.input || {}, cleanRows);
 
     const baseSummary = toText(next.summary).replace(/\s*·\s*субаренда\s+\d+\s+поз\./i, '');
     next.summary = [baseSummary, cleanRows.length ? `субаренда ${cleanRows.length} поз.` : ''].filter(Boolean).join(' · ');
@@ -240,6 +250,33 @@
     sections.truss = attachRowsToSection(sections.truss, rows);
     const next = Object.assign({}, q, { sections });
     return ROOT.QuoteModel && ROOT.QuoteModel.createQuoteDraft ? ROOT.QuoteModel.createQuoteDraft(next) : next;
+  }
+
+  function activeTrussRows() {
+    try {
+      if (ROOT.QuoteDraftStorage && ROOT.QuoteDraftStorage.loadActiveDraft) {
+        return normalizeSourceRows(ROOT.QuoteDraftStorage.loadActiveDraft({ hydrateBom:false }) || {});
+      }
+    } catch (_) {}
+    return [];
+  }
+
+  function patchVisualRender() {
+    const visual = ROOT.V4StructureVisualConfigurator;
+    if (!visual || typeof visual.renderTrussConfigurator !== 'function') return false;
+    if (visual.__packitTrussSubrentInputSeed) return true;
+    const original = visual.renderTrussConfigurator.bind(visual);
+    visual.renderTrussConfigurator = function patchedRenderTrussConfigurator(target, options) {
+      const opts = Object.assign({}, options || {});
+      if (opts.mode === 'quote') {
+        const ownRows = normalizeSourceRows(opts.input || {});
+        const rows = ownRows.length ? ownRows : activeTrussRows();
+        if (rows.length) opts.input = seedInputWithRows(opts.input || {}, rows);
+      }
+      return original(target, opts);
+    };
+    visual.__packitTrussSubrentInputSeed = true;
+    return true;
   }
 
   function patchBinder() {
@@ -278,14 +315,15 @@
       tries += 1;
       const okBinder = patchBinder();
       const okStorage = patchStorage();
-      if ((okBinder && okStorage) || tries > 60) return true;
+      const okVisual = patchVisualRender();
+      if ((okBinder && okStorage && okVisual) || tries > 60) return true;
       return false;
     };
     if (tick()) return;
     const timer = setInterval(() => { if (tick()) clearInterval(timer); }, 100);
   }
 
-  ROOT.QuoteTrussSubrentSectionBridge = { VERSION, init, collectRows, attachRowsToSection, attachRowsToDraft, normalizeSourceRows };
+  ROOT.QuoteTrussSubrentSectionBridge = { VERSION, init, collectRows, attachRowsToSection, attachRowsToDraft, normalizeSourceRows, seedInputWithRows };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
 })();
