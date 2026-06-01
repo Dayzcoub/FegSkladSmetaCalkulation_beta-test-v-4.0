@@ -1,5 +1,5 @@
 // PACK.IT — Quote Truss subrent section bridge.
-// Logic bridge only: when the quote wizard binds the truss section, copy only FILLED
+// Logic bridge only: when the quote wizard binds or saves the truss section, copy only FILLED
 // bottom "Добор ферм" rows into sections.truss.subrentRows.
 // Important: do NOT append these rows to sections.truss.bomRows, otherwise the truss
 // step position table duplicates the constructor BOM. Final summary/subrent documents
@@ -9,7 +9,7 @@
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
-  const VERSION = '1.2.0-quote-truss-subrent-section-bridge-dom-and-source';
+  const VERSION = '1.3.0-quote-truss-subrent-section-bridge-save-persist';
 
   function toText(value) { return String(value == null ? '' : value).trim(); }
   function toNumber(value, fallback) {
@@ -140,13 +140,22 @@
 
   function normalizeSourceRows(source) {
     const src = source || {};
+    const section = src.sections && src.sections.truss ? src.sections.truss : null;
+    const sectionInput = section && section.input || {};
+    const sectionState = sectionInput && sectionInput.state || {};
     const list = Array.isArray(src.subrentRows)
       ? src.subrentRows
       : Array.isArray(src.subrentAssignments)
         ? src.subrentAssignments
         : Array.isArray(src.state && src.state.subrentAssignments)
           ? src.state.subrentAssignments
-          : [];
+          : Array.isArray(section && section.subrentRows)
+            ? section.subrentRows
+            : Array.isArray(sectionInput.subrentAssignments)
+              ? sectionInput.subrentAssignments
+              : Array.isArray(sectionState.subrentAssignments)
+                ? sectionState.subrentAssignments
+                : [];
     return list.map((row, index) => normalizeSubrentRow(row, index, { sourceMode: 'source' })).filter(Boolean);
   }
 
@@ -177,12 +186,28 @@
     });
   }
 
+  function toAssignment(row) {
+    return {
+      key: toText(row.code || row.itemId || row.trussPart),
+      itemId: toText(row.itemId),
+      code: toText(row.code),
+      trussPart: toText(row.trussPart || 'subrent'),
+      qty: nonNegative(row.qty, 0),
+      supplierId: toText(row.supplierId),
+      supplierName: toText(row.supplierName),
+      subrentPrice: nonNegative(row.subrentPrice, 0),
+      clientPrice: nonNegative(row.clientPrice, 0) || nonNegative(row.subrentPrice, 0),
+      note: toText(row.note)
+    };
+  }
+
   function attachRowsToSection(section, rows) {
     if (!section) return section;
     const next = clone(section) || {};
     const cleanBomRows = removeBridgeRows(next.bomRows || []);
     const cleanItems = removeBridgeRows(next.items || []);
     const cleanRows = Array.isArray(rows) ? rows : [];
+    const assignments = cleanRows.map(toAssignment);
     const subrentTotal = cleanRows.reduce((sum, row) => sum + nonNegative(row.clientPrice || row.subrentPrice, 0) * nonNegative(row.qty, 0), 0);
     const previousSubrentTotal = nonNegative(next.subrentTotal, 0);
 
@@ -193,11 +218,28 @@
     next.subrentTotal = subrentTotal;
     next.subrentOverride = false;
 
+    // Persist values back into the constructor seed so going Next/Back or re-rendering keeps fields filled.
+    next.input = Object.assign({}, next.input || {}, {
+      subrentRows: cleanRows,
+      subrentAssignments: assignments,
+      state: Object.assign({}, next.input && next.input.state || {}, { subrentAssignments: assignments })
+    });
+
     const baseSummary = toText(next.summary).replace(/\s*·\s*субаренда\s+\d+\s+поз\./i, '');
     next.summary = [baseSummary, cleanRows.length ? `субаренда ${cleanRows.length} поз.` : ''].filter(Boolean).join(' · ');
     next.rental = Math.max(0, nonNegative(next.rental, 0) - previousSubrentTotal) + subrentTotal;
     next.updatedAt = new Date().toISOString();
     return next;
+  }
+
+  function attachRowsToDraft(draft, source) {
+    const q = clone(draft || {}) || {};
+    const sections = Object.assign({}, q.sections || {});
+    if (!sections.truss) return draft;
+    const rows = collectRows(document, source || sections.truss || q);
+    sections.truss = attachRowsToSection(sections.truss, rows);
+    const next = Object.assign({}, q, { sections });
+    return ROOT.QuoteModel && ROOT.QuoteModel.createQuoteDraft ? ROOT.QuoteModel.createQuoteDraft(next) : next;
   }
 
   function patchBinder() {
@@ -207,35 +249,43 @@
     const original = binder.bindTrussSection.bind(binder);
     binder.bindTrussSection = function patchedBindTrussSection(draft, source, overrides) {
       let next = original(draft, source, overrides);
-      try {
-        if (!next || !next.sections || !next.sections.truss) return next;
-        const rows = collectRows(document, source || {});
-        const sections = Object.assign({}, next.sections || {});
-        sections.truss = attachRowsToSection(sections.truss, rows);
-        if (ROOT.QuoteModel && ROOT.QuoteModel.mergeQuotePatch) {
-          next = ROOT.QuoteModel.mergeQuotePatch(next, { sections });
-        } else {
-          next = Object.assign({}, next, { sections });
-        }
-      } catch (err) {
-        try { if (console && console.warn) console.warn('QuoteTrussSubrentSectionBridge skipped', err); } catch (_) {}
-      }
+      try { next = attachRowsToDraft(next, source || {}); }
+      catch (err) { try { if (console && console.warn) console.warn('QuoteTrussSubrentSectionBridge bind skipped', err); } catch (_) {} }
       return next;
     };
     binder.__packitTrussSubrentSectionBridge = true;
     return true;
   }
 
-  function init() {
-    if (patchBinder()) return;
-    let tries = 0;
-    const timer = setInterval(() => {
-      tries += 1;
-      if (patchBinder() || tries > 40) clearInterval(timer);
-    }, 100);
+  function patchStorage() {
+    const storage = ROOT.QuoteDraftStorage;
+    if (!storage || typeof storage.saveDraft !== 'function') return false;
+    if (storage.__packitTrussSubrentSectionBridge) return true;
+    const original = storage.saveDraft.bind(storage);
+    storage.saveDraft = function patchedSaveDraft(draft, options) {
+      let next = draft;
+      try { next = attachRowsToDraft(draft, draft); }
+      catch (err) { try { if (console && console.warn) console.warn('QuoteTrussSubrentSectionBridge save skipped', err); } catch (_) {} }
+      return original(next, options || {});
+    };
+    storage.__packitTrussSubrentSectionBridge = true;
+    return true;
   }
 
-  ROOT.QuoteTrussSubrentSectionBridge = { VERSION, init, collectRows, attachRowsToSection, normalizeSourceRows };
+  function init() {
+    let tries = 0;
+    const tick = () => {
+      tries += 1;
+      const okBinder = patchBinder();
+      const okStorage = patchStorage();
+      if ((okBinder && okStorage) || tries > 60) return true;
+      return false;
+    };
+    if (tick()) return;
+    const timer = setInterval(() => { if (tick()) clearInterval(timer); }, 100);
+  }
+
+  ROOT.QuoteTrussSubrentSectionBridge = { VERSION, init, collectRows, attachRowsToSection, attachRowsToDraft, normalizeSourceRows };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
 })();
