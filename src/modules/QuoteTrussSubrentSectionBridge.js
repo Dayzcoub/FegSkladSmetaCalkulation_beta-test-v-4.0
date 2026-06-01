@@ -9,7 +9,7 @@
 
   const GLOBAL = typeof window !== 'undefined' ? window : globalThis;
   const ROOT = (GLOBAL.FEGModules = GLOBAL.FEGModules || {});
-  const VERSION = '1.1.0-quote-truss-subrent-section-bridge-filled-only';
+  const VERSION = '1.2.0-quote-truss-subrent-section-bridge-dom-and-source';
 
   function toText(value) { return String(value == null ? '' : value).trim(); }
   function toNumber(value, fallback) {
@@ -64,40 +64,39 @@
     };
   }
 
-  function parseRow(row, index) {
-    const meta = parseMeta(row);
-    const qtyField = findField(row, ['сколько', 'кол-во', 'количество']);
-    const subrentPriceField = findField(row, ['субаренда/ед', 'субаренда', 'себест']);
-    const clientPriceField = findField(row, ['клиент/ед', 'клиент', 'цена клиенту']);
-    const qty = nonNegative(valueOfField(qtyField), 0);
+  function normalizeSubrentRow(raw, index, metaPatch) {
+    const row = raw || {};
+    const qty = nonNegative(row.qty == null ? (row.subrentQty == null ? row.quantity : row.subrentQty) : row.qty, 0);
     if (qty <= 0) return null;
 
-    const supplier = selectedSupplier(row);
-    const subrentPrice = nonNegative(valueOfField(subrentPriceField), 0);
-    const clientPriceRaw = valueOfField(clientPriceField);
-    const clientPrice = nonNegative(clientPriceRaw, subrentPrice || 0);
+    const supplierId = toText(row.supplierId || row.supplier_id);
+    const supplierName = toText(row.supplierName || row.supplier_name);
+    const subrentPrice = nonNegative(row.subrentPrice == null ? row.subrent_price : row.subrentPrice, 0);
+    const clientPrice = nonNegative(row.clientPrice == null ? row.client_price : row.clientPrice, subrentPrice || 0);
 
     // Critical contract: empty rows are deficit hints only. They must NOT go to final summary.
     // A row is filled only after the user chose a real subrentor and entered a positive price.
-    if (!supplier.supplierName || subrentPrice <= 0) return null;
+    if (!supplierName || subrentPrice <= 0) return null;
 
+    const code = toText(row.code || row.sku || row.itemCode || row.item_code || row.key || row.trussPart || row.truss_part) || `TRUSS-SUBRENT-${index + 1}`;
+    const name = toText(row.name || row.title || row.itemName || row.item_name) || 'Позиция субаренды ферм';
+    const note = [toText(row.note), `субаренда: ${supplierName}`].filter(Boolean).join('; ');
     const margin = Math.max(0, (clientPrice || 0) - (subrentPrice || 0)) * qty;
-    const noteParts = [meta.note, `субаренда: ${supplier.supplierName}`];
 
     return {
-      id: `quote-truss-subrent:${meta.code || index}:${supplier.supplierId || supplier.supplierName}:${index}`,
-      itemId: '',
-      code: meta.code || `TRUSS-SUBRENT-${index + 1}`,
-      name: meta.title || 'Позиция субаренды ферм',
+      id: toText(row.id) || `quote-truss-subrent:${code}:${supplierId || supplierName}:${index}`,
+      itemId: toText(row.itemId || row.item_id),
+      code,
+      name,
       qty,
-      unit: 'шт',
-      requestedQty: qty,
+      unit: toText(row.unit || 'шт') || 'шт',
+      requestedQty: nonNegative(row.requestedQty == null ? row.requested_qty : row.requestedQty, qty),
       sourceType: 'subrent',
       sourceSystem: 'quote_truss_subrent_bottom',
-      supplierId: supplier.supplierId,
-      supplierName: supplier.supplierName,
+      supplierId,
+      supplierName,
       subrentQty: qty,
-      deficitQty: qty,
+      deficitQty: nonNegative(row.deficitQty == null ? row.deficit_qty : row.deficitQty, qty),
       subrentPrice,
       clientPrice,
       rentalPrice: clientPrice || subrentPrice || 0,
@@ -105,26 +104,69 @@
       weightKg: 0,
       powerW: 0,
       startupPowerW: 0,
-      trussPart: 'subrent',
+      trussPart: toText(row.trussPart || row.truss_part || 'subrent') || 'subrent',
       uiHidden: true,
       hiddenFromSectionBom: true,
-      note: noteParts.filter(Boolean).join('; '),
-      meta: {
+      note,
+      meta: Object.assign({}, clone(row.meta || {}) || {}, metaPatch || {}, {
         bridgeVersion: VERSION,
         source: 'quote-truss-bottom-subrent-form',
         rowIndex: index,
         uiHidden: true
-      }
+      })
     };
   }
 
-  function collectRows(root) {
+  function parseRow(row, index) {
+    const meta = parseMeta(row);
+    const qtyField = findField(row, ['сколько', 'кол-во', 'количество']);
+    const subrentPriceField = findField(row, ['субаренда/ед', 'субаренда', 'себест']);
+    const clientPriceField = findField(row, ['клиент/ед', 'клиент', 'цена клиенту']);
+    const supplier = selectedSupplier(row);
+    const clientPriceRaw = valueOfField(clientPriceField);
+    return normalizeSubrentRow({
+      id: `quote-truss-subrent:${meta.code || index}:${supplier.supplierId || supplier.supplierName}:${index}`,
+      code: meta.code || `TRUSS-SUBRENT-${index + 1}`,
+      name: meta.title || 'Позиция субаренды ферм',
+      qty: valueOfField(qtyField),
+      supplierId: supplier.supplierId,
+      supplierName: supplier.supplierName,
+      subrentPrice: valueOfField(subrentPriceField),
+      clientPrice: clientPriceRaw || valueOfField(subrentPriceField),
+      note: meta.note,
+      trussPart: row.getAttribute('data-truss-subrent-part') || 'subrent'
+    }, index, { sourceMode: 'dom' });
+  }
+
+  function normalizeSourceRows(source) {
+    const src = source || {};
+    const list = Array.isArray(src.subrentRows)
+      ? src.subrentRows
+      : Array.isArray(src.subrentAssignments)
+        ? src.subrentAssignments
+        : Array.isArray(src.state && src.state.subrentAssignments)
+          ? src.state.subrentAssignments
+          : [];
+    return list.map((row, index) => normalizeSubrentRow(row, index, { sourceMode: 'source' })).filter(Boolean);
+  }
+
+  function collectRows(root, source) {
     const scope = root || document;
+    const sourceRows = normalizeSourceRows(source || {});
     const host = scope.querySelector('[data-packit-truss-subrent-bottom-host]') || document.querySelector('[data-packit-truss-subrent-bottom-host]');
-    if (!host) return [];
-    return Array.from(host.querySelectorAll('[data-truss-subrent-row], .v4-truss-subrent-row'))
-      .map(parseRow)
-      .filter(Boolean);
+    const domRoot = host || (scope.querySelector('[data-quote-truss-panel]') || scope);
+    const domRows = domRoot && domRoot.querySelectorAll
+      ? Array.from(domRoot.querySelectorAll('[data-truss-subrent-row], .v4-truss-subrent-row')).map(parseRow).filter(Boolean)
+      : [];
+
+    // Prefer live DOM because it contains the latest typed supplier/price values before autosave.
+    const primary = domRows.length ? domRows : sourceRows;
+    const byKey = new Map();
+    primary.forEach(row => {
+      const key = [row.code, row.supplierId || row.supplierName, row.qty, row.subrentPrice].join('|');
+      byKey.set(key, row);
+    });
+    return Array.from(byKey.values());
   }
 
   function removeBridgeRows(rows) {
@@ -142,6 +184,7 @@
     const cleanItems = removeBridgeRows(next.items || []);
     const cleanRows = Array.isArray(rows) ? rows : [];
     const subrentTotal = cleanRows.reduce((sum, row) => sum + nonNegative(row.clientPrice || row.subrentPrice, 0) * nonNegative(row.qty, 0), 0);
+    const previousSubrentTotal = nonNegative(next.subrentTotal, 0);
 
     // Keep constructor BOM clean. Subrent rows live in a separate section field.
     next.bomRows = cleanBomRows;
@@ -152,7 +195,7 @@
 
     const baseSummary = toText(next.summary).replace(/\s*·\s*субаренда\s+\d+\s+поз\./i, '');
     next.summary = [baseSummary, cleanRows.length ? `субаренда ${cleanRows.length} поз.` : ''].filter(Boolean).join(' · ');
-    next.rental = nonNegative(next.rental, 0) + subrentTotal;
+    next.rental = Math.max(0, nonNegative(next.rental, 0) - previousSubrentTotal) + subrentTotal;
     next.updatedAt = new Date().toISOString();
     return next;
   }
@@ -166,7 +209,7 @@
       let next = original(draft, source, overrides);
       try {
         if (!next || !next.sections || !next.sections.truss) return next;
-        const rows = collectRows(document);
+        const rows = collectRows(document, source || {});
         const sections = Object.assign({}, next.sections || {});
         sections.truss = attachRowsToSection(sections.truss, rows);
         if (ROOT.QuoteModel && ROOT.QuoteModel.mergeQuotePatch) {
@@ -192,7 +235,7 @@
     }, 100);
   }
 
-  ROOT.QuoteTrussSubrentSectionBridge = { VERSION, init, collectRows, attachRowsToSection };
+  ROOT.QuoteTrussSubrentSectionBridge = { VERSION, init, collectRows, attachRowsToSection, normalizeSourceRows };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
 })();
