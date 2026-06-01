@@ -5,7 +5,7 @@
   'use strict';
 
   const ROOT = (window.FEGModules = window.FEGModules || {});
-  const VERSION = '1.0.0-quote-truss-subrent-deduper';
+  const VERSION = '1.1.0-quote-truss-subrent-deduper-load-restore';
   let raf = 0;
 
   function rowCount(panel) {
@@ -58,8 +58,20 @@
     syncHeader(keep);
   }
 
+  function loadRestoreBridge() {
+    if (ROOT.QuoteTrussSubrentRestoreBridge || document.querySelector('script[data-packit-truss-subrent-restore-bridge]')) return;
+    const script = document.createElement('script');
+    script.src = 'src/modules/QuoteTrussSubrentRestoreBridge.js';
+    script.defer = true;
+    script.setAttribute('data-packit-truss-subrent-restore-bridge', 'true');
+    document.head.appendChild(script);
+  }
+
   function run() {
     document.querySelectorAll('[data-packit-truss-subrent-bottom-host]').forEach(dedupeHost);
+    if (ROOT.QuoteTrussSubrentRestoreBridge && ROOT.QuoteTrussSubrentRestoreBridge.restore) {
+      try { ROOT.QuoteTrussSubrentRestoreBridge.restore(); } catch (_) {}
+    }
   }
 
   function schedule() {
@@ -70,6 +82,7 @@
   function init() {
     if (!document.body || document.body.__packitQuoteTrussSubrentDeduper) return;
     document.body.__packitQuoteTrussSubrentDeduper = true;
+    loadRestoreBridge();
     const observer = new MutationObserver(schedule);
     observer.observe(document.body, { childList: true, subtree: true });
     ['click', 'input', 'change'].forEach(type => document.addEventListener(type, event => {
@@ -84,7 +97,7 @@
     window.setTimeout(schedule, 900);
   }
 
-  ROOT.QuoteTrussSubrentDeduper = { VERSION, init, run };
+  ROOT.QuoteTrussSubrentDeduper = { VERSION, init, run, loadRestoreBridge };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
 })();
